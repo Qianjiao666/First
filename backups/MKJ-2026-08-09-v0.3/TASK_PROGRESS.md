@@ -63,6 +63,7 @@
   - v0.3 功能：`11f3012 feat: add personalized planning and feedback`
   - 备份目录：`backups/MKJ-2026-08-09-v0.3/`
 - 最新部署包：
+  - 解压目录：`deployment/MKJ-v0.3-web/`
   - `deployment/MKJ.zip`
   - v0.3 纯网页包 SHA-256：`7387CFF2C8B78152B992BF3FBD901A10A066AD6FAA4E29AAD99C3A3B66975159`
 - 已完成腾讯云 CVM 部署：

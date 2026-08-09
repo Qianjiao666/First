@@ -43,14 +43,14 @@ D:\桌面文件\任务
 
 新对话第一条消息可直接使用：
 
-> 请先读取 `D:\桌面文件\任务\HANDOFF.md` 和 `TASK_PROGRESS.md`，继续航线 MKJ 项目。先核对 GitHub、线上 CVM 与本地发布包版本，再部署最新前端并完成 Supabase Gmail SMTP 排障。仅修改 `https://dsxnb.com/MKJ/`，绝不能影响主站 `https://dsxnb.com/`。涉及 Supabase、浏览器测试、Nginx 或 SSH 前，先读取文档列出的对应 skill。不要索取、显示或提交任何邮箱密码、应用专用密码、验证码、token、数据库密码、service_role key 或 SSH 私钥。
+> 请先读取 `D:\桌面文件\任务\HANDOFF.md` 和 `TASK_PROGRESS.md`，继续航线 MKJ 项目。先核对 GitHub、线上 Lighthouse 与本地发布包版本，再处理后续功能或 Supabase Gmail SMTP 排障。仅修改 `https://dsxnb.com/MKJ/`，绝不能影响主站 `https://dsxnb.com/`。涉及 Supabase、浏览器测试、Nginx 或 SSH 前，先读取文档列出的对应 skill。不要索取、显示或提交任何邮箱密码、应用专用密码、验证码、token、数据库密码、service_role key 或 SSH 私钥。
 
 接手后按以下顺序行动：
 
 1. 读取本文件、`TASK_PROGRESS.md`、`README.md`。
 2. 在 `deployment/github-sync` 检查 `git status` 和最新提交。
 3. 验证线上 MKJ 是否仍与 v0.3 功能提交 `11f3012` 对应文件及 `assets/` 一致。
-4. 若未部署，只更新 CVM `/var/www/MKJ`，不要改主站 Nginx 根路由。
+4. 后续若需重新部署，只更新 Lighthouse `/var/www/MKJ`，不要改主站 Nginx 根路由。
 5. 在 Supabase Auth Logs 定位 Gmail SMTP 的服务端错误。
 6. 完成 QQ/163 邮箱投递、密码恢复和云端状态持久化验收。
 
@@ -61,7 +61,7 @@ D:\桌面文件\任务
 ```text
 子站        https://dsxnb.com/MKJ/
 主站        https://dsxnb.com/
-CVM 目录    /var/www/MKJ
+Lighthouse  /var/www/MKJ
 GitHub      https://github.com/Qianjiao666/First
 分支        main
 Supabase    项目引用 hzxvmrbztbyapqnwttjq
@@ -92,9 +92,10 @@ assets/vendor/
 
 ```text
 Supabase Auth       注册、登录、验证邮件、找回密码、会话保持
-Supabase Postgres   profiles、career_progress
-RLS                 用户只能访问自己的数据
+Supabase Postgres   profiles、career_progress、feedback_messages
+RLS                 私有资料只归本人；留言仅登录可读写且只能删除自己的内容
 localStorage        未登录演示模式
+离线数据            assets/data/chinese-universities.json（当前 134 校）
 ```
 
 数据库脚本：
@@ -112,6 +113,7 @@ v0.3 功能与部署文档已推送：
 ```text
 11f3012 feat: add personalized planning and feedback
 c62da70 docs: correct web release checksum
+e07a64f docs: record successful v0.3 deployment
 ```
 
 同步克隆：
@@ -149,9 +151,12 @@ backups/MKJ-2026-08-09-v0.3/
 ### 发布包
 
 ```text
+D:\桌面文件\任务\deployment\MKJ-v0.3-web\
 D:\桌面文件\任务\deployment\MKJ.zip
 SHA-256 7387CFF2C8B78152B992BF3FBD901A10A066AD6FAA4E29AAD99C3A3B66975159
 ```
+
+`MKJ-v0.3-web` 是解压后的纯网页目录；`MKJ.zip` 是同内容上传包。两者均只包含可部署文件。
 
 部署时只复制以下内容：
 
@@ -207,6 +212,7 @@ supabase
 supabase-postgres-best-practices
 playwright
 playwright-explore-website
+playwright-interactive
 webapp-testing
 web-design-reviewer
 frontend-design
@@ -214,6 +220,7 @@ nginx-ops
 ssh
 secrets
 security-review
+security-best-practices
 shipping-and-launch
 ```
 
@@ -227,17 +234,17 @@ shipping-and-launch
 6. 连接 CVM：读 `ssh/SKILL.md`，不得索取或输出私钥。
 7. 上线前：读 `shipping-and-launch/SKILL.md`；处理敏感配置时读 `secrets/SKILL.md`。
 
-本次尝试通过官方 `skill-installer` 查询 OpenAI GitHub curated 清单时，本机审批服务连接中断，未返回清单。由于本项目所需 skills 已全部存在，没有重复安装或覆盖现有目录。需要增加新 skill 时，必须使用系统自带：
+本次已通过官方 `skill-installer` 从 OpenAI GitHub curated 清单安装 `playwright-interactive` 与 `security-best-practices`。其他所需 skills 已存在，没有重复覆盖。需要增加新 skill 时，必须使用系统自带：
 
 ```text
 C:\Users\梁惠\.codex\skills\.system\skill-installer\SKILL.md
 ```
 
-## 6. 下一步实施清单
+## 6. 后续发布与验收流程
 
-### A. 部署最新前端
+### A. 未来版本重新部署
 
-在 CVM 中先备份现有 `/var/www/MKJ`，再复制四个网页文件和整个 `assets/`。不要把 README 或 `supabase/schema.sql` 放入网站目录。
+当前 v0.3 已部署。未来更新时，在 Lighthouse 中先备份现有 `/var/www/MKJ`，再复制四个网页文件和整个 `assets/`。不要把 README 或 `supabase/schema.sql` 放入网站目录。
 
 部署后至少检查：
 
@@ -271,7 +278,7 @@ D:\桌面文件\任务\output\playwright\
 
 核心流程：
 
-1. 访客状态点击后打开登录弹窗。
+1. 访客点击头像可打开资料菜单，点击“登录账户”后打开登录弹窗。
 2. 注册提交加载态、成功/错误提示和重发冷却。
 3. 恢复邮件回跳后设置新密码。
 4. 移动底部导航滚动并更新激活状态。
@@ -280,7 +287,7 @@ D:\桌面文件\任务\output\playwright\
 
 v0.3 已完成 375/768/1280/1920 四种宽度线上检查；真实账户下的留言发布与跨设备同步仍应在后续日常验收中持续观察。
 
-## 7. 完成标准
+## 7. 项目整体完成标准
 
 只有同时满足以下条件才可宣布正式完成：
 
