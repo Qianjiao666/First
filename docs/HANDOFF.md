@@ -23,6 +23,9 @@
    `Permission denied (publickey,...)`，所以 `https://dsxnb.com/MKJ/` 仍是旧版。
 2. Supabase 必须重新执行最新版 `supabase/schema.sql`，否则学历云端字段和留言表不存在。
 
+GitHub 已完成推送：`11f3012 feat: add personalized planning and feedback`。推送后检查
+线上公开 `script.js`，未发现 `themePresets`，证明服务器没有自动从 GitHub 同步。
+
 不要将“本地功能完成”写成“线上完成”。发布包路径是 `deployment/MKJ.zip`；部署时仍然
 只复制 `index.html`、`styles.css`、`script.js`、`supabase-config.js` 和 `assets/`。
 当前 v0.3 压缩包 SHA-256：`B16F9F936EDC08908C91205F6214F40ADCF2C89D8165F41C66F7AF838890F945`。

@@ -75,6 +75,7 @@
 ## 当前状态
 
 - `v0.3` 功能已在本地完成，但尚未部署到 `https://dsxnb.com/MKJ/`。
+- GitHub `main` 已推送提交 `11f3012 feat: add personalized planning and feedback`，仓库状态干净。
 - 本机没有可用的腾讯云 SSH 密钥登录权限，服务器拒绝 `publickey` 认证；不能宣称线上已更新。
 - 留言板与学历云端同步需要在 Supabase SQL Editor 重新执行最新版 `supabase/schema.sql`。
 - 大学搜索当前打包离线索引；完整 582 校上游 CSV 下载被本机审批服务中断，来源与替换方式已写入 `assets/data/UNIVERSITY_DATA_SOURCE.md`。
