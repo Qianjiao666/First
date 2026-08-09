@@ -3,13 +3,39 @@ const missions = [...document.querySelectorAll("[data-mission]")];
 const missionCount = document.querySelector("#missionCount");
 const roleModal = document.querySelector("#roleModal");
 const infoModal = document.querySelector("#infoModal");
+const authModal = document.querySelector("#authModal");
 const notificationMenu = document.querySelector("#notificationMenu");
 const profileMenu = document.querySelector("#profileMenu");
 const roleOptions = [...document.querySelectorAll("[data-role]")];
 const targetPanel = document.querySelector("#roles");
 const navLinks = [...document.querySelectorAll(".main-nav a")];
+const authTabs = [...document.querySelectorAll("[data-auth-view]")];
+const authForms = [...document.querySelectorAll("[data-auth-form]")];
+const authHint = document.querySelector("#authHint");
+const authError = document.querySelector("#authError");
+const profileButton = document.querySelector(".profile-button");
+const profileNodes = {
+  avatar: [document.querySelector("#profileAvatar"), document.querySelector("#menuProfileAvatar")],
+  name: [document.querySelector("#profileName"), document.querySelector("#menuProfileName")],
+  meta: [document.querySelector("#profileMeta"), document.querySelector("#menuProfileMeta")],
+};
+
 let selectedRole = localStorage.getItem("career-role") || "frontend";
 let activeOpener = null;
+let currentUser = null;
+let remoteDataReady = false;
+
+const supabaseConfig = window.SUPABASE_CONFIG || {};
+const canUseSupabase = Boolean(
+  supabaseConfig.url &&
+  supabaseConfig.publishableKey &&
+  window.supabase?.createClient,
+);
+const supabaseClient = canUseSupabase
+  ? window.supabase.createClient(supabaseConfig.url, supabaseConfig.publishableKey, {
+      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true },
+    })
+  : null;
 
 const roleData = {
   frontend: {
@@ -90,7 +116,8 @@ function animateScore(nextScore) {
 }
 
 function renderRole(roleKey, animate = false) {
-  const role = roleData[roleKey];
+  const role = roleData[roleKey] || roleData.frontend;
+  selectedRole = roleData[roleKey] ? roleKey : "frontend";
   targetPanel.querySelector("h2").textContent = role.name;
   const tagContainer = targetPanel.querySelector(".role-meta");
   tagContainer.innerHTML = role.tags.map((tag) => `<span>${tag}</span>`).join("");
@@ -100,7 +127,7 @@ function renderRole(roleKey, animate = false) {
   document.querySelector(".certainty-meter > span").style.width = `${role.score}%`;
   document.querySelector(".certainty-meter").setAttribute("aria-label", `就业确定性指数 ${role.score} 分`);
   document.querySelector(".score-status").lastChild.textContent = role.status;
-  roleOptions.forEach((option) => option.classList.toggle("selected", option.dataset.role === roleKey));
+  roleOptions.forEach((option) => option.classList.toggle("selected", option.dataset.role === selectedRole));
   if (animate) animateScore(role.score);
   else document.querySelector("#score").textContent = role.score;
 }
@@ -110,12 +137,28 @@ function updateMissionCount() {
   missionCount.textContent = completed;
 }
 
-function saveMissions() {
-  const state = missions.map((mission) => mission.classList.contains("completed"));
-  localStorage.setItem("career-missions", JSON.stringify(state));
+function getMissionState() {
+  return missions.map((mission) => mission.classList.contains("completed"));
 }
 
-function restoreMissions() {
+function applyMissionState(state) {
+  const safeState = Array.isArray(state) && state.length === missions.length
+    ? state.map(Boolean)
+    : [true, false, false];
+  missions.forEach((mission, index) => {
+    mission.classList.toggle("completed", safeState[index]);
+    mission.querySelector(".checkbox").textContent = safeState[index] ? "✓" : "";
+    mission.setAttribute("aria-pressed", String(safeState[index]));
+  });
+  updateMissionCount();
+}
+
+function saveLocalState() {
+  localStorage.setItem("career-role", selectedRole);
+  localStorage.setItem("career-missions", JSON.stringify(getMissionState()));
+}
+
+function restoreLocalState() {
   let state = [true, false, false];
   try {
     const saved = JSON.parse(localStorage.getItem("career-missions"));
@@ -123,22 +166,194 @@ function restoreMissions() {
   } catch {
     localStorage.removeItem("career-missions");
   }
+  applyMissionState(state);
+}
 
-  missions.forEach((mission, index) => {
-    mission.classList.toggle("completed", state[index]);
-    mission.querySelector(".checkbox").textContent = state[index] ? "✓" : "";
-    mission.setAttribute("aria-pressed", String(state[index]));
+function setProfileUI(user) {
+  const email = user?.email || "";
+  const displayName = user?.user_metadata?.display_name || email.split("@")[0] || "林同学";
+  const initial = displayName.trim().slice(0, 1) || "林";
+  profileNodes.avatar.forEach((node) => { node.textContent = initial; });
+  profileNodes.name.forEach((node) => { node.textContent = displayName; });
+  profileNodes.meta.forEach((node) => { node.textContent = user ? email : "大二 · 计算机"; });
+  profileButton.title = user ? "打开账户菜单" : "登录或注册";
+}
+
+function setAuthError(message = "") {
+  authError.textContent = message;
+  authError.hidden = !message;
+}
+
+function setAuthView(view) {
+  authTabs.forEach((tab) => {
+    const active = tab.dataset.authView === view;
+    tab.classList.toggle("active", active);
+    tab.setAttribute("aria-selected", String(active));
   });
-  updateMissionCount();
+  authForms.forEach((form) => { form.hidden = form.dataset.authForm !== view; });
+  setAuthError("");
+}
+
+function openAuthModal(view = "login", opener = profileButton) {
+  setAuthView(view);
+  authHint.textContent = canUseSupabase
+    ? "你的账号数据将通过 Supabase 安全保存。"
+    : "当前未配置公开密钥，网页仍可使用本地演示模式。";
+  openModal(authModal, opener);
+}
+
+function isMissingTableError(error) {
+  return error?.code === "42P01" || /relation .* does not exist|schema cache/i.test(error?.message || "");
+}
+
+async function persistRemoteState() {
+  if (!supabaseClient || !currentUser || !remoteDataReady) return;
+  const now = new Date().toISOString();
+  const [profileResult, progressResult] = await Promise.all([
+    supabaseClient.from("profiles").upsert({
+      id: currentUser.id,
+      display_name: currentUser.user_metadata?.display_name || "航线同学",
+      target_role: selectedRole,
+      updated_at: now,
+    }),
+    supabaseClient.from("career_progress").upsert({
+      user_id: currentUser.id,
+      mission_state: getMissionState(),
+      updated_at: now,
+    }),
+  ]);
+  const error = profileResult.error || progressResult.error;
+  if (error) {
+    remoteDataReady = false;
+    showToast(isMissingTableError(error) ? "请先在 Supabase 执行 schema.sql" : "云端保存失败，已保留本地记录");
+  }
+}
+
+async function loadRemoteState() {
+  if (!supabaseClient || !currentUser) return;
+  const [profileResult, progressResult] = await Promise.all([
+    supabaseClient.from("profiles").select("display_name, target_role").eq("id", currentUser.id).maybeSingle(),
+    supabaseClient.from("career_progress").select("mission_state").eq("user_id", currentUser.id).maybeSingle(),
+  ]);
+  const error = profileResult.error || progressResult.error;
+  if (error) {
+    remoteDataReady = false;
+    showToast(isMissingTableError(error) ? "请先在 Supabase 执行 schema.sql" : "云端读取失败，暂时使用本地记录");
+    return;
+  }
+  remoteDataReady = true;
+  if (profileResult.data?.target_role && roleData[profileResult.data.target_role]) {
+    selectedRole = profileResult.data.target_role;
+    localStorage.setItem("career-role", selectedRole);
+  }
+  if (progressResult.data?.mission_state) {
+    applyMissionState(progressResult.data.mission_state);
+    localStorage.setItem("career-missions", JSON.stringify(getMissionState()));
+  }
+  renderRole(selectedRole);
+  await persistRemoteState();
+}
+
+async function handleAuthSession(session) {
+  currentUser = session?.user || null;
+  setProfileUI(currentUser);
+  remoteDataReady = false;
+  if (currentUser) {
+    await loadRemoteState();
+  }
+}
+
+function formatAuthError(error) {
+  const message = error?.message || "操作失败，请稍后再试";
+  if (/invalid login credentials/i.test(message)) return "邮箱或密码不正确";
+  if (/email not confirmed/i.test(message)) return "邮箱还未验证，请先查收验证邮件";
+  if (/user already registered/i.test(message)) return "这个邮箱已经注册过了，请直接登录";
+  return message;
+}
+
+async function submitLogin(event) {
+  event.preventDefault();
+  if (!supabaseClient) {
+    setAuthError("请先把 Supabase 的 Publishable key 填入 supabase-config.js");
+    return;
+  }
+  const form = new FormData(event.currentTarget);
+  const { error } = await supabaseClient.auth.signInWithPassword({
+    email: String(form.get("email")).trim(),
+    password: String(form.get("password")),
+  });
+  if (error) {
+    setAuthError(formatAuthError(error));
+    return;
+  }
+  closeModal(authModal);
+  showToast("登录成功，正在同步你的航线");
+}
+
+async function submitRegister(event) {
+  event.preventDefault();
+  if (!supabaseClient) {
+    setAuthError("请先把 Supabase 的 Publishable key 填入 supabase-config.js");
+    return;
+  }
+  const form = new FormData(event.currentTarget);
+  const displayName = String(form.get("displayName")).trim() || "航线同学";
+  const { data, error } = await supabaseClient.auth.signUp({
+    email: String(form.get("email")).trim(),
+    password: String(form.get("password")),
+    options: { data: { display_name: displayName } },
+  });
+  if (error) {
+    setAuthError(formatAuthError(error));
+    return;
+  }
+  if (data.session) {
+    closeModal(authModal);
+    showToast("账户创建成功");
+  } else {
+    setAuthError("注册成功，请查收验证邮件后再登录。");
+  }
+}
+
+async function submitReset(event) {
+  event.preventDefault();
+  if (!supabaseClient) {
+    setAuthError("请先把 Supabase 的 Publishable key 填入 supabase-config.js");
+    return;
+  }
+  const form = new FormData(event.currentTarget);
+  const { error } = await supabaseClient.auth.resetPasswordForEmail(String(form.get("email")).trim(), {
+    redirectTo: window.location.href,
+  });
+  if (error) {
+    setAuthError(formatAuthError(error));
+    return;
+  }
+  setAuthError("重置邮件已发送，请检查邮箱。");
+}
+
+async function signOut() {
+  closePopovers();
+  if (!supabaseClient || !currentUser) {
+    openAuthModal("login");
+    return;
+  }
+  const { error } = await supabaseClient.auth.signOut();
+  if (error) {
+    showToast(formatAuthError(error));
+    return;
+  }
+  showToast("已退出登录");
 }
 
 missions.forEach((mission) => {
-  mission.addEventListener("click", () => {
+  mission.addEventListener("click", async () => {
     const completed = mission.classList.toggle("completed");
     mission.querySelector(".checkbox").textContent = completed ? "✓" : "";
     mission.setAttribute("aria-pressed", String(completed));
     updateMissionCount();
-    saveMissions();
+    saveLocalState();
+    await persistRemoteState();
     showToast(completed ? "已加入你的完成记录" : "已移回本周待办");
   });
 });
@@ -156,10 +371,11 @@ roleOptions.forEach((option) => {
   });
 });
 
-document.querySelector("#confirmRole").addEventListener("click", () => {
-  localStorage.setItem("career-role", selectedRole);
+document.querySelector("#confirmRole").addEventListener("click", async () => {
+  saveLocalState();
   renderRole(selectedRole, true);
   closeModal(roleModal);
+  await persistRemoteState();
   showToast(`已切换为「${roleData[selectedRole].name}」`);
 });
 
@@ -175,11 +391,16 @@ document.querySelectorAll(".modal-backdrop").forEach((backdrop) => {
   });
 });
 
+authTabs.forEach((tab) => tab.addEventListener("click", () => setAuthView(tab.dataset.authView)));
+document.querySelector("#loginForm").addEventListener("submit", submitLogin);
+document.querySelector("#registerForm").addEventListener("submit", submitRegister);
+document.querySelector("#resetForm").addEventListener("submit", submitReset);
+
 document.querySelector("#viewAll").addEventListener("click", (event) => {
   const extraEvidence = [...document.querySelectorAll(".extra-evidence")];
   const willShow = extraEvidence.some((item) => item.hidden);
   extraEvidence.forEach((item) => { item.hidden = !willShow; });
-  event.currentTarget.innerHTML = willShow ? '收起详情 <span>↑</span>' : '查看全部 <span>→</span>';
+  event.currentTarget.innerHTML = willShow ? "收起详情 <span>↑</span>" : "查看全部 <span>→</span>";
   showToast(willShow ? "已展开全部 6 项能力证据" : "已收起次要能力");
 });
 
@@ -190,8 +411,12 @@ document.querySelector(".icon-button").addEventListener("click", (event) => {
   notificationMenu.hidden = !willOpen;
 });
 
-document.querySelector(".profile-button").addEventListener("click", (event) => {
+profileButton.addEventListener("click", (event) => {
   event.stopPropagation();
+  if (!currentUser) {
+    openAuthModal("login", event.currentTarget);
+    return;
+  }
   const willOpen = profileMenu.hidden;
   closePopovers();
   profileMenu.hidden = !willOpen;
@@ -206,14 +431,14 @@ document.querySelectorAll("[data-notification]").forEach((button) => {
 });
 
 document.querySelectorAll("[data-profile-action]").forEach((button) => {
-  button.addEventListener("click", () => {
-    const messages = {
-      profile: "个人资料编辑将在账户系统接入后开放",
-      settings: "偏好设置已准备好接入真实账户数据",
-      logout: "当前是演示模式，无需退出",
-    };
+  button.addEventListener("click", async () => {
+    const action = button.dataset.profileAction;
+    if (action === "logout") {
+      await signOut();
+      return;
+    }
     closePopovers();
-    showToast(messages[button.dataset.profileAction]);
+    showToast(action === "profile" ? "个人资料会随账户数据一起保存" : "偏好设置将在下一步开放");
   });
 });
 
@@ -250,5 +475,14 @@ const sectionObserver = new IntersectionObserver((entries) => {
 
 observedSections.forEach((section) => sectionObserver.observe(section));
 
-restoreMissions();
+restoreLocalState();
 renderRole(selectedRole);
+setProfileUI(null);
+
+if (supabaseClient) {
+  authHint.textContent = "你的账号数据将通过 Supabase 安全保存。";
+  supabaseClient.auth.onAuthStateChange((_event, session) => {
+    window.setTimeout(() => handleAuthSession(session), 0);
+  });
+  supabaseClient.auth.getSession().then(({ data }) => handleAuthSession(data.session));
+}

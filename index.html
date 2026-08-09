@@ -30,8 +30,8 @@
             ◌
           </button>
           <button class="profile-button" title="打开个人资料">
-            <span class="avatar">林</span>
-            <span class="profile-copy"><strong>林同学</strong><small>大二 · 计算机</small></span>
+            <span class="avatar" id="profileAvatar">林</span>
+            <span class="profile-copy"><strong id="profileName">林同学</strong><small id="profileMeta">大二 · 计算机</small></span>
             <span aria-hidden="true">⌄</span>
           </button>
         </div>
@@ -189,10 +189,10 @@
       </button>
     </div>
     <div class="popover profile-menu" id="profileMenu" hidden>
-      <div class="profile-menu-user"><span class="avatar">林</span><span><strong>林同学</strong><small>大二 · 计算机</small></span></div>
+      <div class="profile-menu-user"><span class="avatar" id="menuProfileAvatar">林</span><span><strong id="menuProfileName">林同学</strong><small id="menuProfileMeta">大二 · 计算机</small></span></div>
       <button class="popover-link" data-profile-action="profile">个人资料 <span>→</span></button>
       <button class="popover-link" data-profile-action="settings">偏好设置 <span>→</span></button>
-      <button class="popover-link" data-profile-action="logout">退出当前演示 <span>→</span></button>
+      <button class="popover-link" data-profile-action="logout">退出登录 <span>→</span></button>
     </div>
     <div class="modal-backdrop" id="roleModal" hidden>
       <section class="modal" role="dialog" aria-modal="true" aria-labelledby="roleModalTitle">
@@ -219,7 +219,39 @@
         <button class="secondary-button" data-close-modal>知道了</button>
       </section>
     </div>
+    <div class="modal-backdrop" id="authModal" hidden>
+      <section class="modal auth-modal" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
+        <button class="modal-close" data-close-modal aria-label="关闭登录窗口">×</button>
+        <p class="eyebrow">航线账户</p>
+        <h2 id="authModalTitle">把你的进度，带到每一次打开。</h2>
+        <p class="modal-copy">注册后，目标岗位和任务记录会安全保存到你的账户。</p>
+        <div class="auth-tabs" role="tablist" aria-label="账户操作">
+          <button class="auth-tab active" type="button" data-auth-view="login" role="tab" aria-selected="true">登录</button>
+          <button class="auth-tab" type="button" data-auth-view="register" role="tab" aria-selected="false">注册</button>
+          <button class="auth-tab" type="button" data-auth-view="reset" role="tab" aria-selected="false">找回密码</button>
+        </div>
+        <form class="auth-form" id="loginForm" data-auth-form="login">
+          <label>邮箱<input name="email" type="email" autocomplete="email" placeholder="you@example.com" required /></label>
+          <label>密码<input name="password" type="password" autocomplete="current-password" placeholder="至少 6 位" required /></label>
+          <button class="primary-button" type="submit">登录航线</button>
+        </form>
+        <form class="auth-form" id="registerForm" data-auth-form="register" hidden>
+          <label>你的称呼<input name="displayName" type="text" autocomplete="name" placeholder="例如：林同学" maxlength="30" /></label>
+          <label>邮箱<input name="email" type="email" autocomplete="email" placeholder="you@example.com" required /></label>
+          <label>密码<input name="password" type="password" autocomplete="new-password" placeholder="至少 6 位" minlength="6" required /></label>
+          <button class="primary-button" type="submit">创建账户</button>
+        </form>
+        <form class="auth-form" id="resetForm" data-auth-form="reset" hidden>
+          <label>注册邮箱<input name="email" type="email" autocomplete="email" placeholder="you@example.com" required /></label>
+          <button class="primary-button" type="submit">发送重置邮件</button>
+        </form>
+        <p class="auth-hint" id="authHint">当前未配置公开密钥，网页仍可使用本地演示模式。</p>
+        <p class="auth-error" id="authError" role="alert" hidden></p>
+      </section>
+    </div>
     <div class="toast" id="toast" role="status"></div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.111.0"></script>
+    <script src="./supabase-config.js"></script>
     <script src="./script.js"></script>
   </body>
 </html>
