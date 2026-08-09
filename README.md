@@ -8,14 +8,17 @@
 
 ## 网站部署
 
-只需要部署以下浏览器文件：
+只需要部署以下浏览器文件与本地依赖目录：
 
 ```text
 index.html
 styles.css
 script.js
 supabase-config.js
+assets/
 ```
+
+`assets/` 中包含固定版本的 Supabase JS、DM Mono 字体及对应开源许可证。网页运行时不依赖 Google Fonts 或 jsDelivr，更适合国内网络环境。
 
 不要修改主站 Nginx 的 `location /`，也不要把 `supabase/schema.sql` 复制到网站目录。
 
@@ -30,7 +33,7 @@ Site URL       https://dsxnb.com/MKJ/
 Redirect URLs  https://dsxnb.com/MKJ/
 ```
 
-注册、登录、找回密码、会话保持、目标岗位和任务状态云端同步均由 Supabase 提供。
+注册、登录、验证邮件重发、完整密码恢复、会话保持、目标岗位和任务状态云端同步均由 Supabase 提供。验证邮件重发带 60 秒冷却，避免触发邮件频率限制。
 
 ## 邮件服务
 
