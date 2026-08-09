@@ -264,12 +264,36 @@ async function handleAuthSession(session) {
   }
 }
 
-function formatAuthError(error) {
-  const message = error?.message || "操作失败，请稍后再试";
+function getAuthErrorMessage(error) {
+  const values = [
+    error?.message,
+    error?.error_description,
+    error?.msg,
+    error?.error,
+    error?.cause?.message,
+  ];
+  for (const value of values) {
+    if (typeof value !== "string") continue;
+    const message = value.trim();
+    if (message && message !== "{}" && message !== "[object Object]") return message;
+  }
+  return "";
+}
+
+function formatAuthError(error, fallback = "操作失败，请稍后再试") {
+  const message = getAuthErrorMessage(error);
   if (/invalid login credentials/i.test(message)) return "邮箱或密码不正确";
   if (/email not confirmed/i.test(message)) return "邮箱还未验证，请先查收验证邮件";
   if (/user already registered/i.test(message)) return "这个邮箱已经注册过了，请直接登录";
-  return message;
+  if (/rate limit|too many requests|over_email_send_rate_limit/i.test(message)) return "邮件发送过于频繁，请稍后再试";
+  if (/smtp|535|authentication failed|username and password not accepted/i.test(message)) {
+    return "发件邮箱认证失败，请检查 Gmail 地址和应用专用密码";
+  }
+  if (/error sending|failed to send|confirmation email|recovery email/i.test(message)) {
+    return "邮件发送失败，请检查 SMTP 配置或稍后再试";
+  }
+  if (/failed to fetch|network|load failed/i.test(message)) return "网络连接失败，请检查网络后重试";
+  return message || fallback;
 }
 
 async function submitLogin(event) {
@@ -284,7 +308,7 @@ async function submitLogin(event) {
     password: String(form.get("password")),
   });
   if (error) {
-    setAuthError(formatAuthError(error));
+    setAuthError(formatAuthError(error, "登录失败，请稍后再试"));
     return;
   }
   closeModal(authModal);
@@ -308,7 +332,7 @@ async function submitRegister(event) {
     },
   });
   if (error) {
-    setAuthError(formatAuthError(error));
+    setAuthError(formatAuthError(error, "注册失败，验证邮件未能发送，请检查 SMTP 配置"));
     return;
   }
   if (data.session) {
@@ -330,7 +354,7 @@ async function submitReset(event) {
     redirectTo: authRedirectUrl,
   });
   if (error) {
-    setAuthError(formatAuthError(error));
+    setAuthError(formatAuthError(error, "重置邮件发送失败，请检查 SMTP 配置"));
     return;
   }
   setAuthError("重置邮件已发送，请检查邮箱。");
