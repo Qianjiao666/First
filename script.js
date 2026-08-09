@@ -26,6 +26,7 @@ let currentUser = null;
 let remoteDataReady = false;
 
 const supabaseConfig = window.SUPABASE_CONFIG || {};
+const authRedirectUrl = new URL("./", window.location.href).href;
 const canUseSupabase = Boolean(
   supabaseConfig.url &&
   supabaseConfig.publishableKey &&
@@ -301,7 +302,10 @@ async function submitRegister(event) {
   const { data, error } = await supabaseClient.auth.signUp({
     email: String(form.get("email")).trim(),
     password: String(form.get("password")),
-    options: { data: { display_name: displayName } },
+    options: {
+      data: { display_name: displayName },
+      emailRedirectTo: authRedirectUrl,
+    },
   });
   if (error) {
     setAuthError(formatAuthError(error));
@@ -323,7 +327,7 @@ async function submitReset(event) {
   }
   const form = new FormData(event.currentTarget);
   const { error } = await supabaseClient.auth.resetPasswordForEmail(String(form.get("email")).trim(), {
-    redirectTo: window.location.href,
+    redirectTo: authRedirectUrl,
   });
   if (error) {
     setAuthError(formatAuthError(error));
