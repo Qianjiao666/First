@@ -4,7 +4,7 @@
 
 ## 已完成
 
-- 已完成 `v0.3` 本地开发与浏览器验收：
+- 已完成 `v0.3` 开发、正式部署与浏览器验收：
   - 5 组背景/强调色预设与自定义颜色，使用 `localStorage` 持久化
   - 36 个岗位，支持 6 类筛选和关键词搜索
   - 最高学历及本科、硕士、博士学校填写与本地院校搜索
@@ -17,6 +17,11 @@
   - `feedback_messages`、长度约束、索引和 RLS
 - 已通过 375、768、1280、1920 四种宽度验收：无横向溢出、控制台 0 错误。
 - 已安装并保留项目所需 GitHub Skills：`playwright-interactive`、`security-best-practices`。
+- 已在 Supabase 执行最新版 `schema.sql`：
+  - `profiles.education` 查询返回 HTTP 200
+  - 匿名访问 `feedback_messages` 返回 HTTP 401，符合权限设计
+- 已通过腾讯云 Lighthouse WebShell 发布纯网页包到 `/var/www/MKJ`，并在服务器生成部署前备份。
+- 线上核心文件 SHA-256 与本地/GitHub 一致，正式子站和主站均返回 HTTP 200。
 
 - 完成 Apple 风格的大学生就业确定性工作台页面。
 - 页面部署路径保持为 `/MKJ/`，不修改主网页 `/`。
@@ -55,7 +60,8 @@
   - 最新备份更新：`005ab57 chore: refresh MKJ backup`
   - 生产与 SMTP 文档：`cefc5ba docs: update production setup and SMTP guide`
   - 认证与移动端体验：`dff95b8 feat: improve auth and mobile experience`
-  - 备份目录：`backups/MKJ-2026-08-09/`
+  - v0.3 功能：`11f3012 feat: add personalized planning and feedback`
+  - 备份目录：`backups/MKJ-2026-08-09-v0.3/`
 - 最新部署包：
   - `deployment/MKJ.zip`
   - v0.3 纯网页包 SHA-256：`7387CFF2C8B78152B992BF3FBD901A10A066AD6FAA4E29AAD99C3A3B66975159`
@@ -74,26 +80,24 @@
 
 ## 当前状态
 
-- `v0.3` 功能已在本地完成，但尚未部署到 `https://dsxnb.com/MKJ/`。
-- GitHub `main` 已推送提交 `11f3012 feat: add personalized planning and feedback`，仓库状态干净。
-- 本机没有可用的腾讯云 SSH 密钥登录权限，服务器拒绝 `publickey` 认证；不能宣称线上已更新。
-- 留言板与学历云端同步需要在 Supabase SQL Editor 重新执行最新版 `supabase/schema.sql`。
+- `v0.3` 已部署到 `https://dsxnb.com/MKJ/` 并通过线上验收。
+- GitHub `main` 已包含提交 `11f3012 feat: add personalized planning and feedback`，待本次状态文档提交后再次确认仓库干净。
+- Supabase 最新 schema 已执行，学历字段和留言表均可从 Data API 识别。
 - 大学搜索当前打包离线索引；完整 582 校上游 CSV 下载被本机审批服务中断，来源与替换方式已写入 `assets/data/UNIVERSITY_DATA_SOURCE.md`。
 
 - 基础版本已完成 GitHub、Supabase、腾讯云 CVM 和线上静态页面部署。
 - 邮箱验证回跳问题已经修复。
 - Supabase URL Configuration 已设置生产地址。
 - Gmail Custom SMTP 已保存，但注册验证邮件仍发送失败。
-- 前端已修复空错误对象显示，并完成认证与移动端体验增强；待把新发布包同步到 CVM。
+- 前端已修复空错误对象显示，并完成认证、移动端和 v0.3 个性化体验增强。
 - GitHub 根目录已推送最新源码和 `assets/`；完整备份目录也已补齐并通过提交 `8f880d1 chore: refresh complete MKJ backup` 推送。
 - 当前需要从 Supabase Auth Logs 获取 Gmail SMTP 的具体服务端错误。
 
 ## 下一步
 
-1. 在 Supabase SQL Editor 执行最新版 `supabase/schema.sql`。
-2. 把新发布包中的五项内容同步到 `/var/www/MKJ`：四个网页文件和整个 `assets/` 目录。
-3. 在线验证主题、岗位、学历、任务、日志和留言板。
-4. 在 Supabase Auth Logs 中继续排查 Gmail SMTP，并验证 QQ/163 投递。
+1. 使用真实登录账户验证留言发布、删除和跨设备学历/任务同步。
+2. 在 Supabase Auth Logs 中继续排查 Gmail SMTP，并验证 QQ/163 投递。
+3. 获得下载授权后，用上游 582 校 CSV 更新当前 134 校离线索引。
 
 不要在对话中发送真实密码、验证码或私钥。
 

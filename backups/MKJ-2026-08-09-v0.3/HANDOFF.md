@@ -4,7 +4,7 @@
 
 ## 0. v0.3 最新接手状态
 
-用户要求的 7 项功能已在本地实现并通过 Playwright 验收，但尚未发布到线上：
+用户要求的 7 项功能已实现、部署到正式子站并通过 Playwright 线上验收：
 
 - 多色主题和自定义背景/强调色
 - 36 个目标岗位，支持分类与搜索
@@ -14,18 +14,20 @@
 - 三条更新日志
 - Supabase 账户留言板
 
-浏览器验收宽度为 375/768/1280/1920，均无横向溢出，控制台 0 错误；截图在
-`output/playwright/mkj-*.png`。
+浏览器验收宽度为 375/768/1280/1920，均无横向溢出，控制台 0 错误；线上截图在
+`output/playwright/online-mkj-*.png`。
 
-当前两个发布阻塞：
+2026-08-09 已通过腾讯云 Lighthouse WebShell 将纯网页包部署到 `/var/www/MKJ`，部署前备份
+保存在服务器 `/root/MKJ-site-before-v0.3-*.tar.gz`。正式站首页、大学数据和主站均返回
+HTTP 200。线上 `index.html`、`styles.css`、`script.js` 的 SHA-256 与本地/GitHub 源码一致。
 
-1. 本机连接腾讯云 `119.45.253.94` 时无可用 SSH 密钥，服务器返回
-   `Permission denied (publickey,...)`，所以 `https://dsxnb.com/MKJ/` 仍是旧版。
-2. Supabase 必须重新执行最新版 `supabase/schema.sql`，否则学历云端字段和留言表不存在。
+Supabase 最新 `schema.sql` 已执行：`profiles.education` 可通过 Data API 识别；匿名请求
+`feedback_messages` 返回 401，确认表存在且匿名访问被拒绝。
 
-不要将“本地功能完成”写成“线上完成”。发布包路径是 `deployment/MKJ.zip`；部署时仍然
+GitHub `main` 已包含功能提交 `11f3012 feat: add personalized planning and feedback` 及后续
+部署文档更新。发布包路径是 `deployment/MKJ.zip`；部署时仍然
 只复制 `index.html`、`styles.css`、`script.js`、`supabase-config.js` 和 `assets/`。
-当前 v0.3 压缩包 SHA-256：`B16F9F936EDC08908C91205F6214F40ADCF2C89D8165F41C66F7AF838890F945`。
+当前 v0.3 纯网页压缩包 SHA-256：`7387CFF2C8B78152B992BF3FBD901A10A066AD6FAA4E29AAD99C3A3B66975159`。
 
 大学数据源选定 `https://github.com/xioajiumi/Chinese_Universities`（MIT）。当前本地有
 离线索引，完整 582 校 CSV 下载被本机审批服务中断，详情见
@@ -47,7 +49,7 @@ D:\桌面文件\任务
 
 1. 读取本文件、`TASK_PROGRESS.md`、`README.md`。
 2. 在 `deployment/github-sync` 检查 `git status` 和最新提交。
-3. 验证线上 MKJ 是否已经部署源码提交 `dff95b8` 对应文件及 `assets/`。
+3. 验证线上 MKJ 是否仍与 v0.3 功能提交 `11f3012` 对应文件及 `assets/` 一致。
 4. 若未部署，只更新 CVM `/var/www/MKJ`，不要改主站 Nginx 根路由。
 5. 在 Supabase Auth Logs 定位 Gmail SMTP 的服务端错误。
 6. 完成 QQ/163 邮箱投递、密码恢复和云端状态持久化验收。
@@ -105,11 +107,11 @@ D:\桌面文件\任务\supabase\schema.sql
 
 ### GitHub
 
-最新两个提交已推送：
+v0.3 功能与部署文档已推送：
 
 ```text
-8f880d1 chore: refresh complete MKJ backup
-dff95b8 feat: improve auth and mobile experience
+11f3012 feat: add personalized planning and feedback
+c62da70 docs: correct web release checksum
 ```
 
 同步克隆：
@@ -121,12 +123,18 @@ D:\桌面文件\任务\deployment\github-sync
 完整备份：
 
 ```text
-backups/MKJ-2026-08-09/
+backups/MKJ-2026-08-09-v0.3/
 ```
 
 备份包含网页源码、`assets/`、许可证、README、数据库脚本和 `BACKUP_MANIFEST.md`。清单中的文件 SHA-256 已与根目录逐项核对。
 
 ### 最新前端改进
+
+- 5 组主题预设及自定义背景/强调色，刷新后保持。
+- 36 个目标岗位，支持 6 类筛选和关键词搜索。
+- 最高学历及本科、硕士、博士学校搜索与云端同步。
+- 自定义任务创建、完成、删除及旧任务状态迁移。
+- 三期更新日志和 Supabase 账户留言板。
 
 - 登录、注册、找回密码有提交中禁用与稳定按钮文案。
 - 成功提示为绿色，错误提示为红色，不再显示 `{}`。
@@ -142,7 +150,7 @@ backups/MKJ-2026-08-09/
 
 ```text
 D:\桌面文件\任务\deployment\MKJ.zip
-SHA-256 B230BC92C8E946D041E94CA6A58D07C6037804C59FEBF4DAA1B5EA2DF40BE883
+SHA-256 7387CFF2C8B78152B992BF3FBD901A10A066AD6FAA4E29AAD99C3A3B66975159
 ```
 
 部署时只复制以下内容：
@@ -157,13 +165,14 @@ assets/
 
 ### 线上版本
 
-旧版 MKJ 曾验证为 HTTP 200，且主站未受影响。完成 `dff95b8` 后尚未取得可靠的线上哈希确认，因此新对话必须先检查线上是否已有 `assets/vendor/supabase-2.111.0.js`，不能默认新版已经部署。
+v0.3 已部署。正式站、大学数据文件与主站均返回 HTTP 200；线上三个核心文件哈希与本地源码一致。线上 Playwright 四尺寸验收通过，控制台 0 错误。
 
 ### Supabase 与邮件
 
 已经完成：
 
-- `profiles`、`career_progress` 表和 RLS。
+- `profiles`、`career_progress`、`feedback_messages` 表和 RLS。
+- `profiles.education` 学历字段、留言表长度约束及索引。
 - Site URL 和 Redirect URL 均为 `https://dsxnb.com/MKJ/`。
 - 原有已验证账户可以登录。
 - Gmail Custom SMTP 已保存。
@@ -269,7 +278,7 @@ D:\桌面文件\任务\output\playwright\
 5. 岗位和任务在 localStorage 及登录云端模式下保持。
 6. 控制台无错误；网络中无 Google Fonts 和 jsDelivr 请求。
 
-目前只完成了新版 375px 布局和访客入口检查；其余尺寸及模拟认证成功响应仍待补验。
+v0.3 已完成 375/768/1280/1920 四种宽度线上检查；真实账户下的留言发布与跨设备同步仍应在后续日常验收中持续观察。
 
 ## 7. 完成标准
 
