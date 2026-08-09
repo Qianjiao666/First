@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="航线：把大学里的每一步，变成就业时拿得出来的证据。" />
+    <title>航线｜大学生就业确定性工作台</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#" aria-label="航线首页">
+          <span class="brand-mark" aria-hidden="true">航</span>
+          <span>
+            <strong>航线</strong>
+            <small>career certainty lab</small>
+          </span>
+        </a>
+        <nav class="main-nav" aria-label="主导航">
+          <a class="active" href="#dashboard">我的航线</a>
+          <a href="#evidence">能力证据</a>
+          <a href="#roles">岗位地图</a>
+          <a href="#missions">任务中心</a>
+        </nav>
+        <div class="top-actions">
+          <button class="icon-button" title="查看通知" aria-label="查看通知">
+            <span class="notification-dot"></span>
+            ◌
+          </button>
+          <button class="profile-button" title="打开个人资料">
+            <span class="avatar" id="profileAvatar">林</span>
+            <span class="profile-copy"><strong id="profileName">林同学</strong><small id="profileMeta">大二 · 计算机</small></span>
+            <span aria-hidden="true">⌄</span>
+          </button>
+        </div>
+      </header>
+
+      <main id="dashboard">
+        <section class="intro-row">
+          <div>
+            <p class="eyebrow">WEEK 12 · 2026 春季学期</p>
+            <h1>别猜未来，<em>现在就校准。</em></h1>
+            <p class="intro-copy">把想去的岗位拆成今天能完成的动作，把做过的事沉淀成面试时拿得出来的证据。</p>
+          </div>
+          <div class="week-note">
+            <span class="note-line"></span>
+            <p><strong>本周建议</strong><br />补齐一个真实项目的部署记录</p>
+            <button class="text-button" data-scroll="#missions">去完成 <span>↗</span></button>
+          </div>
+        </section>
+
+        <section class="dashboard-grid" aria-label="就业路径概览">
+          <article class="certainty-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">就业确定性指数</p>
+                <h2>你离目标岗位还有多远？</h2>
+              </div>
+              <button class="more-button" title="查看指数说明" aria-label="查看指数说明">•••</button>
+            </div>
+            <div class="score-block">
+              <div class="score-number"><span id="score">72</span><small>/ 100</small></div>
+              <div class="score-status"><span class="status-dot"></span>高于同阶段 18%</div>
+            </div>
+            <div class="certainty-meter" aria-label="就业确定性指数 72 分">
+              <span style="width: 72%"></span>
+              <i class="meter-marker marker-25">入门</i>
+              <i class="meter-marker marker-50">可投递</i>
+              <i class="meter-marker marker-75">有竞争力</i>
+            </div>
+            <div class="signal-row">
+              <div><span class="signal-icon up">↗</span><strong>+8</strong><small>较上月</small></div>
+              <div><span class="signal-icon">◆</span><strong>4 / 6</strong><small>关键能力已具备</small></div>
+              <div><span class="signal-icon warm">!</span><strong>2 项</strong><small>需要优先补齐</small></div>
+            </div>
+          </article>
+
+          <article class="target-panel" id="roles">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">当前目标岗位</p>
+                <h2>前端开发工程师</h2>
+              </div>
+              <button class="edit-button" id="changeRole">更换目标 <span>↗</span></button>
+            </div>
+            <div class="role-meta"><span>校招</span><span>互联网 / 软件</span><span>上海 · 杭州</span></div>
+            <div class="role-line">
+              <div class="company-logos" aria-label="目标公司示例">
+                <span class="logo-logo">字</span><span class="logo-logo blue">B</span><span class="logo-logo dark">A</span><span class="logo-logo coral">小</span>
+              </div>
+              <p>已有 <strong>128</strong> 个相似岗位在招</p>
+            </div>
+            <div class="role-footer">
+              <div class="mini-progress"><span style="width: 68%"></span></div>
+              <span>目标画像完成度 68%</span>
+            </div>
+          </article>
+        </section>
+
+        <section class="content-grid">
+          <article class="evidence-panel" id="evidence">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">能力证据</p>
+                <h2>你的优势，能被岗位看见吗？</h2>
+              </div>
+              <button class="text-button" id="viewAll">查看全部 <span>→</span></button>
+            </div>
+            <div class="evidence-list">
+              <div class="evidence-item">
+                <div class="evidence-label"><span class="rank">01</span><strong>工程基础</strong><small>HTML · CSS · JavaScript</small></div>
+                <div class="evidence-bar"><span style="width: 86%"></span></div><strong class="evidence-score">86</strong>
+              </div>
+              <div class="evidence-item">
+                <div class="evidence-label"><span class="rank">02</span><strong>框架能力</strong><small>React · 状态管理</small></div>
+                <div class="evidence-bar"><span style="width: 74%"></span></div><strong class="evidence-score">74</strong>
+              </div>
+              <div class="evidence-item warning">
+                <div class="evidence-label"><span class="rank">03</span><strong>真实项目</strong><small>部署 · 协作 · 复盘</small></div>
+                <div class="evidence-bar"><span style="width: 48%"></span></div><strong class="evidence-score">48</strong>
+              </div>
+              <div class="evidence-item">
+                <div class="evidence-label"><span class="rank">04</span><strong>表达与面试</strong><small>作品集 · 项目叙事</small></div>
+                <div class="evidence-bar"><span style="width: 61%"></span></div><strong class="evidence-score">61</strong>
+              </div>
+              <div class="evidence-item extra-evidence" hidden>
+                <div class="evidence-label"><span class="rank">05</span><strong>计算机基础</strong><small>数据结构 · 网络 · 操作系统</small></div>
+                <div class="evidence-bar"><span style="width: 57%"></span></div><strong class="evidence-score">57</strong>
+              </div>
+              <div class="evidence-item extra-evidence" hidden>
+                <div class="evidence-label"><span class="rank">06</span><strong>团队协作</strong><small>Git · Code Review · 沟通</small></div>
+                <div class="evidence-bar"><span style="width: 66%"></span></div><strong class="evidence-score">66</strong>
+              </div>
+            </div>
+            <div class="evidence-insight"><span>✦</span><p><strong>关键判断：</strong>你不是能力不足，而是“真实项目证据”还没有形成闭环。</p><button class="link-button" data-scroll="#missions">去补齐 →</button></div>
+          </article>
+
+          <article class="pulse-panel">
+            <div class="section-heading">
+              <div><p class="eyebrow">岗位脉搏</p><h2>市场正在寻找什么？</h2></div>
+              <span class="live-label"><span></span>实时</span>
+            </div>
+            <div class="pulse-chart" aria-label="岗位技能热度趋势图">
+              <div class="chart-labels"><span>近 90 天</span><span>需求热度</span></div>
+              <div class="chart-lines"><i></i><i></i><i></i><i></i></div>
+              <svg viewBox="0 0 520 150" role="img" aria-label="技能需求上升趋势">
+                <path class="chart-area" d="M0 127 C52 130 66 112 110 116 S168 104 210 109 S250 80 294 91 S341 82 376 88 S425 44 464 59 S493 36 520 19 L520 150 L0 150 Z"></path>
+                <path class="chart-path" d="M0 127 C52 130 66 112 110 116 S168 104 210 109 S250 80 294 91 S341 82 376 88 S425 44 464 59 S493 36 520 19"></path>
+                <circle cx="464" cy="59" r="5"></circle>
+              </svg>
+              <div class="chart-dates"><span>04.01</span><span>04.30</span><span>05.30</span><span>06.29</span></div>
+            </div>
+            <div class="hot-skills"><span>TypeScript <b>+26%</b></span><span>性能优化 <b>+18%</b></span><span>工程化 <b>+14%</b></span></div>
+          </article>
+        </section>
+
+        <section class="missions-section" id="missions">
+          <div class="section-heading">
+            <div><p class="eyebrow">下一步行动</p><h2>本周，只做这三件事</h2></div>
+            <div class="mission-count"><span id="missionCount">1</span> / 3 已完成</div>
+          </div>
+          <div class="mission-list">
+            <button class="mission-item completed" data-mission>
+              <span class="checkbox">✓</span><span class="mission-copy"><strong>整理个人技术栈</strong><small>把会用的工具，写成一页能看懂的能力清单</small></span><span class="mission-time">25 min</span><span class="mission-arrow">↗</span>
+            </button>
+            <button class="mission-item" data-mission>
+              <span class="checkbox"></span><span class="mission-copy"><strong>给项目补上部署记录</strong><small>记录从代码到线上可访问页面的完整过程</small></span><span class="mission-time">45 min</span><span class="mission-arrow">↗</span>
+            </button>
+            <button class="mission-item" data-mission>
+              <span class="checkbox"></span><span class="mission-copy"><strong>完成一次项目复盘</strong><small>回答：你解决了什么问题？为什么这样解决？</small></span><span class="mission-time">30 min</span><span class="mission-arrow">↗</span>
+            </button>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer"><span>航线 · 你的大学就业确定性工作台</span><span>最后更新于今天 09:42</span></footer>
+    </div>
+    <div class="popover notification-menu" id="notificationMenu" hidden>
+      <div class="popover-heading"><strong>通知</strong><span>2 条新动态</span></div>
+      <button class="popover-item" data-notification>
+        <span class="popover-icon blue-icon">↗</span>
+        <span><strong>岗位画像更新了</strong><small>前端岗位新增「性能优化」要求</small></span>
+      </button>
+      <button class="popover-item" data-notification>
+        <span class="popover-icon green-icon">✓</span>
+        <span><strong>本周任务有新进展</strong><small>你的确定性指数较上月提升 8 分</small></span>
+      </button>
+    </div>
+    <div class="popover profile-menu" id="profileMenu" hidden>
+      <div class="profile-menu-user"><span class="avatar" id="menuProfileAvatar">林</span><span><strong id="menuProfileName">林同学</strong><small id="menuProfileMeta">大二 · 计算机</small></span></div>
+      <button class="popover-link" data-profile-action="profile">个人资料 <span>→</span></button>
+      <button class="popover-link" data-profile-action="settings">偏好设置 <span>→</span></button>
+      <button class="popover-link" data-profile-action="logout">退出登录 <span>→</span></button>
+    </div>
+    <div class="modal-backdrop" id="roleModal" hidden>
+      <section class="modal" role="dialog" aria-modal="true" aria-labelledby="roleModalTitle">
+        <button class="modal-close" data-close-modal aria-label="关闭岗位选择">×</button>
+        <p class="eyebrow">选择你的下一站</p>
+        <h2 id="roleModalTitle">你想把哪一个岗位变成目标？</h2>
+        <p class="modal-copy">换一个目标，航线会重新计算岗位画像、能力缺口和本周行动。</p>
+        <div class="role-options">
+          <button class="role-option selected" data-role="frontend"><span class="role-option-icon">⌘</span><span><strong>前端开发工程师</strong><small>工程基础 · React · 性能优化</small></span><span class="role-option-check">✓</span></button>
+          <button class="role-option" data-role="product"><span class="role-option-icon">✦</span><span><strong>产品经理</strong><small>用户研究 · 产品设计 · 项目推动</small></span><span class="role-option-check">✓</span></button>
+          <button class="role-option" data-role="data"><span class="role-option-icon">◒</span><span><strong>数据分析师</strong><small>SQL · 统计基础 · 业务分析</small></span><span class="role-option-check">✓</span></button>
+          <button class="role-option" data-role="design"><span class="role-option-icon">◌</span><span><strong>体验设计师</strong><small>用户体验 · 交互设计 · 作品集</small></span><span class="role-option-check">✓</span></button>
+        </div>
+        <button class="primary-button" id="confirmRole">确认目标岗位</button>
+      </section>
+    </div>
+    <div class="modal-backdrop" id="infoModal" hidden>
+      <section class="modal info-modal" role="dialog" aria-modal="true" aria-labelledby="infoModalTitle">
+        <button class="modal-close" data-close-modal aria-label="关闭指数说明">×</button>
+        <p class="eyebrow">指数说明</p>
+        <h2 id="infoModalTitle">就业确定性指数，不是给你贴标签。</h2>
+        <p class="modal-copy">它把目标岗位拆成可验证的能力，再结合你的项目、作品和行动记录，告诉你下一件最值得做的事。</p>
+        <div class="info-points"><div><strong>01</strong><span>能力匹配</span></div><div><strong>02</strong><span>证据完整度</span></div><div><strong>03</strong><span>行动连续性</span></div></div>
+        <button class="secondary-button" data-close-modal>知道了</button>
+      </section>
+    </div>
+    <div class="modal-backdrop" id="authModal" hidden>
+      <section class="modal auth-modal" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
+        <button class="modal-close" data-close-modal aria-label="关闭登录窗口">×</button>
+        <p class="eyebrow">航线账户</p>
+        <h2 id="authModalTitle">把你的进度，带到每一次打开。</h2>
+        <p class="modal-copy">注册后，目标岗位和任务记录会安全保存到你的账户。</p>
+        <div class="auth-tabs" role="tablist" aria-label="账户操作">
+          <button class="auth-tab active" type="button" data-auth-view="login" role="tab" aria-selected="true">登录</button>
+          <button class="auth-tab" type="button" data-auth-view="register" role="tab" aria-selected="false">注册</button>
+          <button class="auth-tab" type="button" data-auth-view="reset" role="tab" aria-selected="false">找回密码</button>
+        </div>
+        <form class="auth-form" id="loginForm" data-auth-form="login">
+          <label>邮箱<input name="email" type="email" autocomplete="email" placeholder="you@example.com" required /></label>
+          <label>密码<input name="password" type="password" autocomplete="current-password" placeholder="至少 6 位" required /></label>
+          <button class="primary-button" type="submit">登录航线</button>
+        </form>
+        <form class="auth-form" id="registerForm" data-auth-form="register" hidden>
+          <label>你的称呼<input name="displayName" type="text" autocomplete="name" placeholder="例如：林同学" maxlength="30" /></label>
+          <label>邮箱<input name="email" type="email" autocomplete="email" placeholder="you@example.com" required /></label>
+          <label>密码<input name="password" type="password" autocomplete="new-password" placeholder="至少 6 位" minlength="6" required /></label>
+          <button class="primary-button" type="submit">创建账户</button>
+        </form>
+        <form class="auth-form" id="resetForm" data-auth-form="reset" hidden>
+          <label>注册邮箱<input name="email" type="email" autocomplete="email" placeholder="you@example.com" required /></label>
+          <button class="primary-button" type="submit">发送重置邮件</button>
+        </form>
+        <p class="auth-hint" id="authHint">当前未配置公开密钥，网页仍可使用本地演示模式。</p>
+        <p class="auth-error" id="authError" role="alert" hidden></p>
+      </section>
+    </div>
+    <div class="toast" id="toast" role="status"></div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.111.0"></script>
+    <script src="./supabase-config.js"></script>
+    <script src="./script.js"></script>
+  </body>
+</html>
