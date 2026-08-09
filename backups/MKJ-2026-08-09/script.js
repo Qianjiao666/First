@@ -8,11 +8,15 @@ const notificationMenu = document.querySelector("#notificationMenu");
 const profileMenu = document.querySelector("#profileMenu");
 const roleOptions = [...document.querySelectorAll("[data-role]")];
 const targetPanel = document.querySelector("#roles");
-const navLinks = [...document.querySelectorAll(".main-nav a")];
+const navLinks = [...document.querySelectorAll(".main-nav a, .mobile-nav a")];
 const authTabs = [...document.querySelectorAll("[data-auth-view]")];
 const authForms = [...document.querySelectorAll("[data-auth-form]")];
 const authHint = document.querySelector("#authHint");
-const authError = document.querySelector("#authError");
+const authMessage = document.querySelector("#authMessage");
+const authTabsContainer = document.querySelector(".auth-tabs");
+const authModalTitle = document.querySelector("#authModalTitle");
+const authModalCopy = authModal.querySelector(".modal-copy");
+const resendConfirmationButton = document.querySelector("#resendConfirmation");
 const profileButton = document.querySelector(".profile-button");
 const profileNodes = {
   avatar: [document.querySelector("#profileAvatar"), document.querySelector("#menuProfileAvatar")],
@@ -24,6 +28,7 @@ let selectedRole = localStorage.getItem("career-role") || "frontend";
 let activeOpener = null;
 let currentUser = null;
 let remoteDataReady = false;
+let resendCooldownTimer = null;
 
 const supabaseConfig = window.SUPABASE_CONFIG || {};
 const authRedirectUrl = new URL("./", window.location.href).href;
@@ -172,27 +177,46 @@ function restoreLocalState() {
 
 function setProfileUI(user) {
   const email = user?.email || "";
-  const displayName = user?.user_metadata?.display_name || email.split("@")[0] || "林同学";
-  const initial = displayName.trim().slice(0, 1) || "林";
+  const displayName = user?.user_metadata?.display_name || email.split("@")[0] || "登录 / 注册";
+  const initial = user ? (displayName.trim().slice(0, 1) || "航") : "访";
   profileNodes.avatar.forEach((node) => { node.textContent = initial; });
   profileNodes.name.forEach((node) => { node.textContent = displayName; });
-  profileNodes.meta.forEach((node) => { node.textContent = user ? email : "大二 · 计算机"; });
+  profileNodes.meta.forEach((node) => { node.textContent = user ? email : "访客模式"; });
   profileButton.title = user ? "打开账户菜单" : "登录或注册";
 }
 
-function setAuthError(message = "") {
-  authError.textContent = message;
-  authError.hidden = !message;
+function setAuthMessage(message = "", tone = "error") {
+  authMessage.textContent = message;
+  authMessage.dataset.tone = tone;
+  authMessage.setAttribute("role", tone === "error" ? "alert" : "status");
+  authMessage.hidden = !message;
+}
+
+function setFormBusy(form, busy) {
+  form.setAttribute("aria-busy", String(busy));
+  form.querySelectorAll("input, button").forEach((control) => {
+    control.disabled = busy;
+  });
+  const submitButton = form.querySelector("button[type='submit']");
+  if (submitButton) {
+    submitButton.textContent = busy ? submitButton.dataset.busyLabel : submitButton.dataset.idleLabel;
+  }
 }
 
 function setAuthView(view) {
+  const isRecovery = view === "update";
   authTabs.forEach((tab) => {
     const active = tab.dataset.authView === view;
     tab.classList.toggle("active", active);
     tab.setAttribute("aria-selected", String(active));
   });
   authForms.forEach((form) => { form.hidden = form.dataset.authForm !== view; });
-  setAuthError("");
+  authTabsContainer.hidden = isRecovery;
+  authModalTitle.textContent = isRecovery ? "为账户设置新密码。" : "把你的进度，带到每一次打开。";
+  authModalCopy.textContent = isRecovery
+    ? "恢复链接已验证。保存后即可使用新密码登录。"
+    : "注册后，目标岗位和任务记录会安全保存到你的账户。";
+  setAuthMessage("");
 }
 
 function openAuthModal(view = "login", opener = profileButton) {
@@ -201,6 +225,23 @@ function openAuthModal(view = "login", opener = profileButton) {
     ? "你的账号数据将通过 Supabase 安全保存。"
     : "当前未配置公开密钥，网页仍可使用本地演示模式。";
   openModal(authModal, opener);
+}
+
+function startResendCooldown(seconds = 60) {
+  window.clearInterval(resendCooldownTimer);
+  let remaining = seconds;
+  resendConfirmationButton.disabled = true;
+  resendConfirmationButton.textContent = `${remaining} 秒后可重新发送`;
+  resendCooldownTimer = window.setInterval(() => {
+    remaining -= 1;
+    if (remaining > 0) {
+      resendConfirmationButton.textContent = `${remaining} 秒后可重新发送`;
+      return;
+    }
+    window.clearInterval(resendCooldownTimer);
+    resendConfirmationButton.disabled = false;
+    resendConfirmationButton.textContent = "重新发送验证邮件";
+  }, 1000);
 }
 
 function isMissingTableError(error) {
@@ -299,65 +340,163 @@ function formatAuthError(error, fallback = "操作失败，请稍后再试") {
 async function submitLogin(event) {
   event.preventDefault();
   if (!supabaseClient) {
-    setAuthError("请先把 Supabase 的 Publishable key 填入 supabase-config.js");
+    setAuthMessage("请先把 Supabase 的 Publishable key 填入 supabase-config.js");
     return;
   }
-  const form = new FormData(event.currentTarget);
-  const { error } = await supabaseClient.auth.signInWithPassword({
-    email: String(form.get("email")).trim(),
-    password: String(form.get("password")),
-  });
-  if (error) {
-    setAuthError(formatAuthError(error, "登录失败，请稍后再试"));
-    return;
+  const formElement = event.currentTarget;
+  const form = new FormData(formElement);
+  setAuthMessage("");
+  setFormBusy(formElement, true);
+  try {
+    const { error } = await supabaseClient.auth.signInWithPassword({
+      email: String(form.get("email")).trim(),
+      password: String(form.get("password")),
+    });
+    if (error) {
+      setAuthMessage(formatAuthError(error, "登录失败，请稍后再试"));
+      return;
+    }
+    closeModal(authModal);
+    showToast("登录成功，正在同步你的航线");
+  } catch (error) {
+    setAuthMessage(formatAuthError(error, "登录失败，请稍后再试"));
+  } finally {
+    setFormBusy(formElement, false);
   }
-  closeModal(authModal);
-  showToast("登录成功，正在同步你的航线");
 }
 
 async function submitRegister(event) {
   event.preventDefault();
   if (!supabaseClient) {
-    setAuthError("请先把 Supabase 的 Publishable key 填入 supabase-config.js");
+    setAuthMessage("请先把 Supabase 的 Publishable key 填入 supabase-config.js");
     return;
   }
-  const form = new FormData(event.currentTarget);
+  const formElement = event.currentTarget;
+  const form = new FormData(formElement);
   const displayName = String(form.get("displayName")).trim() || "航线同学";
-  const { data, error } = await supabaseClient.auth.signUp({
-    email: String(form.get("email")).trim(),
-    password: String(form.get("password")),
-    options: {
-      data: { display_name: displayName },
-      emailRedirectTo: authRedirectUrl,
-    },
-  });
-  if (error) {
-    setAuthError(formatAuthError(error, "注册失败，验证邮件未能发送，请检查 SMTP 配置"));
-    return;
-  }
-  if (data.session) {
-    closeModal(authModal);
-    showToast("账户创建成功");
-  } else {
-    setAuthError("注册成功，请查收验证邮件后再登录。");
+  const email = String(form.get("email")).trim();
+  setAuthMessage("");
+  setFormBusy(formElement, true);
+  try {
+    const { data, error } = await supabaseClient.auth.signUp({
+      email,
+      password: String(form.get("password")),
+      options: {
+        data: { display_name: displayName },
+        emailRedirectTo: authRedirectUrl,
+      },
+    });
+    if (error) {
+      setAuthMessage(formatAuthError(error, "注册失败，验证邮件未能发送，请检查 SMTP 配置"));
+      return;
+    }
+    if (data.session) {
+      closeModal(authModal);
+      showToast("账户创建成功");
+    } else {
+      setAuthMessage("注册成功，请查收验证邮件后再登录。", "success");
+      startResendCooldown();
+    }
+  } catch (error) {
+    setAuthMessage(formatAuthError(error, "注册失败，验证邮件未能发送，请检查 SMTP 配置"));
+  } finally {
+    setFormBusy(formElement, false);
+    if (resendConfirmationButton.textContent !== "重新发送验证邮件") {
+      resendConfirmationButton.disabled = true;
+    }
   }
 }
 
 async function submitReset(event) {
   event.preventDefault();
   if (!supabaseClient) {
-    setAuthError("请先把 Supabase 的 Publishable key 填入 supabase-config.js");
+    setAuthMessage("请先把 Supabase 的 Publishable key 填入 supabase-config.js");
     return;
   }
-  const form = new FormData(event.currentTarget);
-  const { error } = await supabaseClient.auth.resetPasswordForEmail(String(form.get("email")).trim(), {
-    redirectTo: authRedirectUrl,
-  });
-  if (error) {
-    setAuthError(formatAuthError(error, "重置邮件发送失败，请检查 SMTP 配置"));
+  const formElement = event.currentTarget;
+  const form = new FormData(formElement);
+  setAuthMessage("");
+  setFormBusy(formElement, true);
+  try {
+    const { error } = await supabaseClient.auth.resetPasswordForEmail(String(form.get("email")).trim(), {
+      redirectTo: authRedirectUrl,
+    });
+    if (error) {
+      setAuthMessage(formatAuthError(error, "重置邮件发送失败，请检查 SMTP 配置"));
+      return;
+    }
+    setAuthMessage("重置邮件已发送，请检查邮箱。", "success");
+  } catch (error) {
+    setAuthMessage(formatAuthError(error, "重置邮件发送失败，请检查 SMTP 配置"));
+  } finally {
+    setFormBusy(formElement, false);
+  }
+}
+
+async function resendConfirmation() {
+  const email = String(document.querySelector("#registerForm [name='email']").value).trim();
+  if (!email) {
+    setAuthMessage("请先填写需要验证的邮箱。");
+    document.querySelector("#registerForm [name='email']").focus();
     return;
   }
-  setAuthError("重置邮件已发送，请检查邮箱。");
+  if (!supabaseClient) {
+    setAuthMessage("请先把 Supabase 的 Publishable key 填入 supabase-config.js");
+    return;
+  }
+  resendConfirmationButton.disabled = true;
+  resendConfirmationButton.textContent = "正在发送…";
+  setAuthMessage("");
+  try {
+    const { error } = await supabaseClient.auth.resend({
+      type: "signup",
+      email,
+      options: { emailRedirectTo: authRedirectUrl },
+    });
+    if (error) {
+      setAuthMessage(formatAuthError(error, "验证邮件发送失败，请稍后再试"));
+      resendConfirmationButton.disabled = false;
+      resendConfirmationButton.textContent = "重新发送验证邮件";
+      return;
+    }
+    setAuthMessage("验证邮件已重新发送，请检查收件箱和垃圾邮件。", "success");
+    startResendCooldown();
+  } catch (error) {
+    setAuthMessage(formatAuthError(error, "验证邮件发送失败，请稍后再试"));
+    resendConfirmationButton.disabled = false;
+    resendConfirmationButton.textContent = "重新发送验证邮件";
+  }
+}
+
+async function submitUpdatePassword(event) {
+  event.preventDefault();
+  const formElement = event.currentTarget;
+  const form = new FormData(formElement);
+  const password = String(form.get("password"));
+  if (password !== String(form.get("passwordConfirm"))) {
+    setAuthMessage("两次输入的密码不一致，请重新确认。");
+    return;
+  }
+  if (!supabaseClient) {
+    setAuthMessage("当前无法连接账户服务，请稍后重试。");
+    return;
+  }
+  setAuthMessage("");
+  setFormBusy(formElement, true);
+  try {
+    const { error } = await supabaseClient.auth.updateUser({ password });
+    if (error) {
+      setAuthMessage(formatAuthError(error, "密码更新失败，请重新打开恢复链接"));
+      return;
+    }
+    formElement.reset();
+    closeModal(authModal);
+    showToast("密码已更新，可以使用新密码登录");
+  } catch (error) {
+    setAuthMessage(formatAuthError(error, "密码更新失败，请重新打开恢复链接"));
+  } finally {
+    setFormBusy(formElement, false);
+  }
 }
 
 async function signOut() {
@@ -423,6 +562,8 @@ authTabs.forEach((tab) => tab.addEventListener("click", () => setAuthView(tab.da
 document.querySelector("#loginForm").addEventListener("submit", submitLogin);
 document.querySelector("#registerForm").addEventListener("submit", submitRegister);
 document.querySelector("#resetForm").addEventListener("submit", submitReset);
+document.querySelector("#updatePasswordForm").addEventListener("submit", submitUpdatePassword);
+resendConfirmationButton.addEventListener("click", resendConfirmation);
 
 document.querySelector("#viewAll").addEventListener("click", (event) => {
   const extraEvidence = [...document.querySelectorAll(".extra-evidence")];
@@ -509,8 +650,11 @@ setProfileUI(null);
 
 if (supabaseClient) {
   authHint.textContent = "你的账号数据将通过 Supabase 安全保存。";
-  supabaseClient.auth.onAuthStateChange((_event, session) => {
-    window.setTimeout(() => handleAuthSession(session), 0);
+  supabaseClient.auth.onAuthStateChange((event, session) => {
+    window.setTimeout(() => {
+      handleAuthSession(session);
+      if (event === "PASSWORD_RECOVERY") openAuthModal("update", null);
+    }, 0);
   });
   supabaseClient.auth.getSession().then(({ data }) => handleAuthSession(data.session));
 }
