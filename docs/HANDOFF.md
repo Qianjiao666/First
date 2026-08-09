@@ -28,7 +28,7 @@ GitHub 已完成推送：`11f3012 feat: add personalized planning and feedback`�
 
 不要将“本地功能完成”写成“线上完成”。发布包路径是 `deployment/MKJ.zip`；部署时仍然
 只复制 `index.html`、`styles.css`、`script.js`、`supabase-config.js` 和 `assets/`。
-当前 v0.3 压缩包 SHA-256：`B16F9F936EDC08908C91205F6214F40ADCF2C89D8165F41C66F7AF838890F945`。
+当前 v0.3 纯网页压缩包 SHA-256：`7387CFF2C8B78152B992BF3FBD901A10A066AD6FAA4E29AAD99C3A3B66975159`。
 
 大学数据源选定 `https://github.com/xioajiumi/Chinese_Universities`（MIT）。当前本地有
 离线索引，完整 582 校 CSV 下载被本机审批服务中断，详情见
