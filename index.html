@@ -3,321 +3,249 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="航线：把大学里的每一步，变成就业时拿得出来的证据。" />
-    <title>航线｜大学生就业确定性工作台</title>
-    <link rel="icon" href="data:," />
-    <link rel="stylesheet" href="./styles.css" />
+    <meta name="description" content="航线求职竞争力评估工具：用 3 分钟校准你的求职准备度，并获得下一步提升建议。" />
+    <title>航线｜别猜未来，现在就校准</title>
+    <link rel="stylesheet" href="/MKJ/styles.css" />
   </head>
   <body>
-    <div class="app-shell">
-      <header class="topbar">
-        <a class="brand" href="#" aria-label="航线首页">
-          <span class="brand-mark" aria-hidden="true">航</span>
-          <span>
-            <strong>航线</strong>
-            <small>career certainty lab</small>
-          </span>
+    <header class="mkj-header" id="mkj-header">
+      <div class="mkj-header-inner">
+        <a class="mkj-logo" href="#home" aria-label="航线首页">
+          <span class="mkj-logo-mark">航</span>
+          <span class="mkj-logo-copy"><strong>航线</strong><small>career calibration</small></span>
         </a>
-        <nav class="main-nav" aria-label="主导航">
-          <a class="active" href="#dashboard">我的航线</a>
-          <a href="#evidence">能力证据</a>
-          <a href="#roles">岗位地图</a>
-          <a href="#missions">任务中心</a>
-          <a href="#feedback">留言板</a>
+        <button class="mkj-menu-button" id="mkj-menu-button" type="button" aria-label="打开导航菜单" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+        <nav class="mkj-nav" id="mkj-nav" aria-label="主导航">
+          <a class="mkj-nav-link mkj-is-active" href="#home">首页</a>
+          <a class="mkj-nav-link" href="#assessment">评估工具</a>
+          <a class="mkj-nav-link" href="#testimonials">案例</a>
+          <a class="mkj-nav-link" href="#team">团队</a>
+          <a class="mkj-nav-link" href="#faq">FAQ</a>
+          <a class="mkj-nav-link" href="#contact">联系</a>
+          <button class="mkj-log-button" id="mkj-log-button" type="button" title="查看更新日志" aria-label="查看更新日志"><span aria-hidden="true">↻</span><b>更新日志</b></button>
+          <button class="mkj-account-button" id="mkj-account-button" type="button">登录 / 注册</button>
+          <a class="mkj-main-site-button" href="/">返回主站 <span aria-hidden="true">↗</span></a>
         </nav>
-        <div class="top-actions">
-          <button class="tool-button" id="themeButton" title="调整页面颜色" aria-label="调整页面颜色"><span class="theme-preview" aria-hidden="true"></span></button>
-          <button class="tool-button" id="changelogButton" title="查看更新日志" aria-label="查看更新日志">↻</button>
-          <button class="icon-button" title="查看通知" aria-label="查看通知">
-            <span class="notification-dot"></span>
-            ◌
-          </button>
-          <button class="profile-button" title="打开个人资料">
-            <span class="avatar" id="profileAvatar">访</span>
-            <span class="profile-copy"><strong id="profileName">登录 / 注册</strong><small id="profileMeta">访客模式</small></span>
-            <span aria-hidden="true">⌄</span>
-          </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="mkj-hero mkj-section" id="home">
+        <div class="mkj-container mkj-hero-grid">
+          <div class="mkj-hero-copy mkj-reveal">
+            <p class="mkj-kicker"><span class="mkj-kicker-dot"></span> 航线 CAREER CALIBRATION / 2026</p>
+            <h1>别猜未来，<span id="mkj-typewriter">现在就校准</span><i aria-hidden="true">_</i></h1>
+            <p class="mkj-hero-description">3 分钟测出你的求职短板，获取一份看得懂、做得到的专属提升方案。</p>
+            <div class="mkj-hero-actions">
+              <a class="mkj-button mkj-button-primary" href="#assessment">开始评估 <span aria-hidden="true">→</span></a>
+              <a class="mkj-button mkj-button-ghost" href="#features">了解更多 <span aria-hidden="true">↓</span></a>
+            </div>
+            <div class="mkj-hero-trust">
+              <div class="mkj-trust-avatars" aria-hidden="true"><span>林</span><span>周</span><span>陈</span><span>+</span></div>
+              <p><strong><span class="mkj-counter" data-count="12840">0</span>+</strong><span>人完成校准</span></p>
+            </div>
+          </div>
+          <div class="mkj-hero-visual mkj-reveal">
+            <div class="mkj-calibration-card">
+              <div class="mkj-card-topline"><span>YOUR SIGNAL / 01</span><span class="mkj-live-dot">LIVE</span></div>
+              <div class="mkj-score-orbit">
+                <div class="mkj-orbit-line mkj-orbit-line-one"></div>
+                <div class="mkj-orbit-line mkj-orbit-line-two"></div>
+                <div class="mkj-score-core"><small>当前准备度</small><strong>72</strong><span>/100</span></div>
+              </div>
+              <div class="mkj-card-status"><span class="mkj-status-check">✓</span><span><strong>可投递区间</strong><small>再补齐 2 项关键证据</small></span><b>+8</b></div>
+              <div class="mkj-card-scale"><span>起点</span><i><b></b></i><span>目标</span></div>
+            </div>
+            <div class="mkj-floating-note mkj-floating-note-top"><span>01</span><p>识别真实短板<br /><strong>而不是猜测</strong></p></div>
+            <div class="mkj-floating-note mkj-floating-note-bottom"><span>→</span><p>下一步行动<br /><strong>清晰可执行</strong></p></div>
+          </div>
         </div>
-      </header>
-
-      <main id="dashboard">
-        <section class="intro-row">
-          <div>
-            <p class="eyebrow">WEEK 12 · 2026 春季学期</p>
-            <h1>别猜未来，<em>现在就校准。</em></h1>
-            <p class="intro-copy">把想去的岗位拆成今天能完成的动作，把做过的事沉淀成面试时拿得出来的证据。</p>
-          </div>
-          <div class="week-note">
-            <span class="note-line"></span>
-            <p><strong>本周建议</strong><br />补齐一个真实项目的部署记录</p>
-            <button class="text-button" data-scroll="#missions">去完成 <span>↗</span></button>
-          </div>
-        </section>
-
-        <section class="dashboard-grid" aria-label="就业路径概览">
-          <article class="certainty-panel">
-            <div class="panel-heading">
-              <div>
-                <p class="eyebrow">就业确定性指数</p>
-                <h2>你离目标岗位还有多远？</h2>
-              </div>
-              <button class="more-button" title="查看指数说明" aria-label="查看指数说明">•••</button>
-            </div>
-            <div class="score-block">
-              <div class="score-number"><span id="score">72</span><small>/ 100</small></div>
-              <div class="score-status"><span class="status-dot"></span>高于同阶段 18%</div>
-            </div>
-            <div class="certainty-meter" aria-label="就业确定性指数 72 分">
-              <span style="width: 72%"></span>
-              <i class="meter-marker marker-25">入门</i>
-              <i class="meter-marker marker-50">可投递</i>
-              <i class="meter-marker marker-75">有竞争力</i>
-            </div>
-            <div class="signal-row">
-              <div><span class="signal-icon up">↗</span><strong>+8</strong><small>较上月</small></div>
-              <div><span class="signal-icon">◆</span><strong>4 / 6</strong><small>关键能力已具备</small></div>
-              <div><span class="signal-icon warm">!</span><strong>2 项</strong><small>需要优先补齐</small></div>
-            </div>
-          </article>
-
-          <article class="target-panel" id="roles">
-            <div class="panel-heading">
-              <div>
-                <p class="eyebrow">当前目标岗位</p>
-                <h2>前端开发工程师</h2>
-              </div>
-              <button class="edit-button" id="changeRole">更换目标 <span>↗</span></button>
-            </div>
-            <div class="role-meta"><span>校招</span><span>互联网 / 软件</span><span>上海 · 杭州</span></div>
-            <div class="role-line">
-              <div class="company-logos" aria-label="目标公司示例">
-                <span class="logo-logo">字</span><span class="logo-logo blue">B</span><span class="logo-logo dark">A</span><span class="logo-logo coral">小</span>
-              </div>
-              <p>已有 <strong>128</strong> 个相似岗位在招</p>
-            </div>
-            <div class="role-footer">
-              <div class="mini-progress"><span style="width: 68%"></span></div>
-              <span>目标画像完成度 68%</span>
-            </div>
-          </article>
-        </section>
-
-        <section class="content-grid">
-          <article class="evidence-panel" id="evidence">
-            <div class="section-heading">
-              <div>
-                <p class="eyebrow">能力证据</p>
-                <h2>你的优势，能被岗位看见吗？</h2>
-              </div>
-              <button class="text-button" id="viewAll">查看全部 <span>→</span></button>
-            </div>
-            <div class="evidence-list">
-              <div class="evidence-item">
-                <div class="evidence-label"><span class="rank">01</span><strong>工程基础</strong><small>HTML · CSS · JavaScript</small></div>
-                <div class="evidence-bar"><span style="width: 86%"></span></div><strong class="evidence-score">86</strong>
-              </div>
-              <div class="evidence-item">
-                <div class="evidence-label"><span class="rank">02</span><strong>框架能力</strong><small>React · 状态管理</small></div>
-                <div class="evidence-bar"><span style="width: 74%"></span></div><strong class="evidence-score">74</strong>
-              </div>
-              <div class="evidence-item warning">
-                <div class="evidence-label"><span class="rank">03</span><strong>真实项目</strong><small>部署 · 协作 · 复盘</small></div>
-                <div class="evidence-bar"><span style="width: 48%"></span></div><strong class="evidence-score">48</strong>
-              </div>
-              <div class="evidence-item">
-                <div class="evidence-label"><span class="rank">04</span><strong>表达与面试</strong><small>作品集 · 项目叙事</small></div>
-                <div class="evidence-bar"><span style="width: 61%"></span></div><strong class="evidence-score">61</strong>
-              </div>
-              <div class="evidence-item extra-evidence" hidden>
-                <div class="evidence-label"><span class="rank">05</span><strong>计算机基础</strong><small>数据结构 · 网络 · 操作系统</small></div>
-                <div class="evidence-bar"><span style="width: 57%"></span></div><strong class="evidence-score">57</strong>
-              </div>
-              <div class="evidence-item extra-evidence" hidden>
-                <div class="evidence-label"><span class="rank">06</span><strong>团队协作</strong><small>Git · Code Review · 沟通</small></div>
-                <div class="evidence-bar"><span style="width: 66%"></span></div><strong class="evidence-score">66</strong>
-              </div>
-            </div>
-            <div class="evidence-insight"><span>✦</span><p><strong>关键判断：</strong>你不是能力不足，而是“真实项目证据”还没有形成闭环。</p><button class="link-button" data-scroll="#missions">去补齐 →</button></div>
-          </article>
-
-          <article class="pulse-panel">
-            <div class="section-heading">
-              <div><p class="eyebrow">岗位脉搏</p><h2>市场正在寻找什么？</h2></div>
-              <span class="sample-label">示例数据</span>
-            </div>
-            <div class="pulse-chart" aria-label="岗位技能热度趋势图">
-              <div class="chart-labels"><span>近 90 天</span><span>需求热度</span></div>
-              <div class="chart-lines"><i></i><i></i><i></i><i></i></div>
-              <svg viewBox="0 0 520 150" role="img" aria-label="技能需求上升趋势">
-                <path class="chart-area" d="M0 127 C52 130 66 112 110 116 S168 104 210 109 S250 80 294 91 S341 82 376 88 S425 44 464 59 S493 36 520 19 L520 150 L0 150 Z"></path>
-                <path class="chart-path" d="M0 127 C52 130 66 112 110 116 S168 104 210 109 S250 80 294 91 S341 82 376 88 S425 44 464 59 S493 36 520 19"></path>
-                <circle cx="464" cy="59" r="5"></circle>
-              </svg>
-              <div class="chart-dates"><span>04.01</span><span>04.30</span><span>05.30</span><span>06.29</span></div>
-            </div>
-            <div class="hot-skills"><span>TypeScript <b>+26%</b></span><span>性能优化 <b>+18%</b></span><span>工程化 <b>+14%</b></span></div>
-          </article>
-        </section>
-
-        <section class="missions-section" id="missions">
-          <div class="section-heading">
-            <div><p class="eyebrow">下一步行动</p><h2>本周，把计划变成行动</h2></div>
-            <div class="mission-heading-actions"><div class="mission-count"><span id="missionCount">1</span> / <b id="missionTotal">3</b> 已完成</div><button class="compact-button" id="addMissionButton">＋ 自定义任务</button></div>
-          </div>
-          <div class="mission-list" id="missionList"></div>
-        </section>
-
-        <section class="feedback-section" id="feedback">
-          <div class="section-heading">
-            <div><p class="eyebrow">共同建设</p><h2>把你的想法留在航线上</h2></div>
-            <span class="feedback-status" id="feedbackStatus">登录后可留言</span>
-          </div>
-          <div class="feedback-layout">
-            <form class="feedback-form" id="feedbackForm">
-              <label for="feedbackContent">想法或建议</label>
-              <textarea id="feedbackContent" name="content" minlength="2" maxlength="500" rows="5" placeholder="例如：希望增加简历版本管理功能" required></textarea>
-              <div class="feedback-form-footer"><span id="feedbackCounter">0 / 500</span><button class="primary-button" type="submit">发布留言</button></div>
-            </form>
-            <div class="feedback-board" id="feedbackBoard" aria-live="polite"><p class="empty-state">登录后即可查看并发布留言。</p></div>
-          </div>
-        </section>
-      </main>
-
-      <footer class="footer"><span>航线 · 你的大学就业确定性工作台</span><span>示例内容更新于 2026 春季学期</span></footer>
-    </div>
-    <nav class="mobile-nav" aria-label="移动端主导航">
-      <a class="active" href="#dashboard"><span aria-hidden="true">⌂</span><small>航线</small></a>
-      <a href="#evidence"><span aria-hidden="true">◇</span><small>证据</small></a>
-      <a href="#roles"><span aria-hidden="true">⌖</span><small>岗位</small></a>
-      <a href="#missions"><span aria-hidden="true">✓</span><small>任务</small></a>
-      <a href="#feedback"><span aria-hidden="true">＋</span><small>留言</small></a>
-    </nav>
-    <div class="popover theme-menu" id="themeMenu" hidden>
-      <div class="popover-heading"><strong>页面颜色</strong><span>自动保存</span></div>
-      <div class="theme-swatches" id="themeSwatches" role="group" aria-label="背景颜色预设"></div>
-      <label class="color-control"><span>自定义背景</span><input type="color" id="canvasColor" value="#f5f5f7" /></label>
-      <label class="color-control"><span>强调颜色</span><input type="color" id="accentColor" value="#0071e3" /></label>
-      <button class="popover-link" id="resetTheme">恢复默认 <span>↺</span></button>
-    </div>
-    <div class="popover notification-menu" id="notificationMenu" hidden>
-      <div class="popover-heading"><strong>通知</strong><span>2 条新动态</span></div>
-      <button class="popover-item" data-notification>
-        <span class="popover-icon blue-icon">↗</span>
-        <span><strong>岗位画像更新了</strong><small>前端岗位新增「性能优化」要求</small></span>
-      </button>
-      <button class="popover-item" data-notification>
-        <span class="popover-icon green-icon">✓</span>
-        <span><strong>本周任务有新进展</strong><small>你的确定性指数较上月提升 8 分</small></span>
-      </button>
-    </div>
-    <div class="popover profile-menu" id="profileMenu" hidden>
-      <div class="profile-menu-user"><span class="avatar" id="menuProfileAvatar">访</span><span><strong id="menuProfileName">登录 / 注册</strong><small id="menuProfileMeta">访客模式</small></span></div>
-      <button class="popover-link" data-profile-action="profile">学历资料 <span>→</span></button>
-      <button class="popover-link" data-profile-action="settings">页面颜色 <span>→</span></button>
-      <button class="popover-link" id="accountAction" data-profile-action="logout">登录账户 <span>→</span></button>
-    </div>
-    <div class="modal-backdrop" id="roleModal" hidden>
-      <section class="modal" role="dialog" aria-modal="true" aria-labelledby="roleModalTitle">
-        <button class="modal-close" data-close-modal aria-label="关闭岗位选择">×</button>
-        <p class="eyebrow">选择你的下一站</p>
-        <h2 id="roleModalTitle">你想把哪一个岗位变成目标？</h2>
-        <p class="modal-copy">从更多方向中搜索目标，航线会同步调整岗位画像与能力指数。</p>
-        <label class="search-field"><span>搜索岗位</span><input id="roleSearch" type="search" placeholder="输入岗位名称或技能" autocomplete="off" /></label>
-        <div class="role-categories" id="roleCategories" aria-label="岗位分类"></div>
-        <div class="role-options" id="roleOptions"></div>
-        <button class="primary-button" id="confirmRole">确认目标岗位</button>
+        <div class="mkj-hero-rule" aria-hidden="true"><span></span><small>SCROLL TO CALIBRATE</small><span></span></div>
       </section>
-    </div>
-    <div class="modal-backdrop" id="educationModal" hidden>
-      <section class="modal education-modal" role="dialog" aria-modal="true" aria-labelledby="educationModalTitle">
-        <button class="modal-close" data-close-modal aria-label="关闭学历资料">×</button>
-        <p class="eyebrow">学习经历</p>
-        <h2 id="educationModalTitle">记录你的学历与学校</h2>
-        <p class="modal-copy">学校名称来自开源中国大学数据集，也可以填写列表外的学校。</p>
-        <form class="education-form" id="educationForm">
-          <label>最高学历<select name="degree"><option value="专科">专科</option><option value="本科" selected>本科</option><option value="硕士">硕士</option><option value="博士">博士</option><option value="其他">其他</option></select></label>
-          <label class="school-field">本科学校<input name="undergraduate" type="search" maxlength="80" autocomplete="off" placeholder="搜索或填写学校" /><span class="school-results" data-school-results="undergraduate" hidden></span></label>
-          <label class="school-field">硕士学校<input name="master" type="search" maxlength="80" autocomplete="off" placeholder="未就读可留空" /><span class="school-results" data-school-results="master" hidden></span></label>
-          <label class="school-field">博士学校<input name="doctor" type="search" maxlength="80" autocomplete="off" placeholder="未就读可留空" /><span class="school-results" data-school-results="doctor" hidden></span></label>
-          <button class="primary-button" type="submit">保存学习经历</button>
-        </form>
-        <p class="data-credit">大学数据：xioajiumi/Chinese_Universities · MIT License</p>
+
+      <section class="mkj-section mkj-section-muted" id="features">
+        <div class="mkj-container">
+          <div class="mkj-section-intro mkj-reveal">
+            <p class="mkj-kicker">WHY 航线 / 为什么是校准</p>
+            <h2>让每一次准备，<br /><em>都指向更确定的机会。</em></h2>
+            <p>我们把模糊的“我还不够好”，拆成能被观察、能被训练、能被证明的具体信号。</p>
+          </div>
+          <div class="mkj-feature-grid">
+            <article class="mkj-feature-card mkj-reveal"><span class="mkj-feature-index">01</span><div class="mkj-icon-box">⌁</div><h3>多维能力测评</h3><p>从专业基础到职业规划，六个维度一起看见你的准备状态。</p><a href="#assessment">查看评估 <span>→</span></a></article>
+            <article class="mkj-feature-card mkj-reveal"><span class="mkj-feature-index">02</span><div class="mkj-icon-box">◌</div><h3>个性化报告</h3><p>结果不止一个分数，更会告诉你当前最值得投入的那一小时。</p><a href="#assessment">看报告样例 <span>→</span></a></article>
+            <article class="mkj-feature-card mkj-reveal"><span class="mkj-feature-index">03</span><div class="mkj-icon-box">↗</div><h3>专家建议</h3><p>将能力缺口翻译成课程、文章和行动清单，今天就能开始。</p><a href="#articles">阅读建议 <span>→</span></a></article>
+          </div>
+        </div>
       </section>
-    </div>
-    <div class="modal-backdrop" id="missionModal" hidden>
-      <section class="modal" role="dialog" aria-modal="true" aria-labelledby="missionModalTitle">
-        <button class="modal-close" data-close-modal aria-label="关闭自定义任务">×</button>
-        <p class="eyebrow">自主计划</p>
-        <h2 id="missionModalTitle">添加一项自己的任务</h2>
-        <form class="mission-form" id="missionForm">
-          <label>任务名称<input name="title" maxlength="60" required placeholder="例如：完成一次模拟面试" /></label>
-          <label>任务说明<textarea name="detail" maxlength="180" rows="3" placeholder="写下完成标准"></textarea></label>
-          <label>预计用时（分钟）<input name="duration" type="number" min="5" max="600" step="5" value="30" required /></label>
-          <button class="primary-button" type="submit">添加到本周</button>
-        </form>
+
+      <section class="mkj-section mkj-assessment-section" id="assessment">
+        <div class="mkj-container">
+          <div class="mkj-section-intro mkj-assessment-intro mkj-reveal">
+            <p class="mkj-kicker">ASSESSMENT / 01</p>
+            <h2>立即校准你的竞争力</h2>
+            <p>凭第一反应作答，不用准备标准答案。真实的选择，比漂亮的答案更有参考价值。</p>
+          </div>
+          <div class="mkj-assessment-shell mkj-reveal" id="mkj-assessment-shell">
+            <div class="mkj-assessment-progress">
+              <div><span id="mkj-question-label">QUESTION 01</span><strong><span id="mkj-current-step">1</span> / <span id="mkj-total-step">10</span></strong></div>
+              <div class="mkj-progress-track"><span id="mkj-progress-bar"></span></div>
+            </div>
+            <div class="mkj-question-stage" id="mkj-question-stage">
+              <div class="mkj-question-copy"><span class="mkj-question-dimension" id="mkj-question-dimension">专业技能</span><h3 id="mkj-question-title"></h3><p id="mkj-question-helper"></p></div>
+              <div class="mkj-options" id="mkj-options" role="list"></div>
+            </div>
+            <div class="mkj-assessment-footer"><button class="mkj-text-button" id="mkj-prev-button" type="button" disabled>← 上一题</button><span id="mkj-assessment-hint">选择后自动进入下一题</span><span class="mkj-keyboard-hint">可用键盘 1–4 选择</span></div>
+          </div>
+
+          <div class="mkj-report" id="mkj-report" hidden>
+            <div class="mkj-report-heading mkj-reveal"><div><p class="mkj-kicker">YOUR REPORT / 评估结果</p><h2>你的能力信号，已经浮出水面。</h2><p>这不是标签，是下一阶段的起点。先把最值得补齐的地方做好。</p></div><button class="mkj-button mkj-button-ghost mkj-restart-button" id="mkj-restart-button" type="button">重新评估 ↻</button></div>
+            <div class="mkj-report-grid">
+              <article class="mkj-report-card mkj-radar-card mkj-reveal"><div class="mkj-report-card-head"><div><span class="mkj-card-label">能力六维</span><h3>你的竞争力雷达</h3></div><span class="mkj-report-chip">LIVE SCORE</span></div><canvas id="mkj-radar-canvas" width="560" height="460" aria-label="能力六维雷达图"></canvas><div class="mkj-radar-legend"><span><i></i>当前能力</span><span><i></i>建议目标</span></div></article>
+              <article class="mkj-report-card mkj-score-card mkj-reveal"><span class="mkj-card-label">OVERALL SCORE</span><div class="mkj-report-score"><strong id="mkj-report-score">0</strong><span>/100</span></div><div class="mkj-level"><span id="mkj-report-level">白银</span><p id="mkj-report-summary"></p></div><div class="mkj-score-divider"></div><div class="mkj-mini-metrics"><div><span>最强维度</span><strong id="mkj-strongest">—</strong></div><div><span>优先补齐</span><strong id="mkj-weakest">—</strong></div></div><button class="mkj-button mkj-button-primary mkj-full-button" id="mkj-card-button" type="button">生成我的能力名片 <span>→</span></button></article>
+            </div>
+            <article class="mkj-recommendation-card mkj-reveal"><div class="mkj-recommendation-head"><div><span class="mkj-card-label">NEXT MOVES</span><h3>给你的 3 条提升建议</h3></div><p>从最薄弱的信号开始，投入才会有回音。</p></div><div class="mkj-recommendations" id="mkj-recommendations"></div></article>
+          </div>
+        </div>
       </section>
-    </div>
-    <div class="modal-backdrop" id="changelogModal" hidden>
-      <section class="modal changelog-modal" role="dialog" aria-modal="true" aria-labelledby="changelogModalTitle">
-        <button class="modal-close" data-close-modal aria-label="关闭更新日志">×</button>
-        <p class="eyebrow">更新日志</p>
-        <h2 id="changelogModalTitle">航线正在持续完善</h2>
-        <div class="changelog-list">
-          <article><time>2026.08.09 · v0.3</time><strong>个性化与共建</strong><p>新增多色主题、更多目标岗位、学历学校、自定义任务、更新日志和用户留言板。</p></article>
-          <article><time>2026.08.09 · v0.2</time><strong>账户体验升级</strong><p>优化注册、邮件验证、密码找回、移动端导航与本地静态资源。</p></article>
-          <article><time>2026.08.08 · v0.1</time><strong>航线工作台上线</strong><p>完成就业指数、能力证据、岗位画像和 Supabase 进度同步。</p></article>
+
+      <section class="mkj-section mkj-stats-section" id="stats">
+        <div class="mkj-container">
+          <div class="mkj-stats-lead mkj-reveal"><p class="mkj-kicker">SIGNALS / 02</p><h2>已经有很多人<br /><em>开始用数据准备。</em></h2></div>
+          <div class="mkj-stats-grid">
+            <div class="mkj-stat-item mkj-reveal"><strong><span class="mkj-counter" data-count="126">0</span></strong><span>服务企业数</span><small>持续合作中</small></div>
+            <div class="mkj-stat-item mkj-reveal"><strong><span class="mkj-counter" data-count="38600">0</span>+</strong><span>评估总人次</span><small>来自真实求职者</small></div>
+            <div class="mkj-stat-item mkj-reveal"><strong><span class="mkj-counter" data-count="98">0</span><b>%</b></strong><span>用户好评率</span><small>最近 90 天</small></div>
+            <div class="mkj-stat-item mkj-reveal"><strong><span class="mkj-counter" data-count="23">0</span><b>%</b></strong><span>平均提分幅度</span><small>完成行动计划后</small></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="mkj-section mkj-testimonials-section" id="testimonials">
+        <div class="mkj-container">
+          <div class="mkj-section-intro mkj-reveal"><p class="mkj-kicker">REAL STORIES / 用户反馈</p><h2>校准之后，<em>他们更敢投了。</em></h2><p>结果没有替他们做决定，但让下一步变得具体。</p></div>
+          <div class="mkj-carousel-wrap mkj-reveal"><button class="mkj-carousel-arrow mkj-carousel-prev" id="mkj-carousel-prev" type="button" aria-label="上一条评价">←</button><div class="mkj-carousel-viewport"><div class="mkj-testimonial-track" id="mkj-testimonial-track"></div></div><button class="mkj-carousel-arrow mkj-carousel-next" id="mkj-carousel-next" type="button" aria-label="下一条评价">→</button></div>
+          <div class="mkj-carousel-dots" id="mkj-carousel-dots" aria-label="评价轮播导航"></div>
+        </div>
+      </section>
+
+      <section class="mkj-section mkj-faq-section" id="faq">
+        <div class="mkj-container mkj-faq-layout">
+          <div class="mkj-section-intro mkj-reveal"><p class="mkj-kicker">FAQ / 常见问题</p><h2>先把疑问<br /><em>放在这里。</em></h2><p>还有没找到的答案？<a href="#contact">直接联系我们。</a></p></div>
+          <div class="mkj-faq-list mkj-reveal" id="mkj-faq-list"></div>
+        </div>
+      </section>
+
+      <section class="mkj-section mkj-team-section" id="team">
+        <div class="mkj-container">
+          <div class="mkj-section-intro mkj-reveal"><p class="mkj-kicker">THE CALIBRATION TEAM / 关于我们</p><h2>我们关心的不是<br /><em>你像谁，而是你要去哪。</em></h2></div>
+          <div class="mkj-team-grid">
+            <article class="mkj-team-card mkj-reveal"><div class="mkj-team-avatar mkj-avatar-blue">许</div><div><h3>许知远</h3><p>职业发展顾问</p><span>把 10 年校招面试经验，整理成可练习的方法。</span></div></article>
+            <article class="mkj-team-card mkj-reveal"><div class="mkj-team-avatar mkj-avatar-ink">沈</div><div><h3>沈一舟</h3><p>测评产品负责人</p><span>让每个复杂的选择，都有一条清晰的反馈路径。</span></div></article>
+            <article class="mkj-team-card mkj-reveal"><div class="mkj-team-avatar mkj-avatar-mint">林</div><div><h3>林嘉禾</h3><p>学习方案设计师</p><span>帮助你把“应该学习”，变成“今天学什么”。</span></div></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="mkj-section mkj-articles-section" id="articles">
+        <div class="mkj-container">
+          <div class="mkj-articles-heading mkj-reveal"><div><p class="mkj-kicker">LATEST NOTES / 最新文章</p><h2>给行动一点<br /><em>更好的参考。</em></h2></div><a class="mkj-text-link" href="#articles">查看全部文章 →</a></div>
+          <div class="mkj-articles-grid">
+            <article class="mkj-article-card mkj-reveal"><span>面试表达 · 06.28</span><h3>不是话说得多，而是让面试官更快看见你的证据</h3><a href="#articles">阅读文章 →</a></article>
+            <article class="mkj-article-card mkj-reveal"><span>职业规划 · 06.20</span><h3>当你不知道选什么岗位，先问自己三个问题</h3><a href="#articles">阅读文章 →</a></article>
+            <article class="mkj-article-card mkj-reveal"><span>简历方法 · 06.12</span><h3>把做过的项目，写成一段能被记住的经历</h3><a href="#articles">阅读文章 →</a></article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="mkj-footer" id="contact">
+      <div class="mkj-container">
+        <div class="mkj-footer-grid">
+          <div class="mkj-footer-brand"><a class="mkj-logo" href="#home"><span class="mkj-logo-mark">航</span><span class="mkj-logo-copy"><strong>航线</strong><small>career calibration</small></span></a><p>别猜未来，现在就校准。<br />给每一次求职准备一个可行动的方向。</p></div>
+          <div class="mkj-footer-column"><h3>快速链接</h3><a href="#assessment">评估工具</a><a href="#testimonials">成功案例</a><a href="#team">关于我们</a><a href="#faq">常见问题</a></div>
+          <div class="mkj-footer-column"><h3>联系我们</h3><a href="mailto:hello@mkj-career.com">hello@mkj-career.com</a><a href="tel:400-888-2026">400-888-2026</a><span>上海市静安区愚园路 88 号</span></div>
+        </div>
+        <div class="mkj-footer-bottom"><span>© 2026 航线 - 别猜未来，现在就校准</span><button class="mkj-back-top" id="mkj-back-top" type="button">返回顶部 ↑</button></div>
+      </div>
+    </footer>
+
+    <button class="mkj-support-button" id="mkj-support-button" type="button" aria-label="打开客服快捷入口" aria-expanded="false"><span class="mkj-support-pulse"></span><span class="mkj-support-icon">?</span></button>
+    <div class="mkj-support-menu" id="mkj-support-menu" hidden><a href="tel:400-888-2026"><span>☎</span>电话咨询</a><a href="#contact"><span>◉</span>微信客服</a><a href="mailto:hello@mkj-career.com"><span>✉</span>邮件留言</a></div>
+
+    <div class="mkj-modal-backdrop" id="mkj-changelog-modal" hidden>
+      <section class="mkj-modal mkj-changelog-modal" role="dialog" aria-modal="true" aria-labelledby="mkj-changelog-title">
+        <button class="mkj-modal-close" data-mkj-close-modal type="button" aria-label="关闭更新日志">×</button>
+        <span class="mkj-modal-mark">更新日志 / CHANGELOG</span>
+        <h2 id="mkj-changelog-title">航线正在持续完善</h2>
+        <div class="mkj-changelog-list">
+          <article class="mkj-changelog-entry"><time>2026.08.10 · v0.4</time><strong>竞争力评估升级</strong><p>新增 10 题渐进评估、能力雷达、个性化建议、能力名片、内容模块和客服入口，同时保留航线账户。</p></article>
+          <article class="mkj-changelog-entry"><time>2026.08.09 · v0.3</time><strong>个性化与共建</strong><p>新增多色主题、更多目标岗位、学历学校、自定义任务、更新日志和用户留言板。</p></article>
+          <article class="mkj-changelog-entry"><time>2026.08.09 · v0.2</time><strong>账户体验升级</strong><p>优化注册、邮件验证、密码找回、移动端导航与本地静态资源。</p></article>
+          <article class="mkj-changelog-entry"><time>2026.08.08 · v0.1</time><strong>航线工作台上线</strong><p>完成就业指数、能力证据、岗位画像和 Supabase 进度同步。</p></article>
         </div>
       </section>
     </div>
-    <div class="modal-backdrop" id="infoModal" hidden>
-      <section class="modal info-modal" role="dialog" aria-modal="true" aria-labelledby="infoModalTitle">
-        <button class="modal-close" data-close-modal aria-label="关闭指数说明">×</button>
-        <p class="eyebrow">指数说明</p>
-        <h2 id="infoModalTitle">就业确定性指数，不是给你贴标签。</h2>
-        <p class="modal-copy">它把目标岗位拆成可验证的能力，再结合你的项目、作品和行动记录，告诉你下一件最值得做的事。</p>
-        <div class="info-points"><div><strong>01</strong><span>能力匹配</span></div><div><strong>02</strong><span>证据完整度</span></div><div><strong>03</strong><span>行动连续性</span></div></div>
-        <button class="secondary-button" data-close-modal>知道了</button>
-      </section>
-    </div>
-    <div class="modal-backdrop" id="authModal" hidden>
-      <section class="modal auth-modal" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
-        <button class="modal-close" data-close-modal aria-label="关闭登录窗口">×</button>
-        <p class="eyebrow">航线账户</p>
-        <h2 id="authModalTitle">把你的进度，带到每一次打开。</h2>
-        <p class="modal-copy">注册后，目标岗位和任务记录会安全保存到你的账户。</p>
-        <div class="auth-tabs" role="tablist" aria-label="账户操作">
-          <button class="auth-tab active" type="button" data-auth-view="login" role="tab" aria-selected="true">登录</button>
-          <button class="auth-tab" type="button" data-auth-view="register" role="tab" aria-selected="false">注册</button>
-          <button class="auth-tab" type="button" data-auth-view="reset" role="tab" aria-selected="false">找回密码</button>
+
+    <div class="mkj-modal-backdrop" id="mkj-auth-modal" hidden>
+      <section class="mkj-modal mkj-auth-modal" role="dialog" aria-modal="true" aria-labelledby="mkj-auth-title">
+        <button class="mkj-modal-close" data-mkj-close-modal type="button" aria-label="关闭账户窗口">×</button>
+        <span class="mkj-modal-mark">航线账户 / ACCOUNT</span>
+        <h2 id="mkj-auth-title">把你的进度，带到每一次打开。</h2>
+        <p id="mkj-auth-copy">注册后，评估记录与个性化建议会安全保存在你的账户。</p>
+        <div class="mkj-auth-session" id="mkj-auth-session" hidden>
+          <div class="mkj-auth-session-avatar" id="mkj-auth-session-avatar">航</div>
+          <div><strong id="mkj-auth-session-name">航线同学</strong><span id="mkj-auth-session-email"></span></div>
+          <button class="mkj-auth-secondary" id="mkj-auth-logout" type="button">退出登录</button>
         </div>
-        <form class="auth-form" id="loginForm" data-auth-form="login">
+        <div class="mkj-auth-tabs" id="mkj-auth-tabs" role="tablist" aria-label="账户操作">
+          <button class="mkj-auth-tab mkj-is-active" type="button" data-mkj-auth-view="login" role="tab" aria-selected="true">登录</button>
+          <button class="mkj-auth-tab" type="button" data-mkj-auth-view="register" role="tab" aria-selected="false">注册</button>
+          <button class="mkj-auth-tab" type="button" data-mkj-auth-view="reset" role="tab" aria-selected="false">找回密码</button>
+        </div>
+        <form class="mkj-auth-form" id="mkj-login-form" data-mkj-auth-form="login">
           <label>邮箱<input name="email" type="email" autocomplete="email" placeholder="you@example.com" required /></label>
           <label>密码<input name="password" type="password" autocomplete="current-password" placeholder="至少 6 位" required /></label>
-          <button class="primary-button" type="submit" data-idle-label="登录航线" data-busy-label="正在登录…">登录航线</button>
+          <button class="mkj-button mkj-button-primary mkj-full-button" type="submit" data-mkj-idle-label="登录航线" data-mkj-busy-label="正在登录…">登录航线</button>
         </form>
-        <form class="auth-form" id="registerForm" data-auth-form="register" hidden>
-          <label>你的称呼<input name="displayName" type="text" autocomplete="name" placeholder="例如：林同学" maxlength="30" /></label>
+        <form class="mkj-auth-form" id="mkj-register-form" data-mkj-auth-form="register" hidden>
+          <label>你的称呼<input name="displayName" type="text" autocomplete="name" maxlength="30" placeholder="例如：林同学" /></label>
           <label>邮箱<input name="email" type="email" autocomplete="email" placeholder="you@example.com" required /></label>
-          <label>密码<input name="password" type="password" autocomplete="new-password" placeholder="至少 6 位" minlength="6" required /></label>
-          <button class="primary-button" type="submit" data-idle-label="创建账户" data-busy-label="正在创建…">创建账户</button>
-          <button class="resend-button" id="resendConfirmation" type="button">重新发送验证邮件</button>
+          <label>密码<input name="password" type="password" autocomplete="new-password" minlength="6" placeholder="至少 6 位" required /></label>
+          <button class="mkj-button mkj-button-primary mkj-full-button" type="submit" data-mkj-idle-label="创建账户" data-mkj-busy-label="正在创建…">创建账户</button>
+          <button class="mkj-auth-secondary mkj-auth-resend" id="mkj-resend-confirmation" type="button">重新发送验证邮件</button>
         </form>
-        <form class="auth-form" id="resetForm" data-auth-form="reset" hidden>
+        <form class="mkj-auth-form" id="mkj-reset-form" data-mkj-auth-form="reset" hidden>
           <label>注册邮箱<input name="email" type="email" autocomplete="email" placeholder="you@example.com" required /></label>
-          <button class="primary-button" type="submit" data-idle-label="发送重置邮件" data-busy-label="正在发送…">发送重置邮件</button>
+          <button class="mkj-button mkj-button-primary mkj-full-button" type="submit" data-mkj-idle-label="发送重置邮件" data-mkj-busy-label="正在发送…">发送重置邮件</button>
         </form>
-        <form class="auth-form" id="updatePasswordForm" data-auth-form="update" hidden>
-          <label>新密码<input name="password" type="password" autocomplete="new-password" placeholder="至少 6 位" minlength="6" required /></label>
-          <label>再次输入新密码<input name="passwordConfirm" type="password" autocomplete="new-password" placeholder="再次输入新密码" minlength="6" required /></label>
-          <button class="primary-button" type="submit" data-idle-label="保存新密码" data-busy-label="正在保存…">保存新密码</button>
+        <form class="mkj-auth-form" id="mkj-update-password-form" data-mkj-auth-form="update" hidden>
+          <label>新密码<input name="password" type="password" autocomplete="new-password" minlength="6" placeholder="至少 6 位" required /></label>
+          <label>再次输入新密码<input name="passwordConfirm" type="password" autocomplete="new-password" minlength="6" placeholder="再次输入新密码" required /></label>
+          <button class="mkj-button mkj-button-primary mkj-full-button" type="submit" data-mkj-idle-label="保存新密码" data-mkj-busy-label="正在保存…">保存新密码</button>
         </form>
-        <p class="auth-hint" id="authHint">当前未配置公开密钥，网页仍可使用本地演示模式。</p>
-        <p class="auth-message" id="authMessage" role="status" aria-live="polite" hidden></p>
+        <p class="mkj-auth-hint" id="mkj-auth-hint">账户数据将通过 Supabase 安全保存。</p>
+        <p class="mkj-auth-message" id="mkj-auth-message" role="status" aria-live="polite" hidden></p>
       </section>
     </div>
-    <div class="toast" id="toast" role="status"></div>
-    <script src="./assets/vendor/supabase-2.111.0.js"></script>
-    <script src="./supabase-config.js"></script>
-    <script src="./script.js"></script>
+
+    <div class="mkj-modal-backdrop" id="mkj-benefit-modal" hidden>
+      <section class="mkj-modal" role="dialog" aria-modal="true" aria-labelledby="mkj-benefit-title">
+        <button class="mkj-modal-close" data-mkj-close-modal type="button" aria-label="关闭弹窗">×</button>
+        <span class="mkj-modal-mark">FREE PACK / 资料包</span><h2 id="mkj-benefit-title">免费领取面经资料包</h2><p>把今天的评估结果带走，再用一套高频面经把短板练成底气。</p>
+        <form id="mkj-benefit-form"><label>姓名<input name="name" required maxlength="30" placeholder="怎么称呼你？" /></label><label>邮箱<input name="email" type="email" required placeholder="用于接收资料包" /></label><button class="mkj-button mkj-button-primary mkj-full-button" type="submit">领取资料包 →</button></form><p class="mkj-form-note" id="mkj-benefit-note" aria-live="polite"></p>
+      </section>
+    </div>
+
+    <div class="mkj-modal-backdrop" id="mkj-card-modal" hidden>
+      <section class="mkj-modal mkj-card-modal" role="dialog" aria-modal="true" aria-labelledby="mkj-card-title">
+        <button class="mkj-modal-close" data-mkj-close-modal type="button" aria-label="关闭弹窗">×</button><span class="mkj-modal-mark">ABILITY CARD / 能力名片</span><h2 id="mkj-card-title">你的能力名片</h2><canvas id="mkj-card-canvas" width="900" height="1125" aria-label="能力名片预览"></canvas><button class="mkj-button mkj-button-primary mkj-full-button" id="mkj-download-card" type="button">下载能力名片 ↓</button><p class="mkj-form-note">保存图片后即可截图分享给朋友或导师。</p>
+      </section>
+    </div>
+
+    <script src="/MKJ/assets/vendor/supabase-2.111.0.js"></script>
+    <script src="/MKJ/supabase-config.js"></script>
+    <script src="/MKJ/script.js"></script>
   </body>
 </html>
