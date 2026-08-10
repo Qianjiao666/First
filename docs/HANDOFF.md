@@ -1,6 +1,6 @@
 # 航线 MKJ 项目接手文档
 
-更新时间：2026-08-09
+更新时间：2026-08-10
 
 ## 0. v0.3 最新接手状态
 
@@ -27,10 +27,13 @@ Supabase 最新 `schema.sql` 已执行：`profiles.education` 可通过 Data API
 GitHub `main` 已包含功能提交 `11f3012 feat: add personalized planning and feedback` 及后续
 部署文档更新。发布包路径是 `deployment/MKJ.zip`；部署时仍然
 只复制 `index.html`、`styles.css`、`script.js`、`supabase-config.js` 和 `assets/`。
-当前 v0.3 纯网页压缩包 SHA-256：`7387CFF2C8B78152B992BF3FBD901A10A066AD6FAA4E29AAD99C3A3B66975159`。
+原 v0.3 纯网页压缩包 SHA-256：`7387CFF2C8B78152B992BF3FBD901A10A066AD6FAA4E29AAD99C3A3B66975159`。
+2026-08-10 已补全 582 校离线索引并重建待发布包，新的本地发布包 SHA-256 为
+`5E889FEE0A0FE7658446A9242BF400FD5B764B952C236CE78EF935CC496A30E2`；582 校索引已部署，
+线上与本地索引 SHA-256 均为 `829BE346D742908F6791D65EF1F9775919D7A1BC98E2374535A0F481D2814A4F`。
 
-大学数据源选定 `https://github.com/xioajiumi/Chinese_Universities`（MIT）。当前本地有
-离线索引，完整 582 校 CSV 下载被本机审批服务中断，详情见
+大学数据源选定 `https://github.com/xioajiumi/Chinese_Universities`（MIT）。当前本地已生成
+包含 582 个唯一学校名称的离线索引，详情见
 `assets/data/UNIVERSITY_DATA_SOURCE.md`。
 
 ## 1. 新对话先做什么
@@ -51,7 +54,7 @@ D:\桌面文件\任务
 2. 在 `deployment/github-sync` 检查 `git status` 和最新提交。
 3. 验证线上 MKJ 是否仍与 v0.3 功能提交 `11f3012` 对应文件及 `assets/` 一致。
 4. 后续若需重新部署，只更新 Lighthouse `/var/www/MKJ`，不要改主站 Nginx 根路由。
-5. 在 Supabase Auth Logs 定位 Gmail SMTP 的服务端错误。
+5. Gmail SMTP、验证回跳和找回密码邮件已完成用户验收；后续只需日常观察。
 6. 完成 QQ/163 邮箱投递、密码恢复和云端状态持久化验收。
 
 ## 2. 项目与边界
@@ -95,7 +98,7 @@ Supabase Auth       注册、登录、验证邮件、找回密码、会话保持
 Supabase Postgres   profiles、career_progress、feedback_messages
 RLS                 私有资料只归本人；留言仅登录可读写且只能删除自己的内容
 localStorage        未登录演示模式
-离线数据            assets/data/chinese-universities.json（当前 134 校）
+离线数据            assets/data/chinese-universities.json（本地与线上均为 582 校）
 ```
 
 数据库脚本：
@@ -153,7 +156,7 @@ backups/MKJ-2026-08-09-v0.3/
 ```text
 D:\桌面文件\任务\deployment\MKJ-v0.3-web\
 D:\桌面文件\任务\deployment\MKJ.zip
-SHA-256 7387CFF2C8B78152B992BF3FBD901A10A066AD6FAA4E29AAD99C3A3B66975159
+SHA-256 5E889FEE0A0FE7658446A9242BF400FD5B764B952C236CE78EF935CC496A30E2
 ```
 
 `MKJ-v0.3-web` 是解压后的纯网页目录；`MKJ.zip` 是同内容上传包。两者均只包含可部署文件。
@@ -170,7 +173,7 @@ assets/
 
 ### 线上版本
 
-v0.3 已部署。正式站、大学数据文件与主站均返回 HTTP 200；线上三个核心文件哈希与本地源码一致。线上 Playwright 四尺寸验收通过，控制台 0 错误。
+原 v0.3 已部署。2026-08-10 线上首页、主站和核心静态文件均可访问；582 校索引已部署并与本地哈希一致。Playwright 四尺寸验收通过，控制台 0 错误。
 
 ### Supabase 与邮件
 
@@ -186,7 +189,7 @@ v0.3 已部署。正式站、大学数据文件与主站均返回 HTTP 200；线
 当前阻塞：
 
 - Gmail SMTP 发送验证邮件仍可能失败，QQ/163 投递尚未最终验收。
-- 必须从 Supabase Dashboard 的 Logs -> Auth Logs 获取最新服务端错误。
+- Auth Logs 已记录 `/signup | request completed`，用户确认邮件流程无异常。
 
 只记录错误类型和错误文字，不记录邮箱、密码、应用专用密码、验证码或 token。
 
@@ -285,7 +288,7 @@ D:\桌面文件\任务\output\playwright\
 5. 岗位和任务在 localStorage 及登录云端模式下保持。
 6. 控制台无错误；网络中无 Google Fonts 和 jsDelivr 请求。
 
-v0.3 已完成 375/768/1280/1920 四种宽度线上检查；真实账户下的留言发布与跨设备同步仍应在后续日常验收中持续观察。
+v0.3 已完成 375/768/1280/1920 四种宽度线上检查；用户已确认真实账户下的留言发布与跨设备同步正常。
 
 ## 7. 项目整体完成标准
 

@@ -1,6 +1,6 @@
 # 航线 MKJ 任务进度
 
-更新时间：2026-08-09
+更新时间：2026-08-10
 
 ## 已完成
 
@@ -84,21 +84,22 @@
 - `v0.3` 已部署到 `https://dsxnb.com/MKJ/` 并通过线上验收。
 - GitHub `main` 已包含提交 `11f3012 feat: add personalized planning and feedback`，待本次状态文档提交后再次确认仓库干净。
 - Supabase 最新 schema 已执行，学历字段和留言表均可从 Data API 识别。
-- 大学搜索当前打包离线索引；完整 582 校上游 CSV 下载被本机审批服务中断，来源与替换方式已写入 `assets/data/UNIVERSITY_DATA_SOURCE.md`。
+- 大学搜索已补全为 582 校本地离线索引；来源、生成格式与许可证已写入 `assets/data/UNIVERSITY_DATA_SOURCE.md`。
 
 - 基础版本已完成 GitHub、Supabase、腾讯云 CVM 和线上静态页面部署。
 - 邮箱验证回跳问题已经修复。
 - Supabase URL Configuration 已设置生产地址。
-- Gmail Custom SMTP 已保存，但注册验证邮件仍发送失败。
+- Gmail Custom SMTP 已保存；用户已确认注册验证邮件、验证回跳、登录和找回密码邮件流程均正常。
 - 前端已修复空错误对象显示，并完成认证、移动端和 v0.3 个性化体验增强。
 - GitHub 根目录已推送最新源码和 `assets/`；完整备份目录也已补齐并通过提交 `8f880d1 chore: refresh complete MKJ backup` 推送。
-- 当前需要从 Supabase Auth Logs 获取 Gmail SMTP 的具体服务端错误。
+- Auth Logs 的注册记录显示 `/signup | request completed`，未发现服务端错误。
+- 582 校索引已部署，线上与本地索引 SHA-256 均为 `829BE346D742908F6791D65EF1F9775919D7A1BC98E2374535A0F481D2814A4F`；新发布包 SHA-256 为 `5E889FEE0A0FE7658446A9242BF400FD5B764B952C236CE78EF935CC496A30E2`。
 
 ## 下一步
 
-1. 使用真实登录账户验证留言发布、删除和跨设备学历/任务同步。
-2. 在 Supabase Auth Logs 中继续排查 Gmail SMTP，并验证 QQ/163 投递。
-3. 获得下载授权后，用上游 582 校 CSV 更新当前 134 校离线索引。
+1. 用户已确认真实账号的岗位、学历、任务和留言云端同步无异常。
+2. 用户已确认注册验证、登录、找回密码及邮箱投递流程无异常。
+3. 持续观察 582 校搜索数据质量；后续更新仍只修改 `/var/www/MKJ`，不得影响主站。
 
 不要在对话中发送真实密码、验证码或私钥。
 

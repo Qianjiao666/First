@@ -1,136 +1,2912 @@
 [
-  {"name":"北京大学","nameEng":"Peking University","location":"北京"},
-  {"name":"清华大学","nameEng":"Tsinghua University","location":"北京"},
-  {"name":"中国人民大学","nameEng":"Renmin University of China","location":"北京"},
-  {"name":"北京师范大学","nameEng":"Beijing Normal University","location":"北京"},
-  {"name":"北京航空航天大学","nameEng":"Beihang University","location":"北京"},
-  {"name":"北京理工大学","nameEng":"Beijing Institute of Technology","location":"北京"},
-  {"name":"中国农业大学","nameEng":"China Agricultural University","location":"北京"},
-  {"name":"中央民族大学","nameEng":"Minzu University of China","location":"北京"},
-  {"name":"北京交通大学","nameEng":"Beijing Jiaotong University","location":"北京"},
-  {"name":"北京科技大学","nameEng":"University of Science and Technology Beijing","location":"北京"},
-  {"name":"北京邮电大学","nameEng":"Beijing University of Posts and Telecommunications","location":"北京"},
-  {"name":"北京林业大学","nameEng":"Beijing Forestry University","location":"北京"},
-  {"name":"北京中医药大学","nameEng":"Beijing University of Chinese Medicine","location":"北京"},
-  {"name":"北京外国语大学","nameEng":"Beijing Foreign Studies University","location":"北京"},
-  {"name":"中国传媒大学","nameEng":"Communication University of China","location":"北京"},
-  {"name":"中央财经大学","nameEng":"Central University of Finance and Economics","location":"北京"},
-  {"name":"对外经济贸易大学","nameEng":"University of International Business and Economics","location":"北京"},
-  {"name":"中国政法大学","nameEng":"China University of Political Science and Law","location":"北京"},
-  {"name":"华北电力大学","nameEng":"North China Electric Power University","location":"北京"},
-  {"name":"中国科学院大学","nameEng":"University of Chinese Academy of Sciences","location":"北京"},
-  {"name":"复旦大学","nameEng":"Fudan University","location":"上海"},
-  {"name":"上海交通大学","nameEng":"Shanghai Jiao Tong University","location":"上海"},
-  {"name":"同济大学","nameEng":"Tongji University","location":"上海"},
-  {"name":"华东师范大学","nameEng":"East China Normal University","location":"上海"},
-  {"name":"华东理工大学","nameEng":"East China University of Science and Technology","location":"上海"},
-  {"name":"东华大学","nameEng":"Donghua University","location":"上海"},
-  {"name":"上海财经大学","nameEng":"Shanghai University of Finance and Economics","location":"上海"},
-  {"name":"上海外国语大学","nameEng":"Shanghai International Studies University","location":"上海"},
-  {"name":"上海大学","nameEng":"Shanghai University","location":"上海"},
-  {"name":"上海科技大学","nameEng":"ShanghaiTech University","location":"上海"},
-  {"name":"南京大学","nameEng":"Nanjing University","location":"江苏"},
-  {"name":"东南大学","nameEng":"Southeast University","location":"江苏"},
-  {"name":"南京航空航天大学","nameEng":"Nanjing University of Aeronautics and Astronautics","location":"江苏"},
-  {"name":"南京理工大学","nameEng":"Nanjing University of Science and Technology","location":"江苏"},
-  {"name":"河海大学","nameEng":"Hohai University","location":"江苏"},
-  {"name":"南京农业大学","nameEng":"Nanjing Agricultural University","location":"江苏"},
-  {"name":"中国药科大学","nameEng":"China Pharmaceutical University","location":"江苏"},
-  {"name":"南京师范大学","nameEng":"Nanjing Normal University","location":"江苏"},
-  {"name":"苏州大学","nameEng":"Soochow University","location":"江苏"},
-  {"name":"江南大学","nameEng":"Jiangnan University","location":"江苏"},
-  {"name":"中国矿业大学","nameEng":"China University of Mining and Technology","location":"江苏"},
-  {"name":"南京邮电大学","nameEng":"Nanjing University of Posts and Telecommunications","location":"江苏"},
-  {"name":"浙江大学","nameEng":"Zhejiang University","location":"浙江"},
-  {"name":"浙江工业大学","nameEng":"Zhejiang University of Technology","location":"浙江"},
-  {"name":"宁波大学","nameEng":"Ningbo University","location":"浙江"},
-  {"name":"杭州电子科技大学","nameEng":"Hangzhou Dianzi University","location":"浙江"},
-  {"name":"浙江工商大学","nameEng":"Zhejiang Gongshang University","location":"浙江"},
-  {"name":"浙江理工大学","nameEng":"Zhejiang Sci-Tech University","location":"浙江"},
-  {"name":"中国美术学院","nameEng":"China Academy of Art","location":"浙江"},
-  {"name":"西湖大学","nameEng":"Westlake University","location":"浙江"},
-  {"name":"中国科学技术大学","nameEng":"University of Science and Technology of China","location":"安徽"},
-  {"name":"合肥工业大学","nameEng":"Hefei University of Technology","location":"安徽"},
-  {"name":"安徽大学","nameEng":"Anhui University","location":"安徽"},
-  {"name":"安徽师范大学","nameEng":"Anhui Normal University","location":"安徽"},
-  {"name":"厦门大学","nameEng":"Xiamen University","location":"福建"},
-  {"name":"福州大学","nameEng":"Fuzhou University","location":"福建"},
-  {"name":"福建师范大学","nameEng":"Fujian Normal University","location":"福建"},
-  {"name":"华侨大学","nameEng":"Huaqiao University","location":"福建"},
-  {"name":"南昌大学","nameEng":"Nanchang University","location":"江西"},
-  {"name":"江西财经大学","nameEng":"Jiangxi University of Finance and Economics","location":"江西"},
-  {"name":"山东大学","nameEng":"Shandong University","location":"山东"},
-  {"name":"中国海洋大学","nameEng":"Ocean University of China","location":"山东"},
-  {"name":"中国石油大学（华东）","nameEng":"China University of Petroleum East China","location":"山东"},
-  {"name":"青岛大学","nameEng":"Qingdao University","location":"山东"},
-  {"name":"山东师范大学","nameEng":"Shandong Normal University","location":"山东"},
-  {"name":"武汉大学","nameEng":"Wuhan University","location":"湖北"},
-  {"name":"华中科技大学","nameEng":"Huazhong University of Science and Technology","location":"湖北"},
-  {"name":"武汉理工大学","nameEng":"Wuhan University of Technology","location":"湖北"},
-  {"name":"华中师范大学","nameEng":"Central China Normal University","location":"湖北"},
-  {"name":"中南财经政法大学","nameEng":"Zhongnan University of Economics and Law","location":"湖北"},
-  {"name":"中国地质大学（武汉）","nameEng":"China University of Geosciences Wuhan","location":"湖北"},
-  {"name":"华中农业大学","nameEng":"Huazhong Agricultural University","location":"湖北"},
-  {"name":"湖南大学","nameEng":"Hunan University","location":"湖南"},
-  {"name":"中南大学","nameEng":"Central South University","location":"湖南"},
-  {"name":"湖南师范大学","nameEng":"Hunan Normal University","location":"湖南"},
-  {"name":"湘潭大学","nameEng":"Xiangtan University","location":"湖南"},
-  {"name":"国防科技大学","nameEng":"National University of Defense Technology","location":"湖南"},
-  {"name":"中山大学","nameEng":"Sun Yat-sen University","location":"广东"},
-  {"name":"华南理工大学","nameEng":"South China University of Technology","location":"广东"},
-  {"name":"暨南大学","nameEng":"Jinan University","location":"广东"},
-  {"name":"华南师范大学","nameEng":"South China Normal University","location":"广东"},
-  {"name":"深圳大学","nameEng":"Shenzhen University","location":"广东"},
-  {"name":"南方科技大学","nameEng":"Southern University of Science and Technology","location":"广东"},
-  {"name":"广东工业大学","nameEng":"Guangdong University of Technology","location":"广东"},
-  {"name":"广州大学","nameEng":"Guangzhou University","location":"广东"},
-  {"name":"香港中文大学（深圳）","nameEng":"The Chinese University of Hong Kong Shenzhen","location":"广东"},
-  {"name":"四川大学","nameEng":"Sichuan University","location":"四川"},
-  {"name":"电子科技大学","nameEng":"University of Electronic Science and Technology of China","location":"四川"},
-  {"name":"西南交通大学","nameEng":"Southwest Jiaotong University","location":"四川"},
-  {"name":"西南财经大学","nameEng":"Southwestern University of Finance and Economics","location":"四川"},
-  {"name":"四川农业大学","nameEng":"Sichuan Agricultural University","location":"四川"},
-  {"name":"成都理工大学","nameEng":"Chengdu University of Technology","location":"四川"},
-  {"name":"重庆大学","nameEng":"Chongqing University","location":"重庆"},
-  {"name":"西南大学","nameEng":"Southwest University","location":"重庆"},
-  {"name":"重庆邮电大学","nameEng":"Chongqing University of Posts and Telecommunications","location":"重庆"},
-  {"name":"贵州大学","nameEng":"Guizhou University","location":"贵州"},
-  {"name":"云南大学","nameEng":"Yunnan University","location":"云南"},
-  {"name":"昆明理工大学","nameEng":"Kunming University of Science and Technology","location":"云南"},
-  {"name":"西安交通大学","nameEng":"Xi'an Jiaotong University","location":"陕西"},
-  {"name":"西北工业大学","nameEng":"Northwestern Polytechnical University","location":"陕西"},
-  {"name":"西安电子科技大学","nameEng":"Xidian University","location":"陕西"},
-  {"name":"西北大学","nameEng":"Northwest University","location":"陕西"},
-  {"name":"陕西师范大学","nameEng":"Shaanxi Normal University","location":"陕西"},
-  {"name":"长安大学","nameEng":"Chang'an University","location":"陕西"},
-  {"name":"西北农林科技大学","nameEng":"Northwest A&F University","location":"陕西"},
-  {"name":"兰州大学","nameEng":"Lanzhou University","location":"甘肃"},
-  {"name":"宁夏大学","nameEng":"Ningxia University","location":"宁夏"},
-  {"name":"青海大学","nameEng":"Qinghai University","location":"青海"},
-  {"name":"新疆大学","nameEng":"Xinjiang University","location":"新疆"},
-  {"name":"石河子大学","nameEng":"Shihezi University","location":"新疆"},
-  {"name":"广西大学","nameEng":"Guangxi University","location":"广西"},
-  {"name":"海南大学","nameEng":"Hainan University","location":"海南"},
-  {"name":"南开大学","nameEng":"Nankai University","location":"天津"},
-  {"name":"天津大学","nameEng":"Tianjin University","location":"天津"},
-  {"name":"天津医科大学","nameEng":"Tianjin Medical University","location":"天津"},
-  {"name":"河北工业大学","nameEng":"Hebei University of Technology","location":"天津"},
-  {"name":"河北大学","nameEng":"Hebei University","location":"河北"},
-  {"name":"燕山大学","nameEng":"Yanshan University","location":"河北"},
-  {"name":"太原理工大学","nameEng":"Taiyuan University of Technology","location":"山西"},
-  {"name":"山西大学","nameEng":"Shanxi University","location":"山西"},
-  {"name":"郑州大学","nameEng":"Zhengzhou University","location":"河南"},
-  {"name":"河南大学","nameEng":"Henan University","location":"河南"},
-  {"name":"大连理工大学","nameEng":"Dalian University of Technology","location":"辽宁"},
-  {"name":"东北大学","nameEng":"Northeastern University","location":"辽宁"},
-  {"name":"大连海事大学","nameEng":"Dalian Maritime University","location":"辽宁"},
-  {"name":"辽宁大学","nameEng":"Liaoning University","location":"辽宁"},
-  {"name":"吉林大学","nameEng":"Jilin University","location":"吉林"},
-  {"name":"东北师范大学","nameEng":"Northeast Normal University","location":"吉林"},
-  {"name":"哈尔滨工业大学","nameEng":"Harbin Institute of Technology","location":"黑龙江"},
-  {"name":"哈尔滨工程大学","nameEng":"Harbin Engineering University","location":"黑龙江"},
-  {"name":"东北林业大学","nameEng":"Northeast Forestry University","location":"黑龙江"},
-  {"name":"东北农业大学","nameEng":"Northeast Agricultural University","location":"黑龙江"},
-  {"name":"内蒙古大学","nameEng":"Inner Mongolia University","location":"内蒙古"},
-  {"name":"西藏大学","nameEng":"Tibet University","location":"西藏"}
+  {
+    "name": "清华大学",
+    "nameEng": "Tsinghua University",
+    "location": "北京"
+  },
+  {
+    "name": "北京大学",
+    "nameEng": "Peking University",
+    "location": "北京"
+  },
+  {
+    "name": "浙江大学",
+    "nameEng": "Zhejiang University",
+    "location": "浙江"
+  },
+  {
+    "name": "上海交通大学",
+    "nameEng": "Shanghai Jiao Tong University",
+    "location": "上海"
+  },
+  {
+    "name": "南京大学",
+    "nameEng": "Nanjing University",
+    "location": "江苏"
+  },
+  {
+    "name": "复旦大学",
+    "nameEng": "Fudan University",
+    "location": "上海"
+  },
+  {
+    "name": "中国科学技术大学",
+    "nameEng": "University of Science and Technology of China",
+    "location": "安徽"
+  },
+  {
+    "name": "华中科技大学",
+    "nameEng": "Huazhong University of Science and Technology",
+    "location": "湖北"
+  },
+  {
+    "name": "武汉大学",
+    "nameEng": "Wuhan University",
+    "location": "湖北"
+  },
+  {
+    "name": "西安交通大学",
+    "nameEng": "Xi'an Jiaotong University",
+    "location": "陕西"
+  },
+  {
+    "name": "哈尔滨工业大学",
+    "nameEng": "Harbin Institute of Technology",
+    "location": "黑龙江"
+  },
+  {
+    "name": "中山大学",
+    "nameEng": "Sun Yat-Sen University",
+    "location": "广东"
+  },
+  {
+    "name": "北京师范大学",
+    "nameEng": "Beijing Normal University",
+    "location": "北京"
+  },
+  {
+    "name": "四川大学",
+    "nameEng": "Sichuan University",
+    "location": "四川"
+  },
+  {
+    "name": "北京航空航天大学",
+    "nameEng": "Beihang University",
+    "location": "北京"
+  },
+  {
+    "name": "同济大学",
+    "nameEng": "Tongji University",
+    "location": "上海"
+  },
+  {
+    "name": "东南大学",
+    "nameEng": "Southeast University",
+    "location": "江苏"
+  },
+  {
+    "name": "中国人民大学",
+    "nameEng": "Renmin University of China",
+    "location": "北京"
+  },
+  {
+    "name": "北京理工大学",
+    "nameEng": "Beijing Institute of Technology",
+    "location": "北京"
+  },
+  {
+    "name": "南开大学",
+    "nameEng": "Nankai University",
+    "location": "天津"
+  },
+  {
+    "name": "山东大学",
+    "nameEng": "Shandong University",
+    "location": "山东"
+  },
+  {
+    "name": "天津大学",
+    "nameEng": "Tianjin University",
+    "location": "天津"
+  },
+  {
+    "name": "中南大学",
+    "nameEng": "Central South University",
+    "location": "湖南"
+  },
+  {
+    "name": "吉林大学",
+    "nameEng": "Jilin University",
+    "location": "吉林"
+  },
+  {
+    "name": "西北工业大学",
+    "nameEng": "Northwestern Polytechnical University",
+    "location": "陕西"
+  },
+  {
+    "name": "厦门大学",
+    "nameEng": "Xiamen University",
+    "location": "福建"
+  },
+  {
+    "name": "华南理工大学",
+    "nameEng": "South China University of Technology",
+    "location": "广东"
+  },
+  {
+    "name": "大连理工大学",
+    "nameEng": "Dalian University of Technology",
+    "location": "辽宁"
+  },
+  {
+    "name": "华东师范大学",
+    "nameEng": "East China Normal University",
+    "location": "上海"
+  },
+  {
+    "name": "中国农业大学",
+    "nameEng": "China Agricultural University",
+    "location": "北京"
+  },
+  {
+    "name": "电子科技大学",
+    "nameEng": "University of Electronic Science and Technology of China",
+    "location": "四川"
+  },
+  {
+    "name": "湖南大学",
+    "nameEng": "Hunan University",
+    "location": "湖南"
+  },
+  {
+    "name": "北京科技大学",
+    "nameEng": "University of Science and Technology Beijing",
+    "location": "北京"
+  },
+  {
+    "name": "重庆大学",
+    "nameEng": "Chongqing University",
+    "location": "重庆"
+  },
+  {
+    "name": "南京航空航天大学",
+    "nameEng": "Nanjing University of Aeronautics and Astronautics",
+    "location": "江苏"
+  },
+  {
+    "name": "东北大学",
+    "nameEng": "Northeastern University",
+    "location": "辽宁"
+  },
+  {
+    "name": "南京理工大学",
+    "nameEng": "Nanjing University of Science and Technology",
+    "location": "江苏"
+  },
+  {
+    "name": "西安电子科技大学",
+    "nameEng": "Xidian University",
+    "location": "陕西"
+  },
+  {
+    "name": "兰州大学",
+    "nameEng": "Lanzhou University",
+    "location": "甘肃"
+  },
+  {
+    "name": "北京交通大学",
+    "nameEng": "Beijing jiaotong University",
+    "location": "北京"
+  },
+  {
+    "name": "南方科技大学",
+    "nameEng": "Southern University of Science and Technology",
+    "location": "广东"
+  },
+  {
+    "name": "华中农业大学",
+    "nameEng": "Huazhong Agricultural University",
+    "location": "湖北"
+  },
+  {
+    "name": "上海大学",
+    "nameEng": "Shanghai University",
+    "location": "上海"
+  },
+  {
+    "name": "苏州大学",
+    "nameEng": "Soochow University (China)",
+    "location": "江苏"
+  },
+  {
+    "name": "华东理工大学",
+    "nameEng": "East China University of Science and Technology",
+    "location": "上海"
+  },
+  {
+    "name": "华中师范大学",
+    "nameEng": "Central China Normal University",
+    "location": "湖北"
+  },
+  {
+    "name": "南京师范大学",
+    "nameEng": "Nanjing Normal University",
+    "location": "江苏"
+  },
+  {
+    "name": "中国地质大学（武汉）",
+    "nameEng": "China University of Geosciences (Wuhan)",
+    "location": "湖北"
+  },
+  {
+    "name": "东北师范大学",
+    "nameEng": "Northeast Normal University",
+    "location": "吉林"
+  },
+  {
+    "name": "哈尔滨工程大学",
+    "nameEng": "Harbin Engineering University",
+    "location": "黑龙江"
+  },
+  {
+    "name": "西南交通大学",
+    "nameEng": "Southwest Jiaotong University",
+    "location": "四川"
+  },
+  {
+    "name": "南京农业大学",
+    "nameEng": "Nanjing Agricultural University",
+    "location": "江苏"
+  },
+  {
+    "name": "郑州大学",
+    "nameEng": "Zhengzhou University",
+    "location": "河南"
+  },
+  {
+    "name": "北京邮电大学",
+    "nameEng": "Beijing University of Posts and Telecommunications",
+    "location": "北京"
+  },
+  {
+    "name": "武汉理工大学",
+    "nameEng": "Wuhan University of Technology",
+    "location": "湖北"
+  },
+  {
+    "name": "中国海洋大学",
+    "nameEng": "Ocean University of China",
+    "location": "山东"
+  },
+  {
+    "name": "暨南大学",
+    "nameEng": "Jinan University",
+    "location": "广东"
+  },
+  {
+    "name": "中国石油大学（北京）",
+    "nameEng": "China University of Petroleum - Beijing",
+    "location": "北京"
+  },
+  {
+    "name": "北京工业大学",
+    "nameEng": "Beijing University of Technology",
+    "location": "北京"
+  },
+  {
+    "name": "河海大学",
+    "nameEng": "Hohai University",
+    "location": "江苏"
+  },
+  {
+    "name": "中国矿业大学",
+    "nameEng": "China University of Mining and Technology - Xuzhou",
+    "location": "江苏"
+  },
+  {
+    "name": "北京化工大学",
+    "nameEng": "Beijing University of Chemical Technology",
+    "location": "北京"
+  },
+  {
+    "name": "中国地质大学（北京）",
+    "nameEng": "China University of Geosciences (Beijing)",
+    "location": "北京"
+  },
+  {
+    "name": "西北大学",
+    "nameEng": "Northwest University",
+    "location": "陕西"
+  },
+  {
+    "name": "江南大学",
+    "nameEng": "Jiangnan University",
+    "location": "江苏"
+  },
+  {
+    "name": "上海科技大学",
+    "nameEng": "ShanghaiTech University",
+    "location": "上海"
+  },
+  {
+    "name": "中国石油大学（华东）",
+    "nameEng": "China University of Petroleum (Huadong)",
+    "location": "山东"
+  },
+  {
+    "name": "西南大学",
+    "nameEng": "Southwest University",
+    "location": "重庆"
+  },
+  {
+    "name": "中国矿业大学（北京）",
+    "nameEng": "China University of Mining and Technology - Beijing",
+    "location": "北京"
+  },
+  {
+    "name": "深圳大学",
+    "nameEng": "Shenzhen University",
+    "location": "广东"
+  },
+  {
+    "name": "陕西师范大学",
+    "nameEng": "Shaanxi Normal University",
+    "location": "陕西"
+  },
+  {
+    "name": "江苏大学",
+    "nameEng": "Jiangsu University",
+    "location": "江苏"
+  },
+  {
+    "name": "浙江工业大学",
+    "nameEng": "Zhejiang University of Technology",
+    "location": "浙江"
+  },
+  {
+    "name": "北京林业大学",
+    "nameEng": "Beijing Forestry University",
+    "location": "北京"
+  },
+  {
+    "name": "华南师范大学",
+    "nameEng": "South China Normal University",
+    "location": "广东"
+  },
+  {
+    "name": "西北农林科技大学",
+    "nameEng": "Northwest A&amp;F University",
+    "location": "陕西"
+  },
+  {
+    "name": "扬州大学",
+    "nameEng": "Yangzhou University",
+    "location": "江苏"
+  },
+  {
+    "name": "南昌大学",
+    "nameEng": "Nanchang University",
+    "location": "江西"
+  },
+  {
+    "name": "福州大学",
+    "nameEng": "Fuzhou University",
+    "location": "福建"
+  },
+  {
+    "name": "华北电力大学",
+    "nameEng": "North China Electric Power University",
+    "location": "北京"
+  },
+  {
+    "name": "东华大学",
+    "nameEng": "Donghua University",
+    "location": "上海"
+  },
+  {
+    "name": "合肥工业大学",
+    "nameEng": "Hefei University of Technology",
+    "location": "安徽"
+  },
+  {
+    "name": "云南大学",
+    "nameEng": "Yunnan University",
+    "location": "云南"
+  },
+  {
+    "name": "宁波大学",
+    "nameEng": "Ningbo University",
+    "location": "浙江"
+  },
+  {
+    "name": "首都师范大学",
+    "nameEng": "Capital Normal University",
+    "location": "北京"
+  },
+  {
+    "name": "湖南师范大学",
+    "nameEng": "Hunan Normal University",
+    "location": "湖南"
+  },
+  {
+    "name": "南京工业大学",
+    "nameEng": "Nanjing Tech University",
+    "location": "江苏"
+  },
+  {
+    "name": "长安大学",
+    "nameEng": "Chang'an University",
+    "location": "陕西"
+  },
+  {
+    "name": "福建师范大学",
+    "nameEng": "Fujian Normal University",
+    "location": "福建"
+  },
+  {
+    "name": "安徽大学",
+    "nameEng": "Anhui University",
+    "location": "安徽"
+  },
+  {
+    "name": "南京信息工程大学",
+    "nameEng": "Nanjing University of Information Science &amp; Technology",
+    "location": "江苏"
+  },
+  {
+    "name": "上海理工大学",
+    "nameEng": "University of Shanghai for Science and Technology",
+    "location": "上海"
+  },
+  {
+    "name": "华南农业大学",
+    "nameEng": "South China Agricultural University",
+    "location": "广东"
+  },
+  {
+    "name": "广西大学",
+    "nameEng": "Guangxi University",
+    "location": "广西"
+  },
+  {
+    "name": "南京邮电大学",
+    "nameEng": "Nanjing University of Posts and Telecommunications",
+    "location": "江苏"
+  },
+  {
+    "name": "燕山大学",
+    "nameEng": "Yanshan University",
+    "location": "河北"
+  },
+  {
+    "name": "河南大学",
+    "nameEng": "Henan University",
+    "location": "河南"
+  },
+  {
+    "name": "湖北大学",
+    "nameEng": "Hubei University",
+    "location": "湖北"
+  },
+  {
+    "name": "广州大学",
+    "nameEng": "Guangzhou University",
+    "location": "广东"
+  },
+  {
+    "name": "青岛大学",
+    "nameEng": "Qingdao University",
+    "location": "山东"
+  },
+  {
+    "name": "湘潭大学",
+    "nameEng": "Xiangtan University",
+    "location": "湖南"
+  },
+  {
+    "name": "广东工业大学",
+    "nameEng": "Guangdong University of Technology",
+    "location": "广东"
+  },
+  {
+    "name": "浙江师范大学",
+    "nameEng": "Zhejiang Normal University",
+    "location": "浙江"
+  },
+  {
+    "name": "大连海事大学",
+    "nameEng": "Dalian Maritime University",
+    "location": "辽宁"
+  },
+  {
+    "name": "上海师范大学",
+    "nameEng": "Shanghai Normal University",
+    "location": "上海"
+  },
+  {
+    "name": "杭州电子科技大学",
+    "nameEng": "Hangzhou Dianzi University",
+    "location": "浙江"
+  },
+  {
+    "name": "武汉科技大学",
+    "nameEng": "Wuhan University of Science and Technology",
+    "location": "湖北"
+  },
+  {
+    "name": "南京林业大学",
+    "nameEng": "Nanjing Forestry University",
+    "location": "江苏"
+  },
+  {
+    "name": "河北工业大学",
+    "nameEng": "Hebei University of Technology",
+    "location": "天津"
+  },
+  {
+    "name": "山东师范大学",
+    "nameEng": "Shandong Normal University",
+    "location": "山东"
+  },
+  {
+    "name": "浙江理工大学",
+    "nameEng": "Zhejiang Sci-Tech University",
+    "location": "浙江"
+  },
+  {
+    "name": "山西大学",
+    "nameEng": "Shanxi University",
+    "location": "山西"
+  },
+  {
+    "name": "太原理工大学",
+    "nameEng": "Taiyuan University of Technology",
+    "location": "山西"
+  },
+  {
+    "name": "东北林业大学",
+    "nameEng": "Northeast Forestry University - China",
+    "location": "黑龙江"
+  },
+  {
+    "name": "河北大学",
+    "nameEng": "Hebei University",
+    "location": "河北"
+  },
+  {
+    "name": "东北农业大学",
+    "nameEng": "Northeast Agricultural University - China",
+    "location": "黑龙江"
+  },
+  {
+    "name": "江西师范大学",
+    "nameEng": "Jiangxi Normal University",
+    "location": "江西"
+  },
+  {
+    "name": "西安建筑科技大学",
+    "nameEng": "Xi'an University of Architecture and Technology",
+    "location": "陕西"
+  },
+  {
+    "name": "杭州师范大学",
+    "nameEng": "Hangzhou Normal University",
+    "location": "浙江"
+  },
+  {
+    "name": "内蒙古大学",
+    "nameEng": "Inner Mongolia University",
+    "location": "内蒙古"
+  },
+  {
+    "name": "福建农林大学",
+    "nameEng": "Fujian Agriculture and Forestry University",
+    "location": "福建"
+  },
+  {
+    "name": "江苏师范大学",
+    "nameEng": "Jiangsu Normal University",
+    "location": "江苏"
+  },
+  {
+    "name": "西安理工大学",
+    "nameEng": "Xi'an University of Technology",
+    "location": "陕西"
+  },
+  {
+    "name": "辽宁大学",
+    "nameEng": "Liaoning University",
+    "location": "辽宁"
+  },
+  {
+    "name": "北京建筑大学",
+    "nameEng": "Beijing University of Civil Engineering and Architecture",
+    "location": "北京"
+  },
+  {
+    "name": "安徽师范大学",
+    "nameEng": "Anhui Normal University",
+    "location": "安徽"
+  },
+  {
+    "name": "河南师范大学",
+    "nameEng": "Henan Normal University",
+    "location": "河南"
+  },
+  {
+    "name": "长沙理工大学",
+    "nameEng": "Changsha University of Science and Technology",
+    "location": "湖南"
+  },
+  {
+    "name": "昆明理工大学",
+    "nameEng": "Kunming University of Science and Technology",
+    "location": "云南"
+  },
+  {
+    "name": "新疆大学",
+    "nameEng": "Xinjiang University",
+    "location": "新疆"
+  },
+  {
+    "name": "汕头大学",
+    "nameEng": "Shantou University",
+    "location": "广东"
+  },
+  {
+    "name": "西南石油大学",
+    "nameEng": "Southwest Petroleum University",
+    "location": "四川"
+  },
+  {
+    "name": "山东科技大学",
+    "nameEng": "Shandong University of Science and Technology",
+    "location": "山东"
+  },
+  {
+    "name": "河南农业大学",
+    "nameEng": "Henan Agricultural University",
+    "location": "河南"
+  },
+  {
+    "name": "贵州大学",
+    "nameEng": "Guizhou University",
+    "location": "贵州"
+  },
+  {
+    "name": "华侨大学",
+    "nameEng": "Huaqiao University",
+    "location": "福建"
+  },
+  {
+    "name": "河北师范大学",
+    "nameEng": "Hebei Normal University",
+    "location": "河北"
+  },
+  {
+    "name": "黑龙江大学",
+    "nameEng": "Heilongjiang University",
+    "location": "黑龙江"
+  },
+  {
+    "name": "中国计量大学",
+    "nameEng": "China Jiliang University",
+    "location": "浙江"
+  },
+  {
+    "name": "陕西科技大学",
+    "nameEng": "Shaanxi University of Science and Technology",
+    "location": "陕西"
+  },
+  {
+    "name": "沈阳农业大学",
+    "nameEng": "Shenyang Agricultural University",
+    "location": "辽宁"
+  },
+  {
+    "name": "天津师范大学",
+    "nameEng": "Tianjin Normal University",
+    "location": "天津"
+  },
+  {
+    "name": "湖北工业大学",
+    "nameEng": "Hubei University of Technology",
+    "location": "湖北"
+  },
+  {
+    "name": "海南大学",
+    "nameEng": "Hainan University",
+    "location": "海南"
+  },
+  {
+    "name": "济南大学",
+    "nameEng": "University of Jinan",
+    "location": "山东"
+  },
+  {
+    "name": "山东农业大学",
+    "nameEng": "Shandong Agricultural University",
+    "location": "山东"
+  },
+  {
+    "name": "常州大学",
+    "nameEng": "Changzhou University",
+    "location": "江苏"
+  },
+  {
+    "name": "温州大学",
+    "nameEng": "Wenzhou University",
+    "location": "浙江"
+  },
+  {
+    "name": "重庆邮电大学",
+    "nameEng": "Chongqing University of Posts and Telecommunications",
+    "location": "重庆"
+  },
+  {
+    "name": "齐鲁工业大学",
+    "nameEng": "Qilu University of Technology",
+    "location": "山东"
+  },
+  {
+    "name": "曲阜师范大学",
+    "nameEng": "Qufu Normal University",
+    "location": "山东"
+  },
+  {
+    "name": "武汉工程大学",
+    "nameEng": "Wuhan Institute of Technology",
+    "location": "湖北"
+  },
+  {
+    "name": "湖南农业大学",
+    "nameEng": "Hunan Agricultural University",
+    "location": "湖南"
+  },
+  {
+    "name": "天津工业大学",
+    "nameEng": "Tiangong University",
+    "location": "天津"
+  },
+  {
+    "name": "安徽农业大学",
+    "nameEng": "Anhui Agricultural University",
+    "location": "安徽"
+  },
+  {
+    "name": "江苏科技大学",
+    "nameEng": "Jiangsu University of Science and Technology",
+    "location": "江苏"
+  },
+  {
+    "name": "浙江农林大学",
+    "nameEng": "Zhejiang A&amp;F University",
+    "location": "浙江"
+  },
+  {
+    "name": "北方工业大学",
+    "nameEng": "North China University of Technology",
+    "location": "北京"
+  },
+  {
+    "name": "广西师范大学",
+    "nameEng": "Guangxi Normal University",
+    "location": "广西"
+  },
+  {
+    "name": "吉林农业大学",
+    "nameEng": "Jilin Agricultural University",
+    "location": "吉林"
+  },
+  {
+    "name": "青岛科技大学",
+    "nameEng": "Qingdao University of Science and Technology",
+    "location": "山东"
+  },
+  {
+    "name": "四川农业大学",
+    "nameEng": "Sichuan Agricultural University",
+    "location": "四川"
+  },
+  {
+    "name": "西北师范大学",
+    "nameEng": "Northwest Normal University China",
+    "location": "甘肃"
+  },
+  {
+    "name": "南通大学",
+    "nameEng": "Nantong University",
+    "location": "江苏"
+  },
+  {
+    "name": "石河子大学",
+    "nameEng": "Shihezi University",
+    "location": "新疆"
+  },
+  {
+    "name": "上海海洋大学",
+    "nameEng": "Shanghai Ocean University",
+    "location": "上海"
+  },
+  {
+    "name": "三峡大学",
+    "nameEng": "China Three Gorges University",
+    "location": "湖北"
+  },
+  {
+    "name": "安徽工业大学",
+    "nameEng": "Anhui University of Technology",
+    "location": "安徽"
+  },
+  {
+    "name": "河南理工大学",
+    "nameEng": "Henan Polytechnic University",
+    "location": "河南"
+  },
+  {
+    "name": "宁夏大学",
+    "nameEng": "Ningxia University",
+    "location": "宁夏"
+  },
+  {
+    "name": "西安科技大学",
+    "nameEng": "Xi'an University of Science and Technology",
+    "location": "陕西"
+  },
+  {
+    "name": "上海海事大学",
+    "nameEng": "Shanghai Maritime University",
+    "location": "上海"
+  },
+  {
+    "name": "成都理工大学",
+    "nameEng": "Chengdu University of Technology",
+    "location": "四川"
+  },
+  {
+    "name": "南昌航空大学",
+    "nameEng": "Nanchang Hangkong University",
+    "location": "江西"
+  },
+  {
+    "name": "长春理工大学",
+    "nameEng": "Changchun University of Science and Technology",
+    "location": "吉林"
+  },
+  {
+    "name": "辽宁师范大学",
+    "nameEng": "Liaoning Normal University",
+    "location": "辽宁"
+  },
+  {
+    "name": "西南科技大学",
+    "nameEng": "Southwest University of Science and Technology",
+    "location": "四川"
+  },
+  {
+    "name": "河北农业大学",
+    "nameEng": "Hebei Agricultural University",
+    "location": "河北"
+  },
+  {
+    "name": "中北大学",
+    "nameEng": "North University of China",
+    "location": "山西"
+  },
+  {
+    "name": "青海大学",
+    "nameEng": "Qinghai University",
+    "location": "青海"
+  },
+  {
+    "name": "集美大学",
+    "nameEng": "Jimei University",
+    "location": "福建"
+  },
+  {
+    "name": "武汉纺织大学",
+    "nameEng": "Wuhan Textile University",
+    "location": "湖北"
+  },
+  {
+    "name": "天津理工大学",
+    "nameEng": "Tianjin University of Technology",
+    "location": "天津"
+  },
+  {
+    "name": "四川师范大学",
+    "nameEng": "Sichuan Normal University",
+    "location": "四川"
+  },
+  {
+    "name": "云南师范大学",
+    "nameEng": "Yunnan Normal University",
+    "location": "云南"
+  },
+  {
+    "name": "浙江海洋大学",
+    "nameEng": "Zhejiang Ocean University",
+    "location": "浙江"
+  },
+  {
+    "name": "天津科技大学",
+    "nameEng": "Tianjin University of Science and Technology",
+    "location": "天津"
+  },
+  {
+    "name": "湖南科技大学",
+    "nameEng": "Hunan University of Science and Technology",
+    "location": "湖南"
+  },
+  {
+    "name": "重庆交通大学",
+    "nameEng": "Chongqing Jiaotong University",
+    "location": "重庆"
+  },
+  {
+    "name": "长江大学",
+    "nameEng": "Yangtze University",
+    "location": "湖北"
+  },
+  {
+    "name": "兰州理工大学",
+    "nameEng": "Lanzhou University of Technology",
+    "location": "甘肃"
+  },
+  {
+    "name": "山东理工大学",
+    "nameEng": "Shandong University of Technology",
+    "location": "山东"
+  },
+  {
+    "name": "安徽理工大学",
+    "nameEng": "Anhui University of Science and Technology",
+    "location": "安徽"
+  },
+  {
+    "name": "烟台大学",
+    "nameEng": "Yantai University",
+    "location": "山东"
+  },
+  {
+    "name": "大连工业大学",
+    "nameEng": "Dalian Polytechnic University",
+    "location": "辽宁"
+  },
+  {
+    "name": "哈尔滨理工大学",
+    "nameEng": "Harbin University of Science and Technology",
+    "location": "黑龙江"
+  },
+  {
+    "name": "沈阳师范大学",
+    "nameEng": "Shenyang Normal University",
+    "location": "辽宁"
+  },
+  {
+    "name": "延边大学",
+    "nameEng": "Yanbian University",
+    "location": "吉林"
+  },
+  {
+    "name": "内蒙古农业大学",
+    "nameEng": "Inner Mongolia Agricultural University",
+    "location": "内蒙古"
+  },
+  {
+    "name": "河南科技大学",
+    "nameEng": "Henan University of Science and Technology",
+    "location": "河南"
+  },
+  {
+    "name": "南华大学",
+    "nameEng": "University of South China",
+    "location": "湖南"
+  },
+  {
+    "name": "哈尔滨师范大学",
+    "nameEng": "Harbin Normal University",
+    "location": "黑龙江"
+  },
+  {
+    "name": "石家庄铁道大学",
+    "nameEng": "Shijiazhuang Tiedao University",
+    "location": "河北"
+  },
+  {
+    "name": "北京信息科技大学",
+    "nameEng": "Beijing Information Science &amp; Technology University",
+    "location": "北京"
+  },
+  {
+    "name": "沈阳建筑大学",
+    "nameEng": "Shenyang Jianzhu University",
+    "location": "辽宁"
+  },
+  {
+    "name": "青岛农业大学",
+    "nameEng": "Qingdao Agricultural University",
+    "location": "山东"
+  },
+  {
+    "name": "上海工程技术大学",
+    "nameEng": "Shanghai University of Engineering Science",
+    "location": "上海"
+  },
+  {
+    "name": "河南工业大学",
+    "nameEng": "Henan University of Technology",
+    "location": "河南"
+  },
+  {
+    "name": "江西理工大学",
+    "nameEng": "Jiangxi University of Science and Technology",
+    "location": "江西"
+  },
+  {
+    "name": "中南林业科技大学",
+    "nameEng": "Central South University of Forestry &amp; Technology",
+    "location": "湖南"
+  },
+  {
+    "name": "北京农学院",
+    "nameEng": "Beijing University of Agriculture",
+    "location": "北京"
+  },
+  {
+    "name": "重庆师范大学",
+    "nameEng": "Chongqing Normal University",
+    "location": "重庆"
+  },
+  {
+    "name": "江西农业大学",
+    "nameEng": "Jiangxi Agricultural University",
+    "location": "江西"
+  },
+  {
+    "name": "兰州交通大学",
+    "nameEng": "Lanzhou Jiaotong University",
+    "location": "甘肃"
+  },
+  {
+    "name": "西藏大学",
+    "nameEng": "Tibet University",
+    "location": "西藏"
+  },
+  {
+    "name": "沈阳工业大学",
+    "nameEng": "Shenyang University of Technology",
+    "location": "辽宁"
+  },
+  {
+    "name": "华东交通大学",
+    "nameEng": "East China Jiaotong University",
+    "location": "江西"
+  },
+  {
+    "name": "沈阳航空航天大学",
+    "nameEng": "Shenyang Aerospace University",
+    "location": "辽宁"
+  },
+  {
+    "name": "西安邮电大学",
+    "nameEng": "Xi'an University of Posts and Telecommunications",
+    "location": "陕西"
+  },
+  {
+    "name": "东华理工大学",
+    "nameEng": "East China University of Technology",
+    "location": "江西"
+  },
+  {
+    "name": "东北电力大学",
+    "nameEng": "Northeast Electric Power University",
+    "location": "吉林"
+  },
+  {
+    "name": "上海电力大学",
+    "nameEng": "Shanghai University of Electric Power",
+    "location": "上海"
+  },
+  {
+    "name": "鲁东大学",
+    "nameEng": "Ludong University",
+    "location": "山东"
+  },
+  {
+    "name": "国际关系学院",
+    "nameEng": "University of International Relations",
+    "location": "北京"
+  },
+  {
+    "name": "大连大学",
+    "nameEng": "Dalian University",
+    "location": "辽宁"
+  },
+  {
+    "name": "苏州科技大学",
+    "nameEng": "Suzhou University of Science and Technology",
+    "location": "江苏"
+  },
+  {
+    "name": "河北科技大学",
+    "nameEng": "Hebei University of Science and Technology",
+    "location": "河北"
+  },
+  {
+    "name": "渤海大学",
+    "nameEng": "Bohai University",
+    "location": "辽宁"
+  },
+  {
+    "name": "华北理工大学",
+    "nameEng": "North China University of Science and Technology",
+    "location": "河北"
+  },
+  {
+    "name": "甘肃农业大学",
+    "nameEng": "Gansu Agricultural University",
+    "location": "甘肃"
+  },
+  {
+    "name": "北京印刷学院",
+    "nameEng": "Beijing Institute of Graphic Communication",
+    "location": "北京"
+  },
+  {
+    "name": "重庆理工大学",
+    "nameEng": "Chongqing University of Technology",
+    "location": "重庆"
+  },
+  {
+    "name": "西安石油大学",
+    "nameEng": "Xi'an Shiyou University",
+    "location": "陕西"
+  },
+  {
+    "name": "海南师范大学",
+    "nameEng": "Hainan Normal University",
+    "location": "海南"
+  },
+  {
+    "name": "上海应用技术大学",
+    "nameEng": "Shanghai Institute of Technology",
+    "location": "上海"
+  },
+  {
+    "name": "桂林电子科技大学",
+    "nameEng": "Guilin University of Electronic Technology",
+    "location": "广西"
+  },
+  {
+    "name": "聊城大学",
+    "nameEng": "Liaocheng University",
+    "location": "山东"
+  },
+  {
+    "name": "郑州轻工业大学",
+    "nameEng": "Zhengzhou University of Light Industry",
+    "location": "河南"
+  },
+  {
+    "name": "武汉轻工大学",
+    "nameEng": "Wuhan Polytechnic University",
+    "location": "湖北"
+  },
+  {
+    "name": "安徽建筑大学",
+    "nameEng": "Anhui jianzhu University",
+    "location": "安徽"
+  },
+  {
+    "name": "东北石油大学",
+    "nameEng": "Northeast Petroleum University",
+    "location": "黑龙江"
+  },
+  {
+    "name": "成都信息工程大学",
+    "nameEng": "Chengdu University of Information Technology",
+    "location": "四川"
+  },
+  {
+    "name": "东莞理工学院",
+    "nameEng": "Dongguan University of Technology",
+    "location": "广东"
+  },
+  {
+    "name": "大连交通大学",
+    "nameEng": "Dalian Jiaotong University",
+    "location": "辽宁"
+  },
+  {
+    "name": "山东建筑大学",
+    "nameEng": "Shandong Jianzhu University",
+    "location": "山东"
+  },
+  {
+    "name": "西华师范大学",
+    "nameEng": "China West Normal University",
+    "location": "四川"
+  },
+  {
+    "name": "西安工程大学",
+    "nameEng": "Xi'an Polytechnic University",
+    "location": "陕西"
+  },
+  {
+    "name": "贵州师范大学",
+    "nameEng": "Guizhou Normal University",
+    "location": "贵州"
+  },
+  {
+    "name": "成都大学",
+    "nameEng": "Chengdu University",
+    "location": "四川"
+  },
+  {
+    "name": "西安工业大学",
+    "nameEng": "Xi'an Technological University",
+    "location": "陕西"
+  },
+  {
+    "name": "浙大宁波理工学院",
+    "nameEng": "NingboTech University",
+    "location": "浙江"
+  },
+  {
+    "name": "佛山科学技术学院",
+    "nameEng": "Foshan University",
+    "location": "广东"
+  },
+  {
+    "name": "山西农业大学",
+    "nameEng": "Shanxi Agricultural University",
+    "location": "山西"
+  },
+  {
+    "name": "青岛理工大学",
+    "nameEng": "Qingdao University of Technology",
+    "location": "山东"
+  },
+  {
+    "name": "华北水利水电大学",
+    "nameEng": "North China University of Water Resources and Electric Power",
+    "location": "河南"
+  },
+  {
+    "name": "厦门理工学院",
+    "nameEng": "Xiamen University of Technology",
+    "location": "福建"
+  },
+  {
+    "name": "北京电子科技学院",
+    "nameEng": "Beijing Electronic Science and Technology Institute",
+    "location": "北京"
+  },
+  {
+    "name": "南京工程学院",
+    "nameEng": "Nanjing Institute of Technology",
+    "location": "江苏"
+  },
+  {
+    "name": "北京联合大学",
+    "nameEng": "Beijing Union University",
+    "location": "北京"
+  },
+  {
+    "name": "长春工业大学",
+    "nameEng": "Changchun University of Technology",
+    "location": "吉林"
+  },
+  {
+    "name": "辽宁工程技术大学",
+    "nameEng": "Liaoning Technical University",
+    "location": "辽宁"
+  },
+  {
+    "name": "湖州师范学院",
+    "nameEng": "Huzhou University",
+    "location": "浙江"
+  },
+  {
+    "name": "江汉大学",
+    "nameEng": "Jianghan University",
+    "location": "湖北"
+  },
+  {
+    "name": "辽宁石油化工大学",
+    "nameEng": "Liaoning shihua University",
+    "location": "辽宁"
+  },
+  {
+    "name": "青海师范大学",
+    "nameEng": "Qinghai Normal University",
+    "location": "青海"
+  },
+  {
+    "name": "吉林师范大学",
+    "nameEng": "Jilin Normal University",
+    "location": "吉林"
+  },
+  {
+    "name": "北京石油化工学院",
+    "nameEng": "Beijing Institute of Petrochemical Technology",
+    "location": "北京"
+  },
+  {
+    "name": "内蒙古师范大学",
+    "nameEng": "Inner Mongolia Normal University",
+    "location": "内蒙古"
+  },
+  {
+    "name": "中国民航大学",
+    "nameEng": "Civil Aviation University of China",
+    "location": "天津"
+  },
+  {
+    "name": "辽宁工业大学",
+    "nameEng": "Liaoning University of Technology",
+    "location": "辽宁"
+  },
+  {
+    "name": "湖南工业大学",
+    "nameEng": "Hunan University of Technology",
+    "location": "湖南"
+  },
+  {
+    "name": "延安大学",
+    "nameEng": "Yan'an University",
+    "location": "陕西"
+  },
+  {
+    "name": "西华大学",
+    "nameEng": "Xihua University",
+    "location": "四川"
+  },
+  {
+    "name": "桂林理工大学",
+    "nameEng": "Guilin University of Technology",
+    "location": "广西"
+  },
+  {
+    "name": "河北工程大学",
+    "nameEng": "Hebei University of Engineering",
+    "location": "河北"
+  },
+  {
+    "name": "沈阳化工大学",
+    "nameEng": "Shenyang University of Chemical Technology",
+    "location": "辽宁"
+  },
+  {
+    "name": "绍兴文理学院",
+    "nameEng": "Shaoxing University",
+    "location": "浙江"
+  },
+  {
+    "name": "安徽工程大学",
+    "nameEng": "Anhui Polytechnic University",
+    "location": "安徽"
+  },
+  {
+    "name": "浙江科技学院",
+    "nameEng": "Zhejiang University of Science and Technology",
+    "location": "浙江"
+  },
+  {
+    "name": "盐城工学院",
+    "nameEng": "Yancheng Institute of Technology",
+    "location": "江苏"
+  },
+  {
+    "name": "盐城师范学院",
+    "nameEng": "Yancheng Teachers University",
+    "location": "江苏"
+  },
+  {
+    "name": "山西师范大学",
+    "nameEng": "Shanxi Normal University",
+    "location": "山西"
+  },
+  {
+    "name": "赣南师范大学",
+    "nameEng": "GanNan Normal University",
+    "location": "江西"
+  },
+  {
+    "name": "大连海洋大学",
+    "nameEng": "Dalian Ocean University",
+    "location": "辽宁"
+  },
+  {
+    "name": "内蒙古工业大学",
+    "nameEng": "Inner Mongolia University of Technology",
+    "location": "内蒙古"
+  },
+  {
+    "name": "淮阴师范学院",
+    "nameEng": "Huaiyin Normal University",
+    "location": "江苏"
+  },
+  {
+    "name": "信阳师范学院",
+    "nameEng": "Xinyang Normal University",
+    "location": "河南"
+  },
+  {
+    "name": "安庆师范大学",
+    "nameEng": "Anqing Normal University",
+    "location": "安徽"
+  },
+  {
+    "name": "合肥学院",
+    "nameEng": "Hefei University",
+    "location": "安徽"
+  },
+  {
+    "name": "云南农业大学",
+    "nameEng": "Yunnan Agricultural University",
+    "location": "云南"
+  },
+  {
+    "name": "辽宁科技大学",
+    "nameEng": "University of Science and Technology Liaoning",
+    "location": "辽宁"
+  },
+  {
+    "name": "南宁师范大学",
+    "nameEng": "Guangxi Teachers Education University",
+    "location": "广西"
+  },
+  {
+    "name": "沈阳理工大学",
+    "nameEng": "Shenyang Ligong University",
+    "location": "辽宁"
+  },
+  {
+    "name": "内蒙古民族大学",
+    "nameEng": "Inner Mongolia University for Nationalities",
+    "location": "内蒙古"
+  },
+  {
+    "name": "新疆师范大学",
+    "nameEng": "Xinjiang Normal University",
+    "location": "新疆"
+  },
+  {
+    "name": "湖北师范大学",
+    "nameEng": "Hubei Normal University",
+    "location": "湖北"
+  },
+  {
+    "name": "重庆科技学院",
+    "nameEng": "Chongqing University of Science and Technology",
+    "location": "重庆"
+  },
+  {
+    "name": "淮阴工学院",
+    "nameEng": "Huaiyin Institute of Technology",
+    "location": "江苏"
+  },
+  {
+    "name": "吉林建筑大学",
+    "nameEng": "Jilin Jianzhu University",
+    "location": "吉林"
+  },
+  {
+    "name": "中原工学院",
+    "nameEng": "Zhongyuan University of Technology",
+    "location": "河南"
+  },
+  {
+    "name": "北华大学",
+    "nameEng": "Beihua University",
+    "location": "吉林"
+  },
+  {
+    "name": "嘉兴学院",
+    "nameEng": "Jiaxing University",
+    "location": "浙江"
+  },
+  {
+    "name": "临沂大学",
+    "nameEng": "Linyi University",
+    "location": "山东"
+  },
+  {
+    "name": "吉首大学",
+    "nameEng": "Jishou University",
+    "location": "湖南"
+  },
+  {
+    "name": "景德镇陶瓷大学",
+    "nameEng": "Jingdezhen Ceramic Institute",
+    "location": "江西"
+  },
+  {
+    "name": "广东技术师范大学",
+    "nameEng": "Guangdong Polytechnic Normal University",
+    "location": "广东"
+  },
+  {
+    "name": "淮北师范大学",
+    "nameEng": "Huaibei Normal University",
+    "location": "安徽"
+  },
+  {
+    "name": "广东海洋大学",
+    "nameEng": "Guangdong Ocean University",
+    "location": "广东"
+  },
+  {
+    "name": "长江师范学院",
+    "nameEng": "Yangtze Normal University",
+    "location": "重庆"
+  },
+  {
+    "name": "宁波工程学院",
+    "nameEng": "Ningbo University of Technology",
+    "location": "浙江"
+  },
+  {
+    "name": "上海海关学院",
+    "nameEng": "Shanghai Customs College",
+    "location": "上海"
+  },
+  {
+    "name": "黑龙江八一农垦大学",
+    "nameEng": "Heilongjiang Bayi Agricultural University",
+    "location": "黑龙江"
+  },
+  {
+    "name": "江西科技师范大学",
+    "nameEng": "Jiangxi Science and Technology Normal University",
+    "location": "江西"
+  },
+  {
+    "name": "安阳师范学院",
+    "nameEng": "Anyang Normal University",
+    "location": "河南"
+  },
+  {
+    "name": "西南林业大学",
+    "nameEng": "Southwest Forestry University",
+    "location": "云南"
+  },
+  {
+    "name": "新疆农业大学",
+    "nameEng": "Xinjiang Agricultural University",
+    "location": "新疆"
+  },
+  {
+    "name": "常熟理工学院",
+    "nameEng": "Changshu Institute of Technology",
+    "location": "江苏"
+  },
+  {
+    "name": "闽南师范大学",
+    "nameEng": "Minnan Normal University",
+    "location": "福建"
+  },
+  {
+    "name": "天津城建大学",
+    "nameEng": "Tianjin Chengjian University",
+    "location": "天津"
+  },
+  {
+    "name": "福建工程学院",
+    "nameEng": "Fujian University of Technology",
+    "location": "福建"
+  },
+  {
+    "name": "沈阳大学",
+    "nameEng": "Shenyang University",
+    "location": "辽宁"
+  },
+  {
+    "name": "五邑大学",
+    "nameEng": "Wuyi University",
+    "location": "广东"
+  },
+  {
+    "name": "内蒙古科技大学",
+    "nameEng": "Inner Mongolia University of Science &amp; Technology",
+    "location": "内蒙古"
+  },
+  {
+    "name": "江苏理工学院",
+    "nameEng": "Jiangsu University of Technology",
+    "location": "江苏"
+  },
+  {
+    "name": "上海第二工业大学",
+    "nameEng": "Shanghai Second Polytechnic University",
+    "location": "上海"
+  },
+  {
+    "name": "浙大城市学院",
+    "nameEng": "Zhejiang University City College",
+    "location": "浙江"
+  },
+  {
+    "name": "太原科技大学",
+    "nameEng": "Taiyuan University of Science and Technology",
+    "location": "山西"
+  },
+  {
+    "name": "岭南师范学院",
+    "nameEng": "LingNan Normal University",
+    "location": "广东"
+  },
+  {
+    "name": "天津农学院",
+    "nameEng": "Tianjin Agricultural University",
+    "location": "天津"
+  },
+  {
+    "name": "塔里木大学",
+    "nameEng": "Tarim University",
+    "location": "新疆"
+  },
+  {
+    "name": "南京晓庄学院",
+    "nameEng": "Nanjing XiaoZhuang University",
+    "location": "江苏"
+  },
+  {
+    "name": "大理大学",
+    "nameEng": "Dali University",
+    "location": "云南"
+  },
+  {
+    "name": "井冈山大学",
+    "nameEng": "Jinggangshan University",
+    "location": "江西"
+  },
+  {
+    "name": "湖南理工学院",
+    "nameEng": "Hunan Institute of Science and Technology",
+    "location": "湖南"
+  },
+  {
+    "name": "江苏海洋大学",
+    "nameEng": "Huaihai Institute of Technology",
+    "location": "江苏"
+  },
+  {
+    "name": "台州学院",
+    "nameEng": "Taizhou University",
+    "location": "浙江"
+  },
+  {
+    "name": "闽江学院",
+    "nameEng": "Minjiang University",
+    "location": "福建"
+  },
+  {
+    "name": "黄冈师范学院",
+    "nameEng": "Huanggang Normal University",
+    "location": "湖北"
+  },
+  {
+    "name": "重庆文理学院",
+    "nameEng": "Chongqing University of Arts and Science",
+    "location": "重庆"
+  },
+  {
+    "name": "浙江万里学院",
+    "nameEng": "Zhejiang Wanli University",
+    "location": "浙江"
+  },
+  {
+    "name": "齐齐哈尔大学",
+    "nameEng": "Qiqihar University",
+    "location": "黑龙江"
+  },
+  {
+    "name": "四川轻化工大学",
+    "nameEng": "Sichuan University of Science and Engineering",
+    "location": "四川"
+  },
+  {
+    "name": "南昌工程学院",
+    "nameEng": "Nanchang Institute of Technology",
+    "location": "江西"
+  },
+  {
+    "name": "天津职业技术师范大学",
+    "nameEng": "TianJin University of Technology and Education",
+    "location": "天津"
+  },
+  {
+    "name": "上海电机学院",
+    "nameEng": "Shanghai Dianji University",
+    "location": "上海"
+  },
+  {
+    "name": "湖北科技学院",
+    "nameEng": "Hubei University of Science and Technology",
+    "location": "湖北"
+  },
+  {
+    "name": "陕西理工大学",
+    "nameEng": "Shaanxi University of Technology",
+    "location": "陕西"
+  },
+  {
+    "name": "内江师范学院",
+    "nameEng": "Neijiang Normal University",
+    "location": "四川"
+  },
+  {
+    "name": "合肥师范学院",
+    "nameEng": "Hefei Normal University",
+    "location": "安徽"
+  },
+  {
+    "name": "阜阳师范大学",
+    "nameEng": "Fuyang Normal University",
+    "location": "安徽"
+  },
+  {
+    "name": "南阳师范学院",
+    "nameEng": "Nanyang Normal University",
+    "location": "河南"
+  },
+  {
+    "name": "贵州师范学院",
+    "nameEng": "Guizhou Normal College",
+    "location": "贵州"
+  },
+  {
+    "name": "徐州工程学院",
+    "nameEng": "Xuzhou Institute of Technology",
+    "location": "江苏"
+  },
+  {
+    "name": "洛阳师范学院",
+    "nameEng": "Luoyang Normal University",
+    "location": "河南"
+  },
+  {
+    "name": "仲恺农业工程学院",
+    "nameEng": "Zhongkai University of Agriculture and Engineering",
+    "location": "广东"
+  },
+  {
+    "name": "长春师范大学",
+    "nameEng": "Changchun Normal University",
+    "location": "吉林"
+  },
+  {
+    "name": "湖北文理学院",
+    "nameEng": "Hubei University of Arts and Science",
+    "location": "湖北"
+  },
+  {
+    "name": "宝鸡文理学院",
+    "nameEng": "Baoji University of Arts and Sciences",
+    "location": "陕西"
+  },
+  {
+    "name": "安徽科技学院",
+    "nameEng": "Anhui Science and Technology University",
+    "location": "安徽"
+  },
+  {
+    "name": "长沙学院",
+    "nameEng": "Changsha University",
+    "location": "湖南"
+  },
+  {
+    "name": "衡阳师范学院",
+    "nameEng": "Hengyang Normal University",
+    "location": "湖南"
+  },
+  {
+    "name": "无锡学院",
+    "nameEng": "Nanjing University of Information Science and Technology, Binjiang College",
+    "location": "江苏"
+  },
+  {
+    "name": "滨州学院",
+    "nameEng": "Binzhou University",
+    "location": "山东"
+  },
+  {
+    "name": "长春大学",
+    "nameEng": "Changchun University",
+    "location": "吉林"
+  },
+  {
+    "name": "黑龙江科技大学",
+    "nameEng": "Heilongjiang University of Science and Technology",
+    "location": "黑龙江"
+  },
+  {
+    "name": "泉州师范学院",
+    "nameEng": "Quanzhou Normal University",
+    "location": "福建"
+  },
+  {
+    "name": "河北科技师范学院",
+    "nameEng": "Hebei Normal University of Science and Technology",
+    "location": "河北"
+  },
+  {
+    "name": "广西科技大学",
+    "nameEng": "Guangxi University of Science and Technology",
+    "location": "广西"
+  },
+  {
+    "name": "江苏第二师范学院",
+    "nameEng": "Jiangsu Second Normal University",
+    "location": "江苏"
+  },
+  {
+    "name": "西藏农牧学院",
+    "nameEng": "Tibet Agriculture and Animal Husbandry University",
+    "location": "西藏"
+  },
+  {
+    "name": "贵州理工学院",
+    "nameEng": "Guizhou Institute of Technology",
+    "location": "贵州"
+  },
+  {
+    "name": "咸阳师范学院",
+    "nameEng": "Xianyang Normal University",
+    "location": "陕西"
+  },
+  {
+    "name": "九江学院",
+    "nameEng": "Jiujiang University",
+    "location": "江西"
+  },
+  {
+    "name": "绵阳师范学院",
+    "nameEng": "Mianyang Teachers' College",
+    "location": "四川"
+  },
+  {
+    "name": "湖北汽车工业学院",
+    "nameEng": "Hubei University of Automotive Technology",
+    "location": "湖北"
+  },
+  {
+    "name": "常州工学院",
+    "nameEng": "Changzhou Institute of Technology",
+    "location": "江苏"
+  },
+  {
+    "name": "金陵科技学院",
+    "nameEng": "Jinling Institute of Technology",
+    "location": "江苏"
+  },
+  {
+    "name": "黑龙江工程学院",
+    "nameEng": "Heilongjiang Institute of Technology",
+    "location": "黑龙江"
+  },
+  {
+    "name": "乐山师范学院",
+    "nameEng": "Leshan Normal University",
+    "location": "四川"
+  },
+  {
+    "name": "潍坊学院",
+    "nameEng": "Weifang University",
+    "location": "山东"
+  },
+  {
+    "name": "佳木斯大学",
+    "nameEng": "Jiamusi University",
+    "location": "黑龙江"
+  },
+  {
+    "name": "唐山师范学院",
+    "nameEng": "Tangshan Normal University",
+    "location": "河北"
+  },
+  {
+    "name": "山东交通学院",
+    "nameEng": "Shandong Jiaotong University",
+    "location": "山东"
+  },
+  {
+    "name": "广东石油化工学院",
+    "nameEng": "Guangdong University of Petrochemical Technology",
+    "location": "广东"
+  },
+  {
+    "name": "河北建筑工程学院",
+    "nameEng": "Hebei University of Architecture",
+    "location": "河北"
+  },
+  {
+    "name": "湖北工程学院",
+    "nameEng": "Hubei Engineering University",
+    "location": "湖北"
+  },
+  {
+    "name": "惠州学院",
+    "nameEng": "Huizhou University",
+    "location": "广东"
+  },
+  {
+    "name": "成都工业学院",
+    "nameEng": "Chengdu Technological University",
+    "location": "四川"
+  },
+  {
+    "name": "丽水学院",
+    "nameEng": "Lishui University",
+    "location": "浙江"
+  },
+  {
+    "name": "黄淮学院",
+    "nameEng": "Huanghuai University",
+    "location": "河南"
+  },
+  {
+    "name": "许昌学院",
+    "nameEng": "Xuchang University",
+    "location": "河南"
+  },
+  {
+    "name": "北华航天工业学院",
+    "nameEng": "North China Institute of Aerospace Engineering",
+    "location": "河北"
+  },
+  {
+    "name": "湖北第二师范学院",
+    "nameEng": "Hubei University of Education",
+    "location": "湖北"
+  },
+  {
+    "name": "湖南第一师范学院",
+    "nameEng": "Hunan First Normal University",
+    "location": "湖南"
+  },
+  {
+    "name": "湖南文理学院",
+    "nameEng": "Hunan University of Arts and Science",
+    "location": "湖南"
+  },
+  {
+    "name": "周口师范学院",
+    "nameEng": "Zhoukou Normal University",
+    "location": "河南"
+  },
+  {
+    "name": "成都师范学院",
+    "nameEng": "Chengdu Normal University",
+    "location": "四川"
+  },
+  {
+    "name": "重庆三峡学院",
+    "nameEng": "Chongqing Three Gorges University",
+    "location": "重庆"
+  },
+  {
+    "name": "铜仁学院",
+    "nameEng": "Tongren University",
+    "location": "贵州"
+  },
+  {
+    "name": "遵义师范学院",
+    "nameEng": "Zunyi Normal University",
+    "location": "贵州"
+  },
+  {
+    "name": "上饶师范学院",
+    "nameEng": "Shangrao Normal University",
+    "location": "江西"
+  },
+  {
+    "name": "商丘师范学院",
+    "nameEng": "Shangqiu Normal University",
+    "location": "河南"
+  },
+  {
+    "name": "宜春学院",
+    "nameEng": "Yichun University",
+    "location": "江西"
+  },
+  {
+    "name": "浙江水利水电学院",
+    "nameEng": "Zhejiang University of Water Resources and Electric Power",
+    "location": "浙江"
+  },
+  {
+    "name": "滁州学院",
+    "nameEng": "Chuzhou University",
+    "location": "安徽"
+  },
+  {
+    "name": "吉林化工学院",
+    "nameEng": "Jilin Institute of Chemical Technology",
+    "location": "吉林"
+  },
+  {
+    "name": "德州学院",
+    "nameEng": "Dezhou University",
+    "location": "山东"
+  },
+  {
+    "name": "肇庆学院",
+    "nameEng": "Zhaoqing University",
+    "location": "广东"
+  },
+  {
+    "name": "泰山学院",
+    "nameEng": "Taishan University",
+    "location": "山东"
+  },
+  {
+    "name": "广东第二师范学院",
+    "nameEng": "Guangdong University of Education",
+    "location": "广东"
+  },
+  {
+    "name": "沈阳工程学院",
+    "nameEng": "Shenyang Institute of Engineering",
+    "location": "辽宁"
+  },
+  {
+    "name": "榆林学院",
+    "nameEng": "Yulin University",
+    "location": "陕西"
+  },
+  {
+    "name": "长春工程学院",
+    "nameEng": "Changchun Institute of Technology",
+    "location": "吉林"
+  },
+  {
+    "name": "洛阳理工学院",
+    "nameEng": "Luoyang Institute of Science and Technology",
+    "location": "河南"
+  },
+  {
+    "name": "韩山师范学院",
+    "nameEng": "Hanshan Normal University",
+    "location": "广东"
+  },
+  {
+    "name": "河北科技工程职业技术大学",
+    "nameEng": "North China Electric Power University Science and Technology College",
+    "location": "河北"
+  },
+  {
+    "name": "天水师范学院",
+    "nameEng": "Tianshui Normal University",
+    "location": "甘肃"
+  },
+  {
+    "name": "北部湾大学",
+    "nameEng": "Beibu Gulf University",
+    "location": "广西"
+  },
+  {
+    "name": "西安文理学院",
+    "nameEng": "Xi'an University",
+    "location": "陕西"
+  },
+  {
+    "name": "齐鲁师范学院",
+    "nameEng": "Qilu Normal University",
+    "location": "山东"
+  },
+  {
+    "name": "皖西学院",
+    "nameEng": "West AnHui University",
+    "location": "安徽"
+  },
+  {
+    "name": "哈尔滨学院",
+    "nameEng": "Harbin University",
+    "location": "黑龙江"
+  },
+  {
+    "name": "湖南城市学院",
+    "nameEng": "Hunan City University",
+    "location": "湖南"
+  },
+  {
+    "name": "通化师范学院",
+    "nameEng": "Tonghua Normal University",
+    "location": "吉林"
+  },
+  {
+    "name": "防灾科技学院",
+    "nameEng": "Institute of Disaster Prevention",
+    "location": "河北"
+  },
+  {
+    "name": "宜宾学院",
+    "nameEng": "Yibin University",
+    "location": "四川"
+  },
+  {
+    "name": "河北工业职业技术大学",
+    "nameEng": "Polytechnic College of Hebei University of Science and Technology",
+    "location": "河北"
+  },
+  {
+    "name": "兰州城市学院",
+    "nameEng": "Lanzhou City University",
+    "location": "甘肃"
+  },
+  {
+    "name": "河南科技学院",
+    "nameEng": "Henan Institute of Science and Technology",
+    "location": "河南"
+  },
+  {
+    "name": "宁夏师范学院",
+    "nameEng": "Ningxia Normal University",
+    "location": "宁夏"
+  },
+  {
+    "name": "曲靖师范学院",
+    "nameEng": "Qujing Normal University",
+    "location": "云南"
+  },
+  {
+    "name": "渭南师范学院",
+    "nameEng": "Weinan Normal University",
+    "location": "陕西"
+  },
+  {
+    "name": "玉林师范学院",
+    "nameEng": "Yulin Normal University",
+    "location": "广西"
+  },
+  {
+    "name": "南京特殊教育师范学院",
+    "nameEng": "Nanjing Normal University of Special Education",
+    "location": "江苏"
+  },
+  {
+    "name": "华北科技学院",
+    "nameEng": "North China Institute of Science and Technology",
+    "location": "河北"
+  },
+  {
+    "name": "唐山学院",
+    "nameEng": "Tangshan College",
+    "location": "河北"
+  },
+  {
+    "name": "韶关学院",
+    "nameEng": "Shaoguan University",
+    "location": "广东"
+  },
+  {
+    "name": "河西学院",
+    "nameEng": "HeXi University",
+    "location": "甘肃"
+  },
+  {
+    "name": "黄山学院",
+    "nameEng": "Huangshan University",
+    "location": "安徽"
+  },
+  {
+    "name": "中国民用航空飞行学院",
+    "nameEng": "Civil Aviation Flight University of China",
+    "location": "四川"
+  },
+  {
+    "name": "湖南工程学院",
+    "nameEng": "Hunan Institute of Engineering",
+    "location": "湖南"
+  },
+  {
+    "name": "三明学院",
+    "nameEng": "Sanming University",
+    "location": "福建"
+  },
+  {
+    "name": "泰州学院",
+    "nameEng": "Taizhou University",
+    "location": "江苏"
+  },
+  {
+    "name": "湖北理工学院",
+    "nameEng": "Hubei Polytechnic University",
+    "location": "湖北"
+  },
+  {
+    "name": "石家庄学院",
+    "nameEng": "Shijiazhuang University",
+    "location": "河北"
+  },
+  {
+    "name": "莆田学院",
+    "nameEng": "Putian University",
+    "location": "福建"
+  },
+  {
+    "name": "龙岩学院",
+    "nameEng": "Longyan University",
+    "location": "福建"
+  },
+  {
+    "name": "内蒙古科技大学包头师范学院",
+    "nameEng": "Baotou Teachers' College",
+    "location": "内蒙古"
+  },
+  {
+    "name": "安顺学院",
+    "nameEng": "Anshun University",
+    "location": "贵州"
+  },
+  {
+    "name": "南昌师范学院",
+    "nameEng": "Nanchang Normal University",
+    "location": "江西"
+  },
+  {
+    "name": "四川文理学院",
+    "nameEng": "Sichuan University of Arts and Science",
+    "location": "四川"
+  },
+  {
+    "name": "廊坊师范学院",
+    "nameEng": "Langfang Teachers University",
+    "location": "河北"
+  },
+  {
+    "name": "玉溪师范学院",
+    "nameEng": "Yuxi Normal University",
+    "location": "云南"
+  },
+  {
+    "name": "河南城建学院",
+    "nameEng": "Henan University of Urban Construction",
+    "location": "河南"
+  },
+  {
+    "name": "重庆第二师范学院",
+    "nameEng": "Chongqing University of Education",
+    "location": "重庆"
+  },
+  {
+    "name": "西昌学院",
+    "nameEng": "Xichang College",
+    "location": "四川"
+  },
+  {
+    "name": "凯里学院",
+    "nameEng": "Kaili University",
+    "location": "贵州"
+  },
+  {
+    "name": "牡丹江师范学院",
+    "nameEng": "Mudanjiang Normal University",
+    "location": "黑龙江"
+  },
+  {
+    "name": "四川旅游学院",
+    "nameEng": "Sichuan Tourism University",
+    "location": "四川"
+  },
+  {
+    "name": "郑州师范学院",
+    "nameEng": "Zhengzhou Normal University",
+    "location": "河南"
+  },
+  {
+    "name": "大庆师范学院",
+    "nameEng": "Daqing Normal University",
+    "location": "黑龙江"
+  },
+  {
+    "name": "攀枝花学院",
+    "nameEng": "Panzhihua University",
+    "location": "四川"
+  },
+  {
+    "name": "昆明学院",
+    "nameEng": "Kunming University",
+    "location": "云南"
+  },
+  {
+    "name": "衢州学院",
+    "nameEng": "Quzhou University",
+    "location": "浙江"
+  },
+  {
+    "name": "白城师范学院",
+    "nameEng": "Baicheng Normal University",
+    "location": "吉林"
+  },
+  {
+    "name": "吉林工程技术师范学院",
+    "nameEng": "Jilin Engineering Normal University",
+    "location": "吉林"
+  },
+  {
+    "name": "淮南师范学院",
+    "nameEng": "Huainan Normal University",
+    "location": "安徽"
+  },
+  {
+    "name": "湖州学院",
+    "nameEng": "Huzhou University Qiuzhen College",
+    "location": "浙江"
+  },
+  {
+    "name": "嘉应学院",
+    "nameEng": "Jiaying University",
+    "location": "广东"
+  },
+  {
+    "name": "南阳理工学院",
+    "nameEng": "Nanyang Institute of Technology",
+    "location": "河南"
+  },
+  {
+    "name": "营口理工学院",
+    "nameEng": "YingKou Institute of Technology",
+    "location": "辽宁"
+  },
+  {
+    "name": "商洛学院",
+    "nameEng": "Shangluo University",
+    "location": "陕西"
+  },
+  {
+    "name": "陇东学院",
+    "nameEng": "Long Dong University",
+    "location": "甘肃"
+  },
+  {
+    "name": "保定学院",
+    "nameEng": "Baoding University",
+    "location": "河北"
+  },
+  {
+    "name": "苏州城市学院",
+    "nameEng": "Wenzheng College of Soochow University",
+    "location": "江苏"
+  },
+  {
+    "name": "安康学院",
+    "nameEng": "Ankang University",
+    "location": "陕西"
+  },
+  {
+    "name": "湖南科技学院",
+    "nameEng": "Hunan University of Science and Engineering",
+    "location": "湖南"
+  },
+  {
+    "name": "山东管理学院",
+    "nameEng": "Shandong Management University",
+    "location": "山东"
+  },
+  {
+    "name": "贵阳学院",
+    "nameEng": "Guiyang University",
+    "location": "贵州"
+  },
+  {
+    "name": "辽宁科技学院",
+    "nameEng": "Liaoning Institute of Science and Technology",
+    "location": "辽宁"
+  },
+  {
+    "name": "武夷学院",
+    "nameEng": "Wuyi University",
+    "location": "福建"
+  },
+  {
+    "name": "鞍山师范学院",
+    "nameEng": "Anshan Normal University Liaoning China",
+    "location": "辽宁"
+  },
+  {
+    "name": "湘南学院",
+    "nameEng": "Xiangnan University",
+    "location": "湖南"
+  },
+  {
+    "name": "六盘水师范学院",
+    "nameEng": "Liupanshui Normal University",
+    "location": "贵州"
+  },
+  {
+    "name": "河南牧业经济学院",
+    "nameEng": "Henan University of Animal Husbandry and Economy",
+    "location": "河南"
+  },
+  {
+    "name": "平顶山学院",
+    "nameEng": "Pingdingshan University",
+    "location": "河南"
+  },
+  {
+    "name": "贺州学院",
+    "nameEng": "Hezhou University",
+    "location": "广西"
+  },
+  {
+    "name": "兰州工业学院",
+    "nameEng": "Lanzhou Institute of Technology",
+    "location": "甘肃"
+  },
+  {
+    "name": "宁德师范学院",
+    "nameEng": "Ningde Normal University",
+    "location": "福建"
+  },
+  {
+    "name": "池州学院",
+    "nameEng": "Chizhou University",
+    "location": "安徽"
+  },
+  {
+    "name": "黔南民族师范学院",
+    "nameEng": "Qiannan Normal College for Nationalities",
+    "location": "贵州"
+  },
+  {
+    "name": "太原师范学院",
+    "nameEng": "Taiyuan Normal University",
+    "location": "山西"
+  },
+  {
+    "name": "宿州学院",
+    "nameEng": "Suzhou University",
+    "location": "安徽"
+  },
+  {
+    "name": "山东石油化工学院",
+    "nameEng": "Shengli College, China University of Petroleum",
+    "location": "山东"
+  },
+  {
+    "name": "海南热带海洋学院",
+    "nameEng": "Hainan Tropical Ocean University",
+    "location": "海南"
+  },
+  {
+    "name": "黑河学院",
+    "nameEng": "Heihe University",
+    "location": "黑龙江"
+  },
+  {
+    "name": "吉林农业科技学院",
+    "nameEng": "Jilin Agricultural Science and Technology University",
+    "location": "吉林"
+  },
+  {
+    "name": "辽东学院",
+    "nameEng": "Eastern Liaoning University",
+    "location": "辽宁"
+  },
+  {
+    "name": "山西大同大学",
+    "nameEng": "Shanxi Datong University",
+    "location": "山西"
+  },
+  {
+    "name": "西安航空学院",
+    "nameEng": "Xi'an Aeronautical University",
+    "location": "陕西"
+  },
+  {
+    "name": "陕西学前师范学院",
+    "nameEng": "Shaanxi Xueqian Normal University",
+    "location": "陕西"
+  },
+  {
+    "name": "四川民族学院",
+    "nameEng": "Sichuan University for Nationalities",
+    "location": "四川"
+  },
+  {
+    "name": "山东农业工程学院",
+    "nameEng": "Shandong Agriculture and Engineering University",
+    "location": "山东"
+  },
+  {
+    "name": "蚌埠学院",
+    "nameEng": "Bengbu University",
+    "location": "安徽"
+  },
+  {
+    "name": "怀化学院",
+    "nameEng": "Huaihua University",
+    "location": "湖南"
+  },
+  {
+    "name": "新余学院",
+    "nameEng": "Xinyu University",
+    "location": "江西"
+  },
+  {
+    "name": "邵阳学院",
+    "nameEng": "Shaoyang University",
+    "location": "湖南"
+  },
+  {
+    "name": "楚雄师范学院",
+    "nameEng": "Chuxiong Normal University",
+    "location": "云南"
+  },
+  {
+    "name": "河南工程学院",
+    "nameEng": "Henan University of Engineering",
+    "location": "河南"
+  },
+  {
+    "name": "济宁学院",
+    "nameEng": "Jining University",
+    "location": "山东"
+  },
+  {
+    "name": "喀什大学",
+    "nameEng": "Kashi University",
+    "location": "新疆"
+  },
+  {
+    "name": "兰州文理学院",
+    "nameEng": "Lanzhou University of Arts and Science",
+    "location": "甘肃"
+  },
+  {
+    "name": "赤峰学院",
+    "nameEng": "Chifeng University",
+    "location": "内蒙古"
+  },
+  {
+    "name": "汉江师范学院",
+    "nameEng": "Hanjiang Normal University",
+    "location": "湖北"
+  },
+  {
+    "name": "伊犁师范大学",
+    "nameEng": "Yili Normal University",
+    "location": "新疆"
+  },
+  {
+    "name": "贵州工程应用技术学院",
+    "nameEng": "Guizhou University of Engineering Science",
+    "location": "贵州"
+  },
+  {
+    "name": "邢台学院",
+    "nameEng": "Xingtai University",
+    "location": "河北"
+  },
+  {
+    "name": "邯郸学院",
+    "nameEng": "Handan College",
+    "location": "河北"
+  },
+  {
+    "name": "衡水学院",
+    "nameEng": "Hengshui University",
+    "location": "河北"
+  },
+  {
+    "name": "晋中学院",
+    "nameEng": "Jinzhong University",
+    "location": "山西"
+  },
+  {
+    "name": "梧州学院",
+    "nameEng": "Wuzhou University",
+    "location": "广西"
+  },
+  {
+    "name": "菏泽学院",
+    "nameEng": "Heze University",
+    "location": "山东"
+  },
+  {
+    "name": "红河学院",
+    "nameEng": "Honghe University",
+    "location": "云南"
+  },
+  {
+    "name": "甘肃民族师范学院",
+    "nameEng": "Gansu Normal University for Nationalities",
+    "location": "甘肃"
+  },
+  {
+    "name": "呼伦贝尔学院",
+    "nameEng": "Hulunbuir University",
+    "location": "内蒙古"
+  },
+  {
+    "name": "山东女子学院",
+    "nameEng": "Shandong Women's University",
+    "location": "山东"
+  },
+  {
+    "name": "湖南人文科技学院",
+    "nameEng": "Hunan University of Humanities, Science and Technology",
+    "location": "湖南"
+  },
+  {
+    "name": "广州航海学院",
+    "nameEng": "Guangzhou Maritime University",
+    "location": "广东"
+  },
+  {
+    "name": "新乡学院",
+    "nameEng": "Xinxiang University",
+    "location": "河南"
+  },
+  {
+    "name": "百色学院",
+    "nameEng": "Baise University",
+    "location": "广西"
+  },
+  {
+    "name": "沧州师范学院",
+    "nameEng": "Cangzhou Normal University",
+    "location": "河北"
+  },
+  {
+    "name": "景德镇学院",
+    "nameEng": "Jingdezhen University",
+    "location": "江西"
+  },
+  {
+    "name": "福建技术师范学院",
+    "nameEng": "Fujian Polytechnic Normal University",
+    "location": "福建"
+  },
+  {
+    "name": "赣南科技学院",
+    "nameEng": "College of Applied Science, Jiangxi University of Science and Technology",
+    "location": "江西"
+  },
+  {
+    "name": "广西民族师范学院",
+    "nameEng": "Guangxi Normal University for Nationalities",
+    "location": "广西"
+  },
+  {
+    "name": "荆楚理工学院",
+    "nameEng": "Jingchu University of Technology",
+    "location": "湖北"
+  },
+  {
+    "name": "安阳工学院",
+    "nameEng": "Anyang Institute of Technology",
+    "location": "河南"
+  },
+  {
+    "name": "阿坝师范学院",
+    "nameEng": "Aba Teachers University",
+    "location": "四川"
+  },
+  {
+    "name": "信阳农林学院",
+    "nameEng": "Xinyang Agriculture and Forestry University",
+    "location": "河南"
+  },
+  {
+    "name": "巢湖学院",
+    "nameEng": "Chaohu University",
+    "location": "安徽"
+  },
+  {
+    "name": "河北民族师范学院",
+    "nameEng": "Hebei Normal University for Nationalities",
+    "location": "河北"
+  },
+  {
+    "name": "桂林航天工业学院",
+    "nameEng": "Guilin University of Aerospace Technology",
+    "location": "广西"
+  },
+  {
+    "name": "长治学院",
+    "nameEng": "Changzhi University",
+    "location": "山西"
+  },
+  {
+    "name": "河池学院",
+    "nameEng": "Hechi University",
+    "location": "广西"
+  },
+  {
+    "name": "河北环境工程学院",
+    "nameEng": "Hebei University of Environmental Engineering",
+    "location": "河北"
+  },
+  {
+    "name": "张家口学院",
+    "nameEng": "Zhangjiakou University",
+    "location": "河北"
+  },
+  {
+    "name": "湖南工学院",
+    "nameEng": "Hunan Institute of Technology",
+    "location": "湖南"
+  },
+  {
+    "name": "河南工学院",
+    "nameEng": "Henan Institute of Technology",
+    "location": "河南"
+  },
+  {
+    "name": "兴义民族师范学院",
+    "nameEng": "Xingyi Normal University for Nationalities",
+    "location": "贵州"
+  },
+  {
+    "name": "绥化学院",
+    "nameEng": "Suihua University",
+    "location": "黑龙江"
+  },
+  {
+    "name": "温州理工学院",
+    "nameEng": "Wenzhou University Oujiang College",
+    "location": "浙江"
+  },
+  {
+    "name": "保山学院",
+    "nameEng": "Baoshan University",
+    "location": "云南"
+  },
+  {
+    "name": "山东青年政治学院",
+    "nameEng": "Shandong Youth University of Political Science",
+    "location": "山东"
+  },
+  {
+    "name": "长沙师范学院",
+    "nameEng": "Changsha Normal University",
+    "location": "湖南"
+  },
+  {
+    "name": "枣庄学院",
+    "nameEng": "Zaozhuang University",
+    "location": "山东"
+  },
+  {
+    "name": "郑州工程技术学院",
+    "nameEng": "Zhengzhou Institute of Technology",
+    "location": "河南"
+  },
+  {
+    "name": "运城学院",
+    "nameEng": "Yuncheng University",
+    "location": "山西"
+  },
+  {
+    "name": "文山学院",
+    "nameEng": "Wenshan University",
+    "location": "云南"
+  },
+  {
+    "name": "吕梁学院",
+    "nameEng": "Luliang University",
+    "location": "山西"
+  },
+  {
+    "name": "新疆工程学院",
+    "nameEng": "Xinjiang Institute of Engineering",
+    "location": "新疆"
+  },
+  {
+    "name": "普洱学院",
+    "nameEng": "Puer University",
+    "location": "云南"
+  },
+  {
+    "name": "萍乡学院",
+    "nameEng": "Pingxiang University",
+    "location": "江西"
+  },
+  {
+    "name": "集宁师范学院",
+    "nameEng": "Jining Normal University",
+    "location": "内蒙古"
+  },
+  {
+    "name": "滇西科技师范学院",
+    "nameEng": "West Yunnan University",
+    "location": "云南"
+  },
+  {
+    "name": "太原工业学院",
+    "nameEng": "Taiyuan Institute of Technology",
+    "location": "山西"
+  },
+  {
+    "name": "新疆理工学院",
+    "nameEng": "Xinjiang Institute of Technology",
+    "location": "新疆"
+  },
+  {
+    "name": "广西科技师范学院",
+    "nameEng": "Guangxi Science and Technology Normal University",
+    "location": "广西"
+  },
+  {
+    "name": "昭通学院",
+    "nameEng": "Zhaotong University",
+    "location": "云南"
+  },
+  {
+    "name": "忻州师范学院",
+    "nameEng": "Xinzhou Teachers University",
+    "location": "山西"
+  },
+  {
+    "name": "河北石油职业技术大学",
+    "nameEng": "Hebei University of Technology City College",
+    "location": "河北"
+  },
+  {
+    "name": "昌吉学院",
+    "nameEng": "Changji University",
+    "location": "新疆"
+  },
+  {
+    "name": "琼台师范学院",
+    "nameEng": "Qiongtai Normal University",
+    "location": "海南"
+  },
+  {
+    "name": "鄂尔多斯应用技术学院",
+    "nameEng": "Ordos Institute of Technology",
+    "location": "内蒙古"
+  },
+  {
+    "name": "黑龙江工业学院",
+    "nameEng": "Heilongjiang University of Technology",
+    "location": "黑龙江"
+  },
+  {
+    "name": "新疆政法学院",
+    "nameEng": "College of Science &amp; Technology Shihezi University",
+    "location": "新疆"
+  },
+  {
+    "name": "山西能源学院",
+    "nameEng": "Shanxi Institute of Energy",
+    "location": "山西"
+  },
+  {
+    "name": "赣东学院",
+    "nameEng": "East China Institute of Technology, Yangtze River College",
+    "location": "江西"
+  },
+  {
+    "name": "河套学院",
+    "nameEng": "Hetao University",
+    "location": "内蒙古"
+  },
+  {
+    "name": "亳州学院",
+    "nameEng": "Bozhou University",
+    "location": "安徽"
+  },
+  {
+    "name": "豫章师范学院",
+    "nameEng": "Yuzhang Normal University",
+    "location": "江西"
+  },
+  {
+    "name": "山西工程技术学院",
+    "nameEng": "Shanxi Institute of Technology",
+    "location": "山西"
+  },
+  {
+    "name": "太原学院",
+    "nameEng": "Taiyuan University",
+    "location": "山西"
+  }
 ]
