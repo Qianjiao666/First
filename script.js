@@ -54,6 +54,10 @@
   let mkjCarouselTimer;
   let mkjCurrentUser = null;
   let mkjResendCooldownTimer = null;
+  let mkjActiveModal = null;
+  let mkjModalTrigger = null;
+  let mkjInertedElements = [];
+  const mkjProgressStorageKey = "mkj-assessment-progress-v1";
   const mkjSupabaseConfig = window.SUPABASE_CONFIG || {};
   const mkjAuthRedirectUrl = new URL("./", window.location.href).href;
   const mkjCanUseSupabase = Boolean(mkjSupabaseConfig.url && mkjSupabaseConfig.publishableKey && window.supabase?.createClient);
@@ -61,7 +65,42 @@
     auth: { persistSession:true, autoRefreshToken:true, detectSessionInUrl:true }
   }) : null;
 
+  const mkjFocusableSelector = "a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex='-1'])";
+  function mkjOpenModal(target,trigger=document.activeElement){
+    const backdrop=typeof target==="string"?mkj$(target):target;
+    if(!backdrop)return;
+    mkjModalTrigger=trigger instanceof HTMLElement?trigger:document.activeElement;
+    backdrop.hidden=false;
+    mkjActiveModal=backdrop;
+    document.body.classList.add("mkj-modal-open");
+    mkjInertedElements=[...document.body.children].filter(element=>element!==backdrop&&!element.matches("script,.mkj-toast"));
+    mkjInertedElements.forEach(element=>{if(!element.inert){element.inert=true;element.dataset.mkjManagedInert="true"}});
+    const dialog=mkj$("[role='dialog']",backdrop);
+    const titleId=dialog?.getAttribute("aria-labelledby");
+    const title=titleId?document.getElementById(titleId):null;
+    if(title){title.tabIndex=-1;title.focus({preventScroll:true})}
+    else mkj$(mkjFocusableSelector,dialog)?.focus({preventScroll:true});
+  }
+  function mkjCloseModal(target=mkjActiveModal,restoreFocus=true){
+    const backdrop=typeof target==="string"?mkj$(target):target;
+    if(!backdrop)return;
+    backdrop.hidden=true;
+    if(backdrop===mkjActiveModal){
+      mkjActiveModal=null;
+      document.body.classList.remove("mkj-modal-open");
+      mkjInertedElements.forEach(element=>{if(element.dataset.mkjManagedInert){element.inert=false;delete element.dataset.mkjManagedInert}});
+      mkjInertedElements=[];
+      if(restoreFocus&&mkjModalTrigger?.isConnected){
+        const fallback=mkjModalTrigger.getClientRects().length?mkjModalTrigger:mkj$("#mkj-menu-button");
+        fallback?.focus({preventScroll:true});
+      }
+      mkjModalTrigger=null;
+    }
+  }
+
   function mkjInit(){
+    mkjSetupEnhanced();
+
     mkjSetupNavigation();
     mkjSetupReveal();
     mkjSetupCounters();
@@ -83,14 +122,15 @@
     const updateHeader = () => header.classList.toggle("mkj-is-scrolled", window.scrollY > 12);
     window.addEventListener("scroll", updateHeader, {passive:true});
     updateHeader();
-    menuButton.addEventListener("click", () => {
-      const open = nav.classList.toggle("mkj-is-open");
-      menuButton.setAttribute("aria-expanded", String(open));
-    });
-    mkj$$(".mkj-nav-link, .mkj-main-site-button").forEach(link => link.addEventListener("click", () => {
-      nav.classList.remove("mkj-is-open");
-      menuButton.setAttribute("aria-expanded","false");
-    }));
+    const overlay=document.createElement("button");
+    overlay.type="button";overlay.className="mkj-nav-overlay";overlay.setAttribute("aria-label","关闭导航菜单");overlay.hidden=true;document.body.appendChild(overlay);
+    const closeNav=(restoreFocus=false)=>{nav.classList.remove("mkj-is-open");menuButton.setAttribute("aria-expanded","false");overlay.hidden=true;document.body.classList.remove("mkj-nav-open");if(restoreFocus)menuButton.focus({preventScroll:true})};
+    const openNav=()=>{nav.classList.add("mkj-is-open");menuButton.setAttribute("aria-expanded","true");overlay.hidden=false;document.body.classList.add("mkj-nav-open")};
+    menuButton.addEventListener("click", () => nav.classList.contains("mkj-is-open")?closeNav(true):openNav());
+    overlay.addEventListener("click",()=>closeNav(true));
+    document.addEventListener("keydown",event=>{if(event.key==="Escape"&&nav.classList.contains("mkj-is-open")){event.preventDefault();closeNav(true)}});
+    window.addEventListener("resize",()=>{if(window.innerWidth>780&&nav.classList.contains("mkj-is-open"))closeNav(false)});
+    mkj$$(".mkj-nav-link, .mkj-main-site-button, .mkj-log-button, .mkj-account-button").forEach(link => link.addEventListener("click", () => closeNav(false)));
     const sections = mkj$$("main section[id]");
     const links = mkj$$(".mkj-nav-link");
     const observer = new IntersectionObserver(entries => entries.forEach(entry => {
@@ -134,32 +174,58 @@
   /* 渲染当前题目，选项点击后保留选择态，再自动进入下一题。 */
   function mkjSetupAssessment(){
     mkj$("#mkj-total-step").textContent = mkjQuestions.length;
+    mkjLoadAssessmentProgress();
     mkjRenderQuestion();
     mkj$("#mkj-prev-button").addEventListener("click", () => {
-      if(mkjCurrent > 0){ mkjCurrent -= 1; mkjRenderQuestion(); }
+      if(mkjCurrent > 0){ mkjCurrent -= 1; mkjPersistAssessmentProgress(); mkjRenderQuestion(); }
+    });
+    mkj$("#mkj-save-progress").addEventListener("click", () => {
+      mkjPersistAssessmentProgress();
+      mkjShowToast("评估进度已保存");
     });
     mkj$("#mkj-restart-button").addEventListener("click", () => {
-      mkjCurrent=0; mkjAnswers=[]; mkjScores={}; mkj$("#mkj-report").hidden=true; mkj$("#mkj-assessment-shell").hidden=false; mkjRenderQuestion();
+      mkjCurrent=0; mkjAnswers=[]; mkjScores={}; localStorage.removeItem(mkjProgressStorageKey); mkj$("#mkj-report").hidden=true; mkj$("#mkj-assessment-shell").hidden=false; mkjRenderQuestion();
     });
     document.addEventListener("keydown", event => {
       if(["1","2","3","4"].includes(event.key) && !mkj$("#mkj-assessment-shell").hidden) mkjSelectOption(Number(event.key)-1);
     });
   }
+  function mkjLoadAssessmentProgress(){
+    try{
+      const saved=JSON.parse(localStorage.getItem(mkjProgressStorageKey)||"null");
+      if(!saved||!Array.isArray(saved.answers)||!Number.isInteger(saved.current))return;
+      if(saved.current<0||saved.current>=mkjQuestions.length)return;
+      mkjCurrent=saved.current;
+      mkjAnswers=saved.answers.slice(0,mkjQuestions.length);
+    }catch(error){ localStorage.removeItem(mkjProgressStorageKey); }
+  }
+  function mkjPersistAssessmentProgress(){
+    localStorage.setItem(mkjProgressStorageKey,JSON.stringify({current:mkjCurrent,answers:mkjAnswers}));
+  }
   function mkjRenderQuestion(){
     const question = mkjQuestions[mkjCurrent];
     mkj$("#mkj-current-step").textContent = mkjCurrent + 1;
     mkj$("#mkj-question-label").textContent = `QUESTION ${String(mkjCurrent+1).padStart(2,"0")}`;
-    mkj$("#mkj-progress-bar").style.width = `${((mkjCurrent+1)/mkjQuestions.length)*100}%`;
+    const progressTrack = mkj$(".mkj-progress-track");
+    const progressValue = mkjCurrent + 1;
+    progressTrack.setAttribute("role","progressbar");
+    progressTrack.setAttribute("aria-valuemin","0");
+    progressTrack.setAttribute("aria-valuemax",String(mkjQuestions.length));
+    progressTrack.setAttribute("aria-valuenow",String(progressValue));
+    progressTrack.setAttribute("aria-valuetext",`第 ${progressValue} 题，共 ${mkjQuestions.length} 题`);
+    mkj$("#mkj-progress-bar").style.transform = `scaleX(${progressValue/mkjQuestions.length})`;
     mkj$("#mkj-question-dimension").textContent = question.dimension;
     mkj$("#mkj-question-title").textContent = question.prompt;
     mkj$("#mkj-question-helper").textContent = question.helper;
     const options = mkj$("#mkj-options");
+    options.setAttribute("aria-busy","false");
     options.innerHTML = "";
     question.options.forEach((option,index) => {
       const button = document.createElement("button");
-      button.className = "mkj-option" + (mkjAnswers[mkjCurrent] === index ? " mkj-is-selected" : "");
+      const selected = mkjAnswers[mkjCurrent] === index;
+      button.className = "mkj-option" + (selected ? " mkj-is-selected" : "");
       button.type = "button";
-      button.setAttribute("role","listitem");
+      button.setAttribute("aria-pressed",String(selected));
       button.innerHTML = `<span class="mkj-option-index">${index+1}</span><span class="mkj-option-label">${option[0]}</span><span class="mkj-option-check">✓</span>`;
       button.addEventListener("click", () => mkjSelectOption(index));
       options.appendChild(button);
@@ -169,14 +235,24 @@
   function mkjSelectOption(index){
     const question = mkjQuestions[mkjCurrent];
     if(!question.options[index]) return;
+    const options = mkj$("#mkj-options");
+    if(options.getAttribute("aria-busy")==="true") return;
+    options.setAttribute("aria-busy","true");
     mkjAnswers[mkjCurrent] = index;
-    mkj$$(".mkj-option").forEach((button,i) => button.classList.toggle("mkj-is-selected", i === index));
+    mkj$$(".mkj-option").forEach((button,i) => {
+      const selected = i === index;
+      button.classList.toggle("mkj-is-selected",selected);
+      button.setAttribute("aria-pressed",String(selected));
+      button.disabled = true;
+    });
+    mkj$("#mkj-prev-button").disabled = true;
     window.setTimeout(() => {
-      if(mkjCurrent < mkjQuestions.length-1){ mkjCurrent += 1; mkjRenderQuestion(); }
+      if(mkjCurrent < mkjQuestions.length-1){ mkjCurrent += 1; mkjPersistAssessmentProgress(); mkjRenderQuestion(); }
       else mkjFinishAssessment();
     }, 360);
   }
   function mkjFinishAssessment(){
+    localStorage.removeItem(mkjProgressStorageKey);
     mkjScores = Object.fromEntries(mkjDimensions.map(dimension => [dimension,[]]));
     mkjQuestions.forEach((question,index) => mkjScores[question.dimension].push(question.options[mkjAnswers[index]][1]));
     const dimensionScores = Object.fromEntries(mkjDimensions.map(dimension => {
@@ -186,9 +262,11 @@
     const total = Math.round(Object.values(dimensionScores).reduce((a,b)=>a+b,0)/mkjDimensions.length);
     mkj$("#mkj-assessment-shell").hidden=true;
     mkj$("#mkj-report").hidden=false;
+    mkj$("#mkj-report").setAttribute("aria-busy","true");
     mkjRenderReport(dimensionScores,total);
+    mkj$("#mkj-report").setAttribute("aria-busy","false");
     mkj$("#mkj-report").scrollIntoView({behavior:"smooth",block:"start"});
-    window.setTimeout(() => mkj$("#mkj-benefit-modal").hidden=false, 650);
+    window.setTimeout(() => mkjOpenModal("#mkj-benefit-modal"), 650);
   }
   function mkjRenderReport(scores,total){
     const sorted = [...mkjDimensions].sort((a,b)=>scores[b]-scores[a]);
@@ -199,7 +277,7 @@
     mkj$("#mkj-weakest").textContent = sorted[sorted.length-1];
     mkj$("#mkj-report-summary").textContent = total >= 80 ? "基础扎实，适合进入高质量投递节奏。" : total >= 60 ? "已有可投递基础，补齐关键证据会更稳。" : "先建立稳定的行动节奏，再逐步扩大目标。";
     const recommendations = mkj$("#mkj-recommendations");
-    recommendations.innerHTML = sorted.slice(-3).reverse().map((dimension,index) => `<div class="mkj-recommendation"><span class="mkj-recommendation-number">0${index+1} / ${dimension}</span><h4>${mkjSuggestionMap[dimension][0]}</h4><p>把 ${dimension} 从“知道”变成面试时可以讲清楚的证据。</p><a href="#articles">查看推荐文章 →</a></div>`).join("");
+    recommendations.innerHTML = sorted.slice(-3).reverse().map((dimension,index) => `<div class="mkj-recommendation" role="listitem" aria-labelledby="mkj-recommendation-${index+1}-title"><span class="mkj-recommendation-number">0${index+1} / ${dimension}</span><h4 id="mkj-recommendation-${index+1}-title">${mkjSuggestionMap[dimension][0]}</h4><p>把 ${dimension} 从“知道”变成面试时可以讲清楚的证据。</p><a href="#articles">查看推荐文章 →</a></div>`).join("");
     mkjDrawRadar(scores);
   }
 
@@ -236,14 +314,20 @@
     const track=mkj$("#mkj-testimonial-track"), dots=mkj$("#mkj-carousel-dots");
     track.innerHTML=mkjTestimonials.map(item=>`<article class="mkj-testimonial"><div class="mkj-testimonial-top"><div class="mkj-testimonial-avatar">${item[4]}</div><div><h3>${item[0]}</h3><p>${item[1]} · ${item[2]}</p></div><span class="mkj-stars">★★★★★</span></div><blockquote>“${item[3]}”</blockquote><cite>已完成 MKJ 竞争力校准</cite></article>`).join("");
     const getPageCount=()=>{const visible=window.innerWidth<=780?1:window.innerWidth<=900?2:3;return Math.max(1,mkjTestimonials.length-visible+1)};
-    const renderDots=()=>{const pages=getPageCount();dots.innerHTML=Array.from({length:pages},(_,i)=>`<button type="button" aria-label="查看第 ${i+1} 页评价" class="${i===mkjCarouselIndex?"mkj-is-active":""}"></button>`).join("");mkj$$("button",dots).forEach((dot,i)=>dot.addEventListener("click",()=>{mkjCarouselIndex=i;render()}))};
-    const render=()=>{const cardWidth=mkj$(".mkj-testimonial").getBoundingClientRect().width+18;const max=getPageCount()-1;mkjCarouselIndex=Math.min(mkjCarouselIndex,max);track.style.transform=`translateX(-${mkjCarouselIndex*cardWidth}px)`;mkj$$("button",dots).forEach((dot,i)=>dot.classList.toggle("mkj-is-active",i===mkjCarouselIndex))};
+    const renderDots=()=>{const pages=getPageCount();dots.innerHTML=Array.from({length:pages},(_,i)=>`<button type="button" aria-label="查看第 ${i+1} 页评价" aria-current="${i===mkjCarouselIndex?"true":"false"}" class="${i===mkjCarouselIndex?"mkj-is-active":""}"></button>`).join("");mkj$$("button",dots).forEach((dot,i)=>dot.addEventListener("click",()=>{mkjCarouselIndex=i;render()}))};
+    const render=()=>{const cardWidth=mkj$(".mkj-testimonial").getBoundingClientRect().width+18;const max=getPageCount()-1;mkjCarouselIndex=Math.min(mkjCarouselIndex,max);track.style.transform=`translateX(-${mkjCarouselIndex*cardWidth}px)`;mkj$$("button",dots).forEach((dot,i)=>{const active=i===mkjCarouselIndex;dot.classList.toggle("mkj-is-active",active);dot.setAttribute("aria-current",String(active))})};
     renderDots();
     const next=()=>{const max=getPageCount()-1;mkjCarouselIndex=mkjCarouselIndex>=max?0:mkjCarouselIndex+1;render()};
     mkj$("#mkj-carousel-prev").addEventListener("click",()=>{mkjCarouselIndex=Math.max(0,mkjCarouselIndex-1);render()});
     mkj$("#mkj-carousel-next").addEventListener("click",next);
-    mkjCarouselTimer=window.setInterval(next,3000); window.addEventListener("resize",render);
-    const viewport=mkj$(".mkj-carousel-viewport");let startX=0;
+    const reducedMotion=window.matchMedia("(prefers-reduced-motion: reduce)");
+    const stopAuto=()=>{window.clearInterval(mkjCarouselTimer);mkjCarouselTimer=null};
+    const startAuto=()=>{if(!reducedMotion.matches&&!mkjCarouselTimer)mkjCarouselTimer=window.setInterval(next,3000)};
+    startAuto(); window.addEventListener("resize",render);
+    const viewport=mkj$(".mkj-carousel-viewport");viewport.tabIndex=0;viewport.setAttribute("aria-label","用户评价轮播");let startX=0;
+    viewport.addEventListener("mouseenter",stopAuto);viewport.addEventListener("mouseleave",startAuto);viewport.addEventListener("focusin",stopAuto);viewport.addEventListener("focusout",startAuto);
+    reducedMotion.addEventListener?.("change",()=>{stopAuto();startAuto()});
+    document.addEventListener("visibilitychange",()=>document.hidden?stopAuto():startAuto());
     viewport.addEventListener("touchstart",e=>{startX=e.changedTouches[0].screenX},{passive:true});
     viewport.addEventListener("touchend",e=>{const delta=e.changedTouches[0].screenX-startX;if(Math.abs(delta)>40)delta<0?next():(mkjCarouselIndex=Math.max(0,mkjCarouselIndex-1),render())},{passive:true});
   }
@@ -253,10 +337,13 @@
   }
   function mkjSetupSupport(){
     const button=mkj$("#mkj-support-button"),menu=mkj$("#mkj-support-menu");
-    button.addEventListener("click",()=>{const open=menu.hidden;menu.hidden=!open;button.classList.toggle("mkj-is-open",open);button.setAttribute("aria-expanded",String(open))});
+    const close=(restoreFocus=false)=>{menu.hidden=true;button.classList.remove("mkj-is-open");button.setAttribute("aria-expanded","false");if(restoreFocus)button.focus({preventScroll:true})};
+    button.addEventListener("click",()=>{const open=menu.hidden;if(open){menu.hidden=false;button.classList.add("mkj-is-open");button.setAttribute("aria-expanded","true")}else close(true)});
+    document.addEventListener("keydown",event=>{if(event.key==="Escape"&&!menu.hidden){event.preventDefault();close(true)}});
+    document.addEventListener("click",event=>{if(!menu.hidden&&!menu.contains(event.target)&&event.target!==button)close(false)});
   }
   function mkjSetupChangelog(){
-    mkj$("#mkj-log-button").addEventListener("click",()=>{mkj$("#mkj-changelog-modal").hidden=false});
+    mkj$("#mkj-log-button").addEventListener("click",event=>mkjOpenModal("#mkj-changelog-modal",event.currentTarget));
   }
   /* 认证逻辑沿用原航线账户能力：Supabase 会话、登录、注册、验证邮件、找回密码与退出。 */
   function mkjSetupAuth(){
@@ -290,7 +377,7 @@
       authCopy.textContent=recovery?"恢复链接已验证。保存后即可使用新密码登录。":mkjCurrentUser?"你的评估与行动记录会继续保存在这个账户中。":"注册后，评估记录与个性化建议会安全保存在你的账户。";
       setMessage("");
     };
-    const openAuth=view=>{setView(view);authHint.textContent=mkjCanUseSupabase?"你的账户数据将通过 Supabase 安全保存。":"账户服务暂未连接，请检查 /MKJ/supabase-config.js。";authModal.hidden=false};
+    const openAuth=view=>{setView(view);authHint.textContent=mkjCanUseSupabase?"你的账户数据将通过 Supabase 安全保存。":"账户服务暂未连接，请检查 /MKJ/supabase-config.js。";mkjOpenModal(authModal,accountButton)};
     const formatError=(error,fallback)=>{
       const raw=[error?.message,error?.error_description,error?.msg,error?.error,error?.cause?.message].find(value=>typeof value==="string"&&value.trim()&&value.trim()!=="{}")||"";
       if(/invalid login credentials/i.test(raw))return"邮箱或密码不正确";
@@ -315,32 +402,53 @@
     const requireClient=()=>{if(!mkjSupabaseClient){setMessage("账户服务暂未连接，请检查 /MKJ/supabase-config.js。");return false}return true};
     accountButton.addEventListener("click",()=>openAuth(mkjCurrentUser?"login":"login"));
     authTabs.forEach(tab=>tab.addEventListener("click",()=>setView(tab.dataset.mkjAuthView)));
-    mkj$("#mkj-auth-logout").addEventListener("click",async()=>{if(!requireClient())return;const{error}=await mkjSupabaseClient.auth.signOut();if(error){setMessage(formatError(error,"退出登录失败"));return}authModal.hidden=true;updateUI(null);mkjShowToast("已退出登录")});
+    mkj$("#mkj-auth-logout").addEventListener("click",async()=>{if(!requireClient())return;const{error}=await mkjSupabaseClient.auth.signOut();if(error){setMessage(formatError(error,"退出登录失败"));return}mkjCloseModal(authModal);updateUI(null);mkjShowToast("已退出登录")});
     mkj$("#mkj-login-form").addEventListener("submit",async event=>{
       event.preventDefault();if(!requireClient())return;const form=event.currentTarget,data=new FormData(form);setMessage("");setBusy(form,true);
-      try{const{error}=await mkjSupabaseClient.auth.signInWithPassword({email:String(data.get("email")).trim(),password:String(data.get("password"))});if(error){setMessage(formatError(error,"登录失败，请稍后再试"));return}authModal.hidden=true;mkjShowToast("登录成功，欢迎回到航线")}catch(error){setMessage(formatError(error,"登录失败，请稍后再试"))}finally{setBusy(form,false)}
+      try{const{error}=await mkjSupabaseClient.auth.signInWithPassword({email:String(data.get("email")).trim(),password:String(data.get("password"))});if(error){setMessage(formatError(error,"登录失败，请稍后再试"));return}mkjCloseModal(authModal);mkjShowToast("登录成功，欢迎回到航线")}catch(error){setMessage(formatError(error,"登录失败，请稍后再试"))}finally{setBusy(form,false)}
     });
     mkj$("#mkj-register-form").addEventListener("submit",async event=>{
       event.preventDefault();if(!requireClient())return;const form=event.currentTarget,data=new FormData(form);const displayName=String(data.get("displayName")).trim()||"航线同学";setMessage("");setBusy(form,true);
-      try{const{data:result,error}=await mkjSupabaseClient.auth.signUp({email:String(data.get("email")).trim(),password:String(data.get("password")),options:{data:{display_name:displayName},emailRedirectTo:mkjAuthRedirectUrl}});if(error){setMessage(formatError(error,"注册失败，验证邮件未能发送"));return}if(result.session){authModal.hidden=true;mkjShowToast("账户创建成功")}else{setMessage("注册成功，请查收验证邮件后再登录。","success");startCooldown()}}catch(error){setMessage(formatError(error,"注册失败，验证邮件未能发送"))}finally{setBusy(form,false)}
+      try{const{data:result,error}=await mkjSupabaseClient.auth.signUp({email:String(data.get("email")).trim(),password:String(data.get("password")),options:{data:{display_name:displayName},emailRedirectTo:mkjAuthRedirectUrl}});if(error){setMessage(formatError(error,"注册失败，验证邮件未能发送"));return}if(result.session){mkjCloseModal(authModal);mkjShowToast("账户创建成功")}else{setMessage("注册成功，请查收验证邮件后再登录。","success");startCooldown()}}catch(error){setMessage(formatError(error,"注册失败，验证邮件未能发送"))}finally{setBusy(form,false)}
     });
     resendButton.addEventListener("click",async()=>{if(!requireClient())return;const email=String(mkj$("#mkj-register-form [name='email']").value).trim();if(!email){setMessage("请先填写需要验证的邮箱");return}resendButton.disabled=true;setMessage("");try{const{error}=await mkjSupabaseClient.auth.resend({type:"signup",email,options:{emailRedirectTo:mkjAuthRedirectUrl}});if(error)throw error;setMessage("验证邮件已重新发送，请检查收件箱和垃圾邮件。","success");startCooldown()}catch(error){setMessage(formatError(error,"验证邮件发送失败，请稍后再试"));resendButton.disabled=false}});
     mkj$("#mkj-reset-form").addEventListener("submit",async event=>{event.preventDefault();if(!requireClient())return;const form=event.currentTarget,data=new FormData(form);setMessage("");setBusy(form,true);try{const{error}=await mkjSupabaseClient.auth.resetPasswordForEmail(String(data.get("email")).trim(),{redirectTo:mkjAuthRedirectUrl});if(error){setMessage(formatError(error,"重置邮件发送失败"));return}setMessage("重置邮件已发送，请检查邮箱。","success")}catch(error){setMessage(formatError(error,"重置邮件发送失败"))}finally{setBusy(form,false)}});
-    mkj$("#mkj-update-password-form").addEventListener("submit",async event=>{event.preventDefault();if(!requireClient())return;const form=event.currentTarget,data=new FormData(form),password=String(data.get("password"));if(password!==String(data.get("passwordConfirm"))){setMessage("两次输入的密码不一致，请重新确认");return}setMessage("");setBusy(form,true);try{const{error}=await mkjSupabaseClient.auth.updateUser({password});if(error){setMessage(formatError(error,"密码更新失败，请重新打开恢复链接"));return}form.reset();authModal.hidden=true;mkjShowToast("密码已更新，可以使用新密码登录")}catch(error){setMessage(formatError(error,"密码更新失败，请重新打开恢复链接"))}finally{setBusy(form,false)}});
+    mkj$("#mkj-update-password-form").addEventListener("submit",async event=>{event.preventDefault();if(!requireClient())return;const form=event.currentTarget,data=new FormData(form),password=String(data.get("password"));if(password!==String(data.get("passwordConfirm"))){setMessage("两次输入的密码不一致，请重新确认");return}setMessage("");setBusy(form,true);try{const{error}=await mkjSupabaseClient.auth.updateUser({password});if(error){setMessage(formatError(error,"密码更新失败，请重新打开恢复链接"));return}form.reset();mkjCloseModal(authModal);mkjShowToast("密码已更新，可以使用新密码登录")}catch(error){setMessage(formatError(error,"密码更新失败，请重新打开恢复链接"))}finally{setBusy(form,false)}});
     const mkjRecoveryFlow=window.location.hash.includes("type=recovery")||new URLSearchParams(window.location.search).get("type")==="recovery";
     if(mkjSupabaseClient){mkjSupabaseClient.auth.onAuthStateChange((event,session)=>window.setTimeout(()=>{updateUI(session?.user||null);if(event==="PASSWORD_RECOVERY"||mkjRecoveryFlow)openAuth("update")},0));mkjSupabaseClient.auth.getSession().then(({data})=>{updateUI(data.session?.user||null);if(mkjRecoveryFlow)openAuth("update")});}
     else updateUI(null);
   }
-  function mkjShowToast(message){
+  /* 增强模块：让新流程卡片与英雄徽章保持轻量动效，同时不改变既有逻辑。 */
+  function mkjSetupEnhanced(){
+    const badges=mkj$$(".mkj-hero-badges span");
+    badges.forEach((badge,index)=>badge.style.transitionDelay=`${index*90}ms`);
+    const processCards=mkj$$(".mkj-process-card");
+    if(processCards.length){
+      processCards.forEach(card=>card.addEventListener("mouseenter",()=>{
+        const dot=card.querySelector("span");
+        if(dot)dot.style.color="#1a4fdb";
+      }));
+    }
+  }  function mkjShowToast(message){
     let toast=mkj$("#mkj-auth-toast");
     if(!toast){toast=document.createElement("div");toast.id="mkj-auth-toast";toast.className="mkj-toast";toast.hidden=true;document.body.appendChild(toast)}
-    toast.textContent=message;toast.hidden=false;requestAnimationFrame(()=>toast.classList.add("mkj-is-visible"));window.clearTimeout(toast._mkjTimer);toast._mkjTimer=window.setTimeout(()=>{toast.classList.remove("mkj-is-visible");window.setTimeout(()=>toast.hidden=true,250)},2600);
+    toast.setAttribute("role","status");toast.setAttribute("aria-live","polite");toast.textContent=message;toast.hidden=false;requestAnimationFrame(()=>toast.classList.add("mkj-is-visible"));window.clearTimeout(toast._mkjTimer);toast._mkjTimer=window.setTimeout(()=>{toast.classList.remove("mkj-is-visible");window.setTimeout(()=>toast.hidden=true,250)},2600);
   }
   function mkjSetupModals(){
-    mkj$$("[data-mkj-close-modal]").forEach(button=>button.addEventListener("click",()=>button.closest(".mkj-modal-backdrop").hidden=true));
-    mkj$$(".mkj-modal-backdrop").forEach(backdrop=>backdrop.addEventListener("click",event=>{if(event.target===backdrop)backdrop.hidden=true}));
-    mkj$("#mkj-benefit-form").addEventListener("submit",event=>{event.preventDefault();mkj$("#mkj-benefit-note").textContent="资料包已登记，稍后会发送到你的邮箱。";event.currentTarget.reset()});
-    mkj$("#mkj-card-button").addEventListener("click",()=>{mkjBuildAbilityCard();mkj$("#mkj-card-modal").hidden=false});
+    mkj$$("[data-mkj-close-modal]").forEach(button=>button.addEventListener("click",()=>mkjCloseModal(button.closest(".mkj-modal-backdrop"))));
+    mkj$$(".mkj-modal-backdrop").forEach(backdrop=>backdrop.addEventListener("click",event=>{if(event.target===backdrop)mkjCloseModal(backdrop)}));
+    document.addEventListener("keydown",event=>{
+      if(!mkjActiveModal)return;
+      if(event.key==="Escape"){event.preventDefault();mkjCloseModal();return}
+      if(event.key!=="Tab")return;
+      const focusable=mkj$$(mkjFocusableSelector,mkjActiveModal).filter(element=>!element.hidden&&element.getClientRects().length);
+      if(!focusable.length){event.preventDefault();return}
+      const first=focusable[0],last=focusable.at(-1);
+      if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus()}
+      else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus()}
+    });
+    mkj$("#mkj-benefit-form").addEventListener("submit",event=>{event.preventDefault();const form=event.currentTarget,submit=mkj$("button[type='submit']",form);form.setAttribute("aria-busy","true");submit.disabled=true;mkj$("#mkj-benefit-note").textContent="资料包已登记，稍后会发送到你的邮箱。";form.reset();form.setAttribute("aria-busy","false");submit.disabled=false});
+    mkj$("#mkj-card-button").addEventListener("click",event=>{mkjBuildAbilityCard();mkjOpenModal("#mkj-card-modal",event.currentTarget)});
     mkj$("#mkj-download-card").addEventListener("click",()=>{const link=document.createElement("a");link.download="mkj-ability-card.png";link.href=mkj$("#mkj-card-canvas").toDataURL("image/png");link.click()});
   }
   function mkjBuildAbilityCard(){
@@ -352,12 +460,13 @@
     ctx.fillStyle="#6c757d";ctx.font="16px -apple-system, BlinkMacSystemFont, sans-serif";ctx.fillText("/ 100  OVERALL SCORE",310,324);
     const cx=w/2,cy=660,r=210;ctx.strokeStyle="#e8edf3";ctx.lineWidth=2;
     for(let ring=1;ring<=4;ring++){ctx.beginPath();mkjDimensions.forEach((_,i)=>{const a=-Math.PI/2+i*Math.PI*2/6,p=[cx+Math.cos(a)*r*ring/4,cy+Math.sin(a)*r*ring/4];i?ctx.lineTo(...p):ctx.moveTo(...p)});ctx.closePath();ctx.stroke()}
-    ctx.beginPath();mkjDimensions.forEach((dimension,i)=>{const a=-Math.PI/2+i*Math.PI*2/6,val=Math.round((mkjScores[dimension].reduce((a,b)=>a+b,0)/(mkjScores[dimension].length*4))*100),p=[cx+Math.cos(a)*r*val/100,cy+Math.sin(a)*r*val/100];i?ctx.lineTo(...p):ctx.moveTo(...p)});ctx.closePath();ctx.fillStyle="rgba(43,110,240,.18)";ctx.fill();ctx.strokeStyle="#2b6ef0";ctx.lineWidth=4;ctx.stroke();
+    ctx.beginPath();mkjDimensions.forEach((dimension,i)=>{const a=-Math.PI/2+i*Math.PI*2/6,values=Array.isArray(mkjScores[dimension])?mkjScores[dimension]:[],val=values.length?Math.round((values.reduce((sum,value)=>sum+value,0)/(values.length*4))*100):0,p=[cx+Math.cos(a)*r*val/100,cy+Math.sin(a)*r*val/100];i?ctx.lineTo(...p):ctx.moveTo(...p)});ctx.closePath();ctx.fillStyle="rgba(43,110,240,.18)";ctx.fill();ctx.strokeStyle="#2b6ef0";ctx.lineWidth=4;ctx.stroke();
     ctx.fillStyle="#6c757d";ctx.font="14px -apple-system, BlinkMacSystemFont, sans-serif";ctx.fillText("别猜未来，现在就校准",96,1005);ctx.fillText("mkj-career.com",96,1032);
   }
   function mkjSetupBackTop(){mkj$("#mkj-back-top").addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}))}
   function mkjTypewriter(){
     const element=mkj$("#mkj-typewriter"),words=["现在就校准","把短板变行动","让优势被看见"];let index=0,letter=0,deleting=false;
+    if(window.matchMedia("(prefers-reduced-motion: reduce)").matches){element.textContent=words[0];return}
     const tick=()=>{const word=words[index];letter+=deleting?-1:1;element.textContent=word.slice(0,letter);let wait=deleting?55:95;if(!deleting&&letter===word.length){wait=1500;deleting=true}if(deleting&&letter===0){deleting=false;index=(index+1)%words.length;wait=350}window.setTimeout(tick,wait)};window.setTimeout(tick,900);
   }
   document.addEventListener("DOMContentLoaded",mkjInit);
