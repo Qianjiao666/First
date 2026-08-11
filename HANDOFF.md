@@ -356,3 +356,10 @@ Supabase service_role key 或数据库密码
 5. 切换后检查 `/MKJ/`、`/MKJ/forum/`、`/MKJ/tasks/`、`/MKJ/shop/`、`/MKJ/announcements/` 和代表性静态资源；确认主站 `/` 未受影响。
 
 不要把多行部署脚本直接粘贴进 WebShell；不要删除已有 `.previous` 回滚目录；不要修改主站 Nginx 根路由。Supabase token、service role key、数据库密码和 SSH 私钥只在本地安全输入，不得写入文件或对话。
+
+## 10. r8 checksum verification record (2026-08-11)
+
+- The uploaded artifact `/root/MKJ-community-forum-tasks-20260811-static-r8.zip` was verified with:
+  `sha256sum -c /root/MKJ-community-forum-tasks-20260811-static-r8.zip.sha256`
+- Result: `MKJ-community-forum-tasks-20260811-static-r8.zip: OK`.
+- Next action: upload `deployment/mkj-r8-cutover.sh` as `/root/mkj-r8-cutover.sh`, then run the single-line cutover command documented above.
