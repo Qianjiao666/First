@@ -68,3 +68,12 @@ test("task styles include keyboard focus and responsive layout guards", async ()
   assert.match(css, /overflow-wrap: anywhere/);
   assert.match(css, /task-pagination-button/);
 });
+
+test("task marketplace mounts pinned announcements and realtime notifications", async () => {
+  const html = await read("tasks/index.html");
+  assert.match(html, /data-task-announcement-slot/);
+  assert.match(html, /data-task-notification-slot/);
+  assert.match(html, /class="task-user-controls"[\s\S]*data-task-reputation-badge[\s\S]*data-task-notification-slot/);
+  assert.match(html, /shared\/community-widgets\.css/);
+  assert.match(html, /shared\/community-widgets\.js/);
+});

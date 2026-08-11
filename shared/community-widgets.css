@@ -1,0 +1,109 @@
+.announce-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid rgba(31, 41, 55, 0.15);
+  background: #fffdf7;
+  color: #1f2937;
+}
+
+.announce-banner-label {
+  flex: 0 0 auto;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.announce-banner a {
+  color: inherit;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.notification-bell {
+  position: relative;
+  z-index: 5;
+}
+
+.notification-bell-trigger,
+.notification-bell-read-all,
+.notification-bell-mark {
+  cursor: pointer;
+  border: 0;
+  background: transparent;
+  color: inherit;
+}
+
+.notification-bell-trigger {
+  min-height: 2.25rem;
+  padding: 0.35rem 0.55rem;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+}
+
+.notification-bell-count {
+  display: inline-flex;
+  min-width: 1.1rem;
+  min-height: 1.1rem;
+  align-items: center;
+  justify-content: center;
+  margin-left: 0.25rem;
+  border-radius: 999px;
+  background: #c2410c;
+  color: #fff;
+  font-size: 0.7rem;
+}
+
+.notification-bell-panel {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  width: min(22rem, calc(100vw - 2rem));
+  padding: 0.8rem;
+  border: 1px solid rgba(31, 41, 55, 0.18);
+  background: #fff;
+  box-shadow: 0 12px 32px rgba(31, 41, 55, 0.16);
+}
+
+.notification-bell-heading,
+.notification-bell-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.notification-bell-list {
+  display: grid;
+  gap: 0.55rem;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.notification-bell-item {
+  padding: 0.55rem 0;
+  border-top: 1px solid rgba(31, 41, 55, 0.1);
+  font-size: 0.85rem;
+}
+
+.notification-bell-item time {
+  color: #6b7280;
+  font-size: 0.72rem;
+}
+
+.forum-notification-slot:empty,
+.task-notification-slot:empty {
+  display: none;
+}
+
+.task-user-controls {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-self: end;
+  gap: 0.75rem;
+}

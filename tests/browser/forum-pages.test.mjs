@@ -37,3 +37,13 @@ test("forum styles are present as an isolated module", async () => {
   assert.ok(source, "assets/css/forum.css exists");
   assert.match(source, /\.forum-layout/);
 });
+
+test("forum landing mounts pinned announcements and realtime notifications", async () => {
+  const source = await readPage("forum/index.html");
+  const navigation = source.match(/<nav class="forum-site-nav"[\s\S]*?<\/nav>/)?.[0] ?? "";
+  assert.match(source, /data-forum-announcement-slot/);
+  assert.match(source, /data-forum-notification-slot/);
+  assert.match(navigation, /data-forum-notification-slot/);
+  assert.match(source, /shared\/community-widgets\.css/);
+  assert.match(source, /shared\/community-widgets\.js/);
+});
