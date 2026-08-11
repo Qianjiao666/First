@@ -179,7 +179,7 @@ Deno.serve(async (request) => {
           p_task_id: taskId,
         });
       } else {
-        throw new ApiError("VALIDATION_ERROR", 400, "涓嶆敮鎸佺殑浠诲姟仲鍐冲畾銆俙);
+        throw new ApiError("VALIDATION_ERROR", 400, "不支持的任务仲裁决定。");
       }
       return jsonResponse({ data: { decision, taskId, applicationId, result }, warnings: reason.warnings });
     }

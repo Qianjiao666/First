@@ -23,6 +23,16 @@ test("task-admin delegates permissions and content filtering to shared services"
   assert.doesNotMatch(source, /service_role[^A-Z_]/i);
 });
 
+test("task-admin keeps the arbitration validation error as valid source text", async () => {
+  const source = await read("supabase/functions/task-admin/index.ts");
+
+  assert.match(
+    source,
+    /throw new ApiError\("VALIDATION_ERROR", 400, "不支持的任务仲裁决定。"\);/,
+  );
+  assert.doesNotMatch(source, /銆俙/);
+});
+
 test("task-complete keeps application and verification writes behind task RPCs", async () => {
   const source = await read("supabase/functions/task-complete/index.ts");
 
