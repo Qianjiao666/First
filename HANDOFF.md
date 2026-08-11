@@ -362,7 +362,7 @@ Supabase service_role key 或数据库密码
 - The uploaded artifact `/root/MKJ-community-forum-tasks-20260811-static-r8.zip` was verified with:
   `sha256sum -c /root/MKJ-community-forum-tasks-20260811-static-r8.zip.sha256`
 - Result: `MKJ-community-forum-tasks-20260811-static-r8.zip: OK`.
-- Next action: upload `deployment/mkj-r8-cutover.sh` as `/root/mkj-r8-cutover.sh`, then run the single-line cutover command documented above.
+- The fixed `deployment/mkj-r8-cutover.sh` was uploaded over `/root/mkj-r8-cutover.sh`, passed its own checksum check, and completed the static cutover.
 
 ### r8 cutover CRLF incident
 
@@ -371,3 +371,14 @@ Supabase service_role key 或数据库密码
 - `deployment/mkj-r8-cutover.sh` now strips the trailing `\r` before checking and hashing each manifest entry. Its fixed SHA-256 is `38D869728855ABCFD9DBECCC766CFF3D25D286E2D9665566DA2C7B8B46E542E3`.
 - `deployment/build-community-release.ps1` now writes UTF-8 without BOM and explicit LF line endings, preventing the same issue in future release artifacts.
 - For this incident, keep the verified r8 ZIP unchanged and upload only the fixed cutover script over `/root/mkj-r8-cutover.sh`. Failed timestamped `.stage` directories are not rollback copies and are ignored by the next run; existing `.previous` directories must still be preserved.
+
+## 11. r8 production deployment completed (2026-08-11)
+
+- Supabase SQL migrations and Edge Functions were deployed before the static cutover. The corrected `task-admin` function deployed successfully with the rest of the function set.
+- Tencent Lighthouse now serves the r8 static release from `/var/www/MKJ`. The main site root `/` and the existing Nginx configuration were not changed.
+- Static artifact SHA-256: `438B9D009091FFA6827E2A33C91AA1B6DA0731D818416F33B191EF865F01D687`.
+- Backend artifact SHA-256: `ABAFEC80DDE49BC63E819EF11A6B62CE304ACAE1AEDE3B97B741BAF29814F0C8`.
+- Live `https://dsxnb.com/MKJ/RELEASE-MANIFEST.txt` matches the manifest bytes inside the local r8 ZIP and reports `Release: 20260811`, `Revision: r8`, and `Files: 79`.
+- Live SHA-256 checks matched the r8 manifest for `index.html`, `admin/index.html`, `forum/index.html`, `tasks/index.html`, `shop/index.html`, `announcements/index.html`, and `shared/community-widgets.js`.
+- `https://dsxnb.com/`, `/MKJ/`, `/MKJ/forum/`, `/MKJ/tasks/`, `/MKJ/shop/`, `/MKJ/announcements/`, and the representative shared JavaScript asset all returned HTTP 200 after cutover.
+- The r8 release is the current production baseline. Preserve every `.previous` rollback directory under `/var/www/.mkj-community-releases/` until a later release has been independently verified.
