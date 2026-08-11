@@ -70,7 +70,7 @@ function Write-ReleaseManifest {
       "$hash  $relative"
     }
 
-  @(
+  $manifestLines = @(
     '# MKJ community release manifest'
     "Release: $ReleaseDate"
     "Revision: $Revision"
@@ -78,7 +78,10 @@ function Write-ReleaseManifest {
     "Files: $($entries.Count)"
     ''
     $entries
-  ) | Set-Content -LiteralPath $manifest -Encoding utf8
+  )
+  $manifestContent = ($manifestLines -join "`n") + "`n"
+  $manifestEncoding = [Text.UTF8Encoding]::new($false)
+  [IO.File]::WriteAllBytes($manifest, $manifestEncoding.GetBytes($manifestContent))
 }
 
 function Write-LinuxZip {

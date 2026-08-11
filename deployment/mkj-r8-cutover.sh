@@ -34,6 +34,7 @@ done
 manifest="$stage/RELEASE-MANIFEST.txt"
 count=0
 while read -r expected relative; do
+  relative=${relative%$'\r'}
   test -f "$stage/$relative"
   actual=$(sha256sum "$stage/$relative" | awk '{print $1}')
   expected=$(printf '%s' "$expected" | tr '[:upper:]' '[:lower:]')

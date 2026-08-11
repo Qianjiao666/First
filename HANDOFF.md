@@ -363,3 +363,11 @@ Supabase service_role key 或数据库密码
   `sha256sum -c /root/MKJ-community-forum-tasks-20260811-static-r8.zip.sha256`
 - Result: `MKJ-community-forum-tasks-20260811-static-r8.zip: OK`.
 - Next action: upload `deployment/mkj-r8-cutover.sh` as `/root/mkj-r8-cutover.sh`, then run the single-line cutover command documented above.
+
+### r8 cutover CRLF incident
+
+- The first cutover stopped after the ZIP checksum printed `OK`. A `bash -x` trace showed that paths read from `RELEASE-MANIFEST.txt` ended with `\r`, for example `admin/account-transfer/index.html\r`.
+- Root cause: Windows PowerShell `Set-Content` generated a CRLF manifest, while the Linux cutover script treated the trailing carriage return as part of each path.
+- `deployment/mkj-r8-cutover.sh` now strips the trailing `\r` before checking and hashing each manifest entry. Its fixed SHA-256 is `38D869728855ABCFD9DBECCC766CFF3D25D286E2D9665566DA2C7B8B46E542E3`.
+- `deployment/build-community-release.ps1` now writes UTF-8 without BOM and explicit LF line endings, preventing the same issue in future release artifacts.
+- For this incident, keep the verified r8 ZIP unchanged and upload only the fixed cutover script over `/root/mkj-r8-cutover.sh`. Failed timestamped `.stage` directories are not rollback copies and are ignored by the next run; existing `.previous` directories must still be preserved.
