@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="航线求职竞争力评估工具：用 3 分钟校准你的求职准备度，并获得下一步提升建议。" />
+    <title>航线｜别猜未来，现在就校准</title>
+    <link rel="stylesheet" href="/MKJ/styles.css?v=20260811-r8.1" />
+    <link rel="stylesheet" href="/MKJ/assets/css/global-modules.css" />
+  </head>
+  <body>
+    <!-- THESIS: 方向 A。OWN-WORLD: 航线视觉底座。STORY: token 先行。FIRST VIEWPORT: 保留首屏与导航顺序。FORM: 保留按钮拓扑与可达性。FINISH: 只改样式与注释，不动文案、DOM 顺序和功能。 -->
+    <header class="mkj-header" id="mkj-header">
+      <div class="mkj-header-inner">
+        <a class="mkj-logo" href="#home" aria-label="航线首页">
+          <span class="mkj-logo-mark">航</span>
+          <span class="mkj-logo-copy"><strong>航线</strong><small>career calibration</small></span>
+        </a>
+        <button class="mkj-menu-button" id="mkj-menu-button" type="button" aria-label="打开导航菜单" aria-controls="mkj-nav" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+        <nav class="mkj-nav" id="mkj-nav" aria-label="主导航">
+          <a class="mkj-nav-link mkj-is-active" href="#home">首页</a>
+          <a class="mkj-nav-link" href="#assessment">评估工具</a>
+          <a class="mkj-nav-link" href="#testimonials">案例</a>
+          <a class="mkj-nav-link" href="#team">团队</a>
+          <a class="mkj-nav-link" href="#faq">FAQ</a>
+          <a class="mkj-nav-link" href="#contact">联系</a>
+          <a class="mkj-nav-link" href="/MKJ/community/">社区</a>
+          <button class="mkj-log-button" id="mkj-log-button" type="button" title="查看产品更新日志（当前 r8.1）" aria-label="查看产品更新日志（当前 r8.1）"><span aria-hidden="true">↻</span><b>更新日志 · r8.1</b></button>
+          <button class="mkj-account-button" id="mkj-account-button" type="button">登录 / 注册</button>
+          <a class="mkj-main-site-button" href="/">返回主站 <span aria-hidden="true">↗</span></a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="mkj-hero mkj-section" id="home">
+        <div class="mkj-container mkj-hero-grid">
+          <div class="mkj-hero-copy mkj-reveal">
+            <p class="mkj-kicker"><span class="mkj-kicker-dot"></span> 航线 CAREER CALIBRATION / 2026</p>
+            <h1>别猜未来，<span id="mkj-typewriter">现在就校准</span><i aria-hidden="true">_</i></h1>
+            <p class="mkj-hero-description">3 分钟测出你的求职短板，获取一份看得懂、做得到的专属提升方案。</p><div class="mkj-hero-badges" aria-hidden="true"><span>⏱ 3 分钟 <b>10 题</b></span><span>◈ 六维雷达</span><span>↗ 可执行建议</span></div>
+            <div class="mkj-hero-actions">
+              <a class="mkj-button mkj-button-primary" href="#assessment">开始评估 <span aria-hidden="true">→</span></a>
+              <a class="mkj-button mkj-button-ghost" href="#process">了解流程 <span aria-hidden="true">↓</span></a>
+            </div>
+            <div class="mkj-hero-trust">
+              <div class="mkj-trust-avatars" aria-hidden="true"><span>林</span><span>周</span><span>陈</span><span>+</span></div>
+              <p><strong><span class="mkj-counter" data-count="12840">0</span>+</strong><span>人完成校准</span></p>
+            </div>
+          </div>
+          <div class="mkj-hero-visual mkj-reveal">
+            <div class="mkj-calibration-card">
+              <div class="mkj-card-topline"><span>YOUR SIGNAL / 01</span><span class="mkj-live-dot">LIVE</span></div>
+              <div class="mkj-score-orbit">
+                <div class="mkj-orbit-line mkj-orbit-line-one"></div>
+                <div class="mkj-orbit-line mkj-orbit-line-two"></div>
+                <div class="mkj-score-core"><small>当前准备度</small><strong>72</strong><span>/100</span></div>
+              </div>
+              <div class="mkj-card-status"><span class="mkj-status-check">✓</span><span><strong>可投递区间</strong><small>再补齐 2 项关键证据</small></span><b>+8</b></div>
+              <div class="mkj-card-scale"><span>起点</span><i><b></b></i><span>目标</span></div>
+            </div>
+            <div class="mkj-floating-note mkj-floating-note-top"><span>01</span><p>识别真实短板<br /><strong>而不是猜测</strong></p></div>
+            <div class="mkj-floating-note mkj-floating-note-bottom"><span>→</span><p>下一步行动<br /><strong>清晰可执行</strong></p></div>
+          </div>
+        </div>
+        <div class="mkj-hero-rule" aria-hidden="true"><span></span><small>SCROLL TO CALIBRATE</small><span></span></div>
+      </section>
+
+      <section class="mkj-section mkj-section-muted" id="features">
+        <div class="mkj-container">
+          <div class="mkj-section-intro mkj-reveal">
+            <p class="mkj-kicker">WHY 航线 / 为什么是校准</p>
+            <h2>让每一次准备，<br /><em>都指向更确定的机会。</em></h2>
+            <p>我们把模糊的“我还不够好”，拆成能被观察、能被训练、能被证明的具体信号。</p>
+          </div>
+          <div class="mkj-feature-grid">
+            <article class="mkj-feature-card mkj-reveal"><span class="mkj-feature-index">01</span><div class="mkj-icon-box">⌁</div><h3>多维能力测评</h3><p>从专业基础到职业规划，六个维度一起看见你的准备状态。</p><a href="#assessment">查看评估 <span>→</span></a></article>
+            <article class="mkj-feature-card mkj-reveal"><span class="mkj-feature-index">02</span><div class="mkj-icon-box">◌</div><h3>个性化报告</h3><p>结果不止一个分数，更会告诉你当前最值得投入的那一小时。</p><a href="#assessment">看报告样例 <span>→</span></a></article>
+            <article class="mkj-feature-card mkj-reveal"><span class="mkj-feature-index">03</span><div class="mkj-icon-box">↗</div><h3>专家建议</h3><p>将能力缺口翻译成课程、文章和行动清单，今天就能开始。</p><a href="#articles">阅读建议 <span>→</span></a></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="mkj-section mkj-process-section" id="process">
+        <div class="mkj-container">
+          <div class="mkj-section-intro mkj-reveal">
+            <p class="mkj-kicker">HOW IT WORKS / 校准流程</p>
+            <h2>三步，把不确定<br /><em>变成下一步。</em></h2>
+            <p>不做复杂诊断，只给一套马上能用的反馈路径。</p>
+          </div>
+          <div class="mkj-process-grid">
+            <article class="mkj-process-card mkj-reveal"><span>01</span><h3>完成 10 题校准</h3><p>凭第一反应作答，无需准备标准答案，3 分钟即可完成。</p></article>
+            <article class="mkj-process-card mkj-reveal"><span>02</span><h3>读取六维雷达</h3><p>总分与六个能力维度同时呈现，快速看到真实短板。</p></article>
+            <article class="mkj-process-card mkj-reveal"><span>03</span><h3>执行专属建议</h3><p>按优先级获得可验证的行动建议，并生成能力名片。</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="mkj-section mkj-assessment-section" id="assessment">
+        <div class="mkj-container">
+          <div class="mkj-section-intro mkj-assessment-intro mkj-reveal">
+            <p class="mkj-kicker">ASSESSMENT / 01</p>
+            <h2>立即校准你的竞争力</h2>
+            <p>凭第一反应作答，不用准备标准答案。真实的选择，比漂亮的答案更有参考价值。</p>
+          </div>
+          <div class="mkj-assessment-shell mkj-reveal" id="mkj-assessment-shell">
+            <div class="mkj-assessment-progress">
+              <div><span id="mkj-question-label">QUESTION 01</span><strong><span id="mkj-current-step">1</span> / <span id="mkj-total-step">10</span></strong></div>
+              <div class="mkj-progress-track" role="progressbar" aria-label="评估进度" aria-valuemin="0" aria-valuemax="10" aria-valuenow="1" aria-valuetext="第 1 题，共 10 题"><span id="mkj-progress-bar" aria-hidden="true"></span></div>
+            </div>
+            <div class="mkj-question-stage" id="mkj-question-stage" role="group" aria-labelledby="mkj-question-title" aria-describedby="mkj-question-helper">
+              <div class="mkj-question-copy"><span class="mkj-question-dimension" id="mkj-question-dimension">专业技能</span><h3 id="mkj-question-title" aria-live="polite" aria-atomic="true"></h3><p id="mkj-question-helper"></p></div>
+              <div class="mkj-options" id="mkj-options" aria-busy="false"></div>
+            </div>
+            <div class="mkj-assessment-footer"><div class="mkj-assessment-actions"><button class="mkj-text-button" id="mkj-prev-button" type="button" disabled>← 上一题</button><button class="mkj-text-button" id="mkj-save-progress" type="button">保存进度</button></div><span id="mkj-assessment-hint">选择后自动进入下一题</span><span class="mkj-keyboard-hint">可用键盘 1–4 选择</span></div>
+          </div>
+
+          <div class="mkj-report" id="mkj-report" role="region" aria-labelledby="mkj-report-title" hidden>
+            <div class="mkj-report-heading mkj-reveal"><div><p class="mkj-kicker">YOUR REPORT / 评估结果</p><h2 id="mkj-report-title">你的能力信号，已经浮出水面。</h2><p>这不是标签，是下一阶段的起点。先把最值得补齐的地方做好。</p></div><button class="mkj-button mkj-button-ghost mkj-restart-button" id="mkj-restart-button" type="button">重新评估 ↻</button></div>
+            <div class="mkj-report-grid">
+              <article class="mkj-report-card mkj-radar-card mkj-reveal" aria-labelledby="mkj-radar-title"><div class="mkj-report-card-head"><div><span class="mkj-card-label">能力六维</span><h3 id="mkj-radar-title">你的竞争力雷达</h3></div><span class="mkj-report-chip">LIVE SCORE</span></div><canvas id="mkj-radar-canvas" width="560" height="460" role="img" aria-label="能力六维雷达图"></canvas><div class="mkj-radar-legend"><span><i></i>当前能力</span><span><i></i>建议目标</span></div></article>
+              <article class="mkj-report-card mkj-score-card mkj-reveal" aria-labelledby="mkj-score-heading"><h3 class="mkj-card-label" id="mkj-score-heading">OVERALL SCORE</h3><div class="mkj-report-score"><strong id="mkj-report-score" aria-label="总分">0</strong><span>/100</span></div><div class="mkj-level"><span id="mkj-report-level" aria-label="等级">白银</span><p id="mkj-report-summary"></p></div><div class="mkj-score-divider"></div><div class="mkj-mini-metrics"><div><span>最强维度</span><strong id="mkj-strongest" aria-label="最强维度">—</strong></div><div><span>优先补齐</span><strong id="mkj-weakest" aria-label="优先补齐">—</strong></div></div><button class="mkj-button mkj-button-primary mkj-full-button" id="mkj-card-button" type="button" aria-haspopup="dialog" aria-controls="mkj-card-modal">生成我的能力名片 <span>→</span></button></article>
+            </div>
+            <article class="mkj-recommendation-card mkj-reveal" aria-labelledby="mkj-recommendations-title"><div class="mkj-recommendation-head"><div><span class="mkj-card-label">NEXT MOVES</span><h3 id="mkj-recommendations-title">给你的 3 条提升建议</h3></div><p>从最薄弱的信号开始，投入才会有回音。</p></div><div class="mkj-recommendations" id="mkj-recommendations" role="list" aria-label="提升建议"></div></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="mkj-section mkj-stats-section" id="stats">
+        <div class="mkj-container">
+          <div class="mkj-stats-lead mkj-reveal"><p class="mkj-kicker">SIGNALS / 02</p><h2>已经有很多人<br /><em>开始用数据准备。</em></h2></div>
+          <div class="mkj-stats-grid">
+            <div class="mkj-stat-item mkj-reveal"><strong><span class="mkj-counter" data-count="126">0</span></strong><span>服务企业数</span><small>持续合作中</small></div>
+            <div class="mkj-stat-item mkj-reveal"><strong><span class="mkj-counter" data-count="38600">0</span>+</strong><span>评估总人次</span><small>来自真实求职者</small></div>
+            <div class="mkj-stat-item mkj-reveal"><strong><span class="mkj-counter" data-count="98">0</span><b>%</b></strong><span>用户好评率</span><small>最近 90 天</small></div>
+            <div class="mkj-stat-item mkj-reveal"><strong><span class="mkj-counter" data-count="23">0</span><b>%</b></strong><span>平均提分幅度</span><small>完成行动计划后</small></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="mkj-section mkj-testimonials-section" id="testimonials">
+        <div class="mkj-container">
+          <div class="mkj-section-intro mkj-reveal"><p class="mkj-kicker">REAL STORIES / 用户反馈</p><h2>校准之后，<em>他们更敢投了。</em></h2><p>结果没有替他们做决定，但让下一步变得具体。</p></div>
+          <div class="mkj-carousel-wrap mkj-reveal"><button class="mkj-carousel-arrow mkj-carousel-prev" id="mkj-carousel-prev" type="button" aria-label="上一条评价">←</button><div class="mkj-carousel-viewport"><div class="mkj-testimonial-track" id="mkj-testimonial-track"></div></div><button class="mkj-carousel-arrow mkj-carousel-next" id="mkj-carousel-next" type="button" aria-label="下一条评价">→</button></div>
+          <div class="mkj-carousel-dots" id="mkj-carousel-dots" aria-label="评价轮播导航"></div>
+        </div>
+      </section>
+
+      <section class="mkj-section mkj-faq-section" id="faq">
+        <div class="mkj-container mkj-faq-layout">
+          <div class="mkj-section-intro mkj-reveal"><p class="mkj-kicker">FAQ / 常见问题</p><h2>先把疑问<br /><em>放在这里。</em></h2><p>还有没找到的答案？<a href="#contact">直接联系我们。</a></p></div>
+          <div class="mkj-faq-list mkj-reveal" id="mkj-faq-list"></div>
+        </div>
+      </section>
+
+      <section class="mkj-section mkj-team-section" id="team">
+        <div class="mkj-container">
+          <div class="mkj-section-intro mkj-reveal"><p class="mkj-kicker">THE CALIBRATION TEAM / 关于我们</p><h2>我们关心的不是<br /><em>你像谁，而是你要去哪。</em></h2></div>
+          <div class="mkj-team-grid">
+            <article class="mkj-team-card mkj-reveal"><div class="mkj-team-avatar mkj-avatar-blue">许</div><div><h3>许知远</h3><p>职业发展顾问</p><span>把 10 年校招面试经验，整理成可练习的方法。</span></div></article>
+            <article class="mkj-team-card mkj-reveal"><div class="mkj-team-avatar mkj-avatar-ink">沈</div><div><h3>沈一舟</h3><p>测评产品负责人</p><span>让每个复杂的选择，都有一条清晰的反馈路径。</span></div></article>
+            <article class="mkj-team-card mkj-reveal"><div class="mkj-team-avatar mkj-avatar-mint">林</div><div><h3>林嘉禾</h3><p>学习方案设计师</p><span>帮助你把“应该学习”，变成“今天学什么”。</span></div></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="mkj-section mkj-articles-section" id="articles">
+        <div class="mkj-container">
+          <div class="mkj-articles-heading mkj-reveal"><div><p class="mkj-kicker">LATEST NOTES / 最新文章</p><h2>给行动一点<br /><em>更好的参考。</em></h2></div><a class="mkj-text-link" href="#articles">查看全部文章 →</a></div>
+          <div class="mkj-articles-grid">
+            <article class="mkj-article-card mkj-reveal"><span>面试表达 · 06.28</span><h3>不是话说得多，而是让面试官更快看见你的证据</h3><a href="#articles">阅读文章 →</a></article>
+            <article class="mkj-article-card mkj-reveal"><span>职业规划 · 06.20</span><h3>当你不知道选什么岗位，先问自己三个问题</h3><a href="#articles">阅读文章 →</a></article>
+            <article class="mkj-article-card mkj-reveal"><span>简历方法 · 06.12</span><h3>把做过的项目，写成一段能被记住的经历</h3><a href="#articles">阅读文章 →</a></article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="mkj-footer" id="contact">
+      <div class="mkj-container">
+        <div class="mkj-footer-grid">
+          <div class="mkj-footer-brand"><a class="mkj-logo" href="#home"><span class="mkj-logo-mark">航</span><span class="mkj-logo-copy"><strong>航线</strong><small>career calibration</small></span></a><p>别猜未来，现在就校准。<br />给每一次求职准备一个可行动的方向。</p></div>
+          <div class="mkj-footer-column"><h3>快速链接</h3><a href="#assessment">评估工具</a><a href="#testimonials">成功案例</a><a href="#team">关于我们</a><a href="#faq">常见问题</a></div>
+          <div class="mkj-footer-column"><h3>联系我们</h3><a href="mailto:hello@mkj-career.com">hello@mkj-career.com</a><a href="tel:400-888-2026">400-888-2026</a><span>上海市静安区愚园路 88 号</span></div>
+        </div>
+        <div class="mkj-footer-bottom"><span>© 2026 航线 - 别猜未来，现在就校准</span><button class="mkj-back-top" id="mkj-back-top" type="button">返回顶部 ↑</button></div>
+      </div>
+    </footer>
+
+    <button class="mkj-support-button" id="mkj-support-button" type="button" aria-label="打开客服快捷入口" aria-controls="mkj-support-menu" aria-expanded="false"><span class="mkj-support-pulse"></span><span class="mkj-support-icon">?</span></button>
+    <div class="mkj-support-menu" id="mkj-support-menu" aria-label="客服快捷入口" hidden><a href="tel:400-888-2026"><span>☎</span>电话咨询</a><a href="#contact"><span>◉</span>微信客服</a><a href="mailto:hello@mkj-career.com"><span>✉</span>邮件留言</a></div>
+
+    <div class="mkj-modal-backdrop" id="mkj-changelog-modal" hidden>
+      <section class="mkj-modal mkj-changelog-modal" role="dialog" aria-modal="true" aria-labelledby="mkj-changelog-title">
+        <button class="mkj-modal-close" data-mkj-close-modal type="button" aria-label="关闭更新日志">×</button>
+        <span class="mkj-modal-mark">更新日志 / CHANGELOG</span>
+        <h2 id="mkj-changelog-title">航线正在持续完善</h2>
+        <div class="mkj-changelog-list">
+          <article class="mkj-changelog-entry"><time>2026.08.11 · r8.1</time><strong>账户状态与版本辨识优化</strong><p>论坛现会同步显示登录昵称与身份；更新日志入口改为明确文字，并为关键资源加入版本标记，避免旧缓存遮住最新界面。</p></article>
+          <article class="mkj-changelog-entry"><time>2026.08.11 · r8</time><strong>社区能力与任务协作完整上线</strong><p>商城、Markdown 公告、实时通知、任务附件、时间轴、仲裁、评价、推荐与模板已上线；论坛管理、精确权限礼包码与账号转移同步可用。</p></article>
+          <article class="mkj-changelog-entry"><time>2026.08.11 · v0.6</time><strong>社区、论坛与任务协作上线</strong><p>新增社区入口、论坛与任务广场；全局声望、礼包码、敏感词过滤和角色后台现已贯通。</p></article>
+          <article class="mkj-changelog-entry"><time>2026.08.10 · v0.5</time><strong>视觉升级与体验增强</strong><p>重新设计整体视觉系统，新增校准流程、评估进度保存、英雄区徽章和更清晰的响应式布局，同时保留航线账户与全部评估能力。</p></article>
+          <article class="mkj-changelog-entry"><time>2026.08.10 · v0.4</time><strong>竞争力评估升级</strong><p>新增 10 题渐进评估、能力雷达、个性化建议、能力名片、内容模块和客服入口，同时保留航线账户。</p></article>
+          <article class="mkj-changelog-entry"><time>2026.08.09 · v0.3</time><strong>个性化与共建</strong><p>新增多色主题、更多目标岗位、学历学校、自定义任务、更新日志和用户留言板。</p></article>
+          <article class="mkj-changelog-entry"><time>2026.08.09 · v0.2</time><strong>账户体验升级</strong><p>优化注册、邮件验证、密码找回、移动端导航与本地静态资源。</p></article>
+          <article class="mkj-changelog-entry"><time>2026.08.08 · v0.1</time><strong>航线工作台上线</strong><p>完成就业指数、能力证据、岗位画像和 Supabase 进度同步。</p></article>
+        </div>
+      </section>
+    </div>
+
+    <div class="mkj-modal-backdrop" id="mkj-auth-modal" hidden>
+      <section class="mkj-modal mkj-auth-modal" role="dialog" aria-modal="true" aria-labelledby="mkj-auth-title">
+        <button class="mkj-modal-close" data-mkj-close-modal type="button" aria-label="关闭账户窗口">×</button>
+        <span class="mkj-modal-mark">航线账户 / ACCOUNT</span>
+        <h2 id="mkj-auth-title">把你的进度，带到每一次打开。</h2>
+        <p id="mkj-auth-copy">注册后，评估记录与个性化建议会安全保存在你的账户。</p>
+        <div class="mkj-auth-session" id="mkj-auth-session" hidden>
+          <div class="mkj-auth-session-avatar" id="mkj-auth-session-avatar">航</div>
+          <div><strong id="mkj-auth-session-name">航线同学</strong><span id="mkj-auth-session-email"></span></div>
+          <button class="mkj-auth-secondary" id="mkj-auth-logout" type="button">退出登录</button>
+        </div>
+        <section class="mkj-reputation-panel" id="mkj-reputation-panel" aria-live="polite">
+          <div><span>全局声望</span><strong id="mkj-reputation-value">--</strong></div>
+          <p id="mkj-reputation-meta">登录后查看当前等级与下一阶段。</p>
+        </section>
+        <section class="mkj-redeem-panel" id="mkj-redeem-panel" aria-labelledby="mkj-redeem-title">
+          <div><h3 id="mkj-redeem-title">&#20817;&#25442;&#31036;&#21253;&#30721;</h3><p>&#22870;&#21169;&#20250;&#35760;&#20837;&#36134;&#25143;&#30340;&#20840;&#23616;&#22768;&#26395;&#12290;</p></div>
+          <form class="mkj-redeem-form" id="mkj-redeem-form" data-mkj-redeem-form aria-describedby="mkj-redeem-message">
+            <label>&#31036;&#21253;&#30721;<input name="code" type="text" autocomplete="off" autocapitalize="characters" maxlength="64" placeholder="e.g. MKJ-AB12" required /></label>
+            <button class="mkj-button mkj-button-primary" type="submit" data-mkj-idle-label="&#20817;&#25442;" data-mkj-busy-label="&#27491;&#22312;&#20817;&#25442;">&#20817;&#25442;</button>
+          </form>
+          <p class="mkj-redeem-message" id="mkj-redeem-message" role="status" aria-live="polite" hidden></p>
+        </section>
+        <div class="mkj-auth-tabs" id="mkj-auth-tabs" role="tablist" aria-label="账户操作">
+          <button class="mkj-auth-tab mkj-is-active" type="button" data-mkj-auth-view="login" role="tab" aria-selected="true">登录</button>
+          <button class="mkj-auth-tab" type="button" data-mkj-auth-view="register" role="tab" aria-selected="false">注册</button>
+          <button class="mkj-auth-tab" type="button" data-mkj-auth-view="reset" role="tab" aria-selected="false">找回密码</button>
+        </div>
+        <form class="mkj-auth-form" id="mkj-login-form" data-mkj-auth-form="login" aria-busy="false" aria-describedby="mkj-auth-message">
+          <label>邮箱<input name="email" type="email" autocomplete="email" placeholder="you@example.com" required /></label>
+          <label>密码<input name="password" type="password" autocomplete="current-password" placeholder="至少 6 位" required /></label>
+          <button class="mkj-button mkj-button-primary mkj-full-button" type="submit" data-mkj-idle-label="登录航线" data-mkj-busy-label="正在登录…">登录航线</button>
+        </form>
+        <form class="mkj-auth-form" id="mkj-register-form" data-mkj-auth-form="register" aria-busy="false" aria-describedby="mkj-auth-message" hidden>
+          <label>你的称呼<input name="displayName" type="text" autocomplete="name" maxlength="30" placeholder="例如：林同学" /></label>
+          <label>邮箱<input name="email" type="email" autocomplete="email" placeholder="you@example.com" required /></label>
+          <label>密码<input name="password" type="password" autocomplete="new-password" minlength="6" placeholder="至少 6 位" required /></label>
+          <button class="mkj-button mkj-button-primary mkj-full-button" type="submit" data-mkj-idle-label="创建账户" data-mkj-busy-label="正在创建…">创建账户</button>
+          <button class="mkj-auth-secondary mkj-auth-resend" id="mkj-resend-confirmation" type="button">重新发送验证邮件</button>
+        </form>
+        <form class="mkj-auth-form" id="mkj-reset-form" data-mkj-auth-form="reset" aria-busy="false" aria-describedby="mkj-auth-message" hidden>
+          <label>注册邮箱<input name="email" type="email" autocomplete="email" placeholder="you@example.com" required /></label>
+          <button class="mkj-button mkj-button-primary mkj-full-button" type="submit" data-mkj-idle-label="发送重置邮件" data-mkj-busy-label="正在发送…">发送重置邮件</button>
+        </form>
+        <form class="mkj-auth-form" id="mkj-update-password-form" data-mkj-auth-form="update" aria-busy="false" aria-describedby="mkj-auth-message" hidden>
+          <label>新密码<input name="password" type="password" autocomplete="new-password" minlength="6" placeholder="至少 6 位" required /></label>
+          <label>再次输入新密码<input name="passwordConfirm" type="password" autocomplete="new-password" minlength="6" placeholder="再次输入新密码" required /></label>
+          <button class="mkj-button mkj-button-primary mkj-full-button" type="submit" data-mkj-idle-label="保存新密码" data-mkj-busy-label="正在保存…">保存新密码</button>
+        </form>
+        <p class="mkj-auth-hint" id="mkj-auth-hint">账户数据将通过 Supabase 安全保存。</p>
+        <p class="mkj-auth-message" id="mkj-auth-message" role="status" aria-live="polite" hidden></p>
+      </section>
+    </div>
+
+    <div class="mkj-modal-backdrop" id="mkj-benefit-modal" hidden>
+      <section class="mkj-modal" role="dialog" aria-modal="true" aria-labelledby="mkj-benefit-title">
+        <button class="mkj-modal-close" data-mkj-close-modal type="button" aria-label="关闭弹窗">×</button>
+        <span class="mkj-modal-mark">FREE PACK / 资料包</span><h2 id="mkj-benefit-title">免费领取面经资料包</h2><p>把今天的评估结果带走，再用一套高频面经把短板练成底气。</p>
+        <form id="mkj-benefit-form" aria-busy="false" aria-describedby="mkj-benefit-note"><label>姓名<input name="name" required maxlength="30" placeholder="怎么称呼你？" /></label><label>邮箱<input name="email" type="email" required placeholder="用于接收资料包" /></label><button class="mkj-button mkj-button-primary mkj-full-button" type="submit">领取资料包 →</button></form><p class="mkj-form-note" id="mkj-benefit-note" role="status" aria-live="polite"></p>
+      </section>
+    </div>
+
+    <div class="mkj-modal-backdrop" id="mkj-card-modal" hidden>
+      <section class="mkj-modal mkj-card-modal" role="dialog" aria-modal="true" aria-labelledby="mkj-card-title" aria-describedby="mkj-card-note">
+        <button class="mkj-modal-close" data-mkj-close-modal type="button" aria-label="关闭弹窗">×</button><span class="mkj-modal-mark">ABILITY CARD / 能力名片</span><h2 id="mkj-card-title">你的能力名片</h2><canvas id="mkj-card-canvas" width="900" height="1125" role="img" aria-label="能力名片预览"></canvas><button class="mkj-button mkj-button-primary mkj-full-button" id="mkj-download-card" type="button">下载能力名片 ↓</button><p class="mkj-form-note" id="mkj-card-note">保存图片后即可截图分享给朋友或导师。</p>
+      </section>
+    </div>
+
+    <script src="/MKJ/assets/vendor/supabase-2.111.0.js"></script>
+    <script src="/MKJ/supabase-config.js"></script>
+    <script type="module" src="/MKJ/assets/js/core/runtime.js?v=20260811-r8.1"></script>
+    <script type="module" src="/MKJ/script.js?v=20260811-r8.1"></script>
+  </body>
+</html>

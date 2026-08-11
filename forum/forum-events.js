@@ -17,6 +17,8 @@ import { renderAuthor, renderCategoryList, renderComment, renderEmpty, renderErr
 
 const page = document.body?.dataset.forumPage;
 let capabilities = [];
+let stopAccountSync = null;
+let accountSyncVersion = 0;
 
 function can(...names) {
   return names.some((name) => capabilities.includes(name));
@@ -324,20 +326,65 @@ async function bootstrapNewPost() {
   });
 }
 
-async function syncAccount() {
+function accountDisplayName(user, identity) {
+  return identity?.displayName
+    || user?.user_metadata?.display_name
+    || "航线同学";
+}
+
+function accountRoleLabel(role) {
+  if (role === "ADMIN") return "管理员";
+  if (role === "MODERATOR") return "版主";
+  return "账户";
+}
+
+async function syncAccount(user) {
   const link = document.querySelector("[data-forum-account-link]");
   if (!link) return;
-  const user = await runtime()?.getCurrentUser?.().catch?.(() => null);
-  if (!user) { link.textContent = "Sign in / Register"; link.dataset.forumAccountState = "signed-out"; return; }
-  const name = user.user_metadata?.display_name || user.email?.split("@")[0] || "Member";
-  link.textContent = `Signed in · ${name}`;
+
+  const version = ++accountSyncVersion;
+  let activeUser = user;
+  if (activeUser === undefined) {
+    try {
+      activeUser = await runtime()?.getCurrentUser?.();
+    } catch {
+      activeUser = null;
+    }
+  }
+  if (version !== accountSyncVersion) return;
+
+  if (!activeUser) {
+    link.textContent = "登录 / 注册";
+    link.dataset.forumAccountState = "signed-out";
+    link.setAttribute("aria-label", "登录或注册航线账号");
+    return;
+  }
+
+  let identity = null;
+  try {
+    identity = await runtime()?.getPublicUserIdentity?.(activeUser.id);
+  } catch {
+    // A profile lookup must not hide a valid authenticated session.
+  }
+  if (version !== accountSyncVersion) return;
+
+  const name = accountDisplayName(activeUser, identity);
+  const role = accountRoleLabel(identity?.role);
+  link.textContent = `已登录 · ${name} · ${role}`;
   link.dataset.forumAccountState = "signed-in";
+  link.setAttribute("aria-label", `当前已登录：${name}，${role}。打开我的账户`);
+}
+
+function subscribeAccountSync() {
+  if (stopAccountSync || !runtime()?.onSessionChange) return;
+  stopAccountSync = runtime().onSessionChange((session) => void syncAccount(session?.user || null));
 }
 
 async function boot() {
+  void syncAccount();
+  subscribeAccountSync();
   try {
     await loadCapabilities();
-    await syncAccount();
     if (page === "index") await bootstrapIndex();
     if (page === "category") await bootstrapIndex(new URLSearchParams(window.location.search).get("slug"));
     if (page === "post") await bootstrapPost();

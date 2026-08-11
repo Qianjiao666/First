@@ -1,0 +1,7 @@
+.playwright-cli/
+.superpowers/
+output/
+deployment/
+deployment/MKJ.zip
+.DS_Store
+Thumbs.db

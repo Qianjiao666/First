@@ -1,19 +1,91 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs/promises";
+import vm from "node:vm";
 import { fileURLToPath } from "node:url";
 
-const moduleUrl = new URL("../../assets/js/forum/forum-events.js", import.meta.url);
+const moduleUrl = new URL("../../forum/forum-events.js", import.meta.url);
 const source = await fs.readFile(fileURLToPath(moduleUrl), "utf8");
 const scriptUrl = new URL("../../script.js", import.meta.url);
 const homepageScript = await fs.readFile(fileURLToPath(scriptUrl), "utf8");
 
-test("forum account navigation reflects the shared authentication session", () => {
+test("the real forum controller synchronizes the shared authentication session", () => {
   assert.match(source, /data-forum-account-link/);
   assert.match(source, /onSessionChange/);
-  assert.match(source, /已登录/);
+  assert.match(source, /getPublicUserIdentity/);
+  assert.match(source, /已登录 ·/);
   assert.match(source, /登录 \/ 注册/);
-  assert.doesNotMatch(source, /syncForumAccountNavigation\(user = await/);
+  assert.doesNotMatch(source, /user\?\.email\?\.split\("@"\)\[0\]/);
+  assert.match(source, /航线同学/);
+  assert.match(source, /void syncAccount\(\);[\s\S]*?await loadCapabilities\(\)/);
+  assert.match(source, /session\?\.user \|\| null/);
+});
+
+test("the forum account link follows login and logout session changes without exposing email", async () => {
+  const attributes = new Map();
+  const link = {
+    textContent: "",
+    dataset: {},
+    setAttribute(name, value) { attributes.set(name, value); },
+  };
+  let sessionListener;
+  let currentUser = {
+    id: "admin-user",
+    email: "private-email@example.com",
+    user_metadata: {},
+  };
+  const identities = new Map([
+    ["admin-user", { displayName: "林同学", role: "ADMIN" }],
+    ["member-user", null],
+  ]);
+  const context = {
+    URLSearchParams,
+    document: {
+      body: { dataset: { forumPage: "" } },
+      querySelector(selector) {
+        return selector === "[data-forum-account-link]" ? link : null;
+      },
+      querySelectorAll() { return []; },
+    },
+    window: {
+      MKJApp: {
+        getCurrentUser: async () => currentUser,
+        getPublicUserIdentity: async (userId) => {
+          const identity = identities.get(userId);
+          if (identity === null) throw new Error("Public profile unavailable");
+          return identity;
+        },
+        getCapabilities: async () => [],
+        onSessionChange(listener) {
+          sessionListener = listener;
+          return () => {};
+        },
+      },
+    },
+  };
+  const executable = source
+    .replace(/^import[\s\S]*?;\r?\n/gm, "")
+    .replace(/^export \{[^}]+\};\r?\n?$/gm, "");
+
+  vm.runInNewContext(`${executable}\nglobalThis.__forumAccountTest = { boot };`, context);
+  await context.__forumAccountTest.boot();
+  await new Promise((resolve) => setImmediate(resolve));
+
+  assert.equal(link.textContent, "已登录 · 林同学 · 管理员");
+  assert.equal(link.dataset.forumAccountState, "signed-in");
+  assert.match(attributes.get("aria-label"), /当前已登录：林同学，管理员/);
+  assert.equal(typeof sessionListener, "function");
+
+  sessionListener(null);
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.equal(link.textContent, "登录 / 注册");
+  assert.equal(link.dataset.forumAccountState, "signed-out");
+
+  currentUser = { id: "member-user", email: "private-email@example.com", user_metadata: {} };
+  sessionListener({ user: currentUser });
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.equal(link.textContent, "已登录 · 航线同学 · 账户");
+  assert.doesNotMatch(link.textContent, /private-email/);
 });
 
 test("the homepage opens the account panel for the forum account route", () => {
