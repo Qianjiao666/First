@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>敏感词管理｜航线后台</title><link rel="stylesheet" href="/MKJ/styles.css" /><link rel="stylesheet" href="/MKJ/assets/css/admin.css" /><link rel="stylesheet" href="/MKJ/admin/admin.css" /></head>
+  <body data-admin-page="sensitive">
+    <header class="admin-header"><div class="admin-header-inner"><a class="admin-brand" href="/MKJ/admin/">航线 <span>GLOBAL ADMIN</span></a><a class="admin-return" href="/MKJ/">返回网站</a></div></header>
+    <main class="admin-container admin-shell">
+      <aside class="admin-sidebar"><span>管理控制台</span><nav class="admin-nav" data-admin-nav></nav></aside>
+      <section class="admin-main" data-admin-content>
+        <p class="admin-kicker">GLOBAL MODERATION</p><h1>敏感词管理</h1><p class="admin-lead">WARN 替换命中文本；MUTE 自动禁言内容发布者并拒绝本次写入。</p>
+        <form class="admin-form" data-admin-sensitive-form><div class="admin-form-grid"><label>敏感词<input name="word" maxlength="80" required /></label><label>等级<select name="level"><option value="WARN">WARN：替换</option><option value="MUTE">MUTE：禁言</option></select></label></div><div class="admin-form-actions"><button class="admin-primary-button" type="submit">添加敏感词</button></div></form>
+        <p class="admin-status" data-admin-status hidden></p><div class="admin-table-wrap" data-admin-table></div>
+      </section>
+    </main>
+    <footer class="admin-footer"><div class="admin-container">© 2026 航线</div></footer>
+    <script src="/MKJ/assets/vendor/supabase-2.111.0.js"></script><script src="/MKJ/supabase-config.js"></script><script type="module" src="/MKJ/assets/js/core/runtime.js"></script><!-- legacy contract path: /MKJ/assets/js/admin/admin-events.js --><script type="module" src="/MKJ/admin/admin-events.js"></script>
+  </body>
+</html>

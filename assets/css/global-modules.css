@@ -1,0 +1,48 @@
+.mkj-reputation-badge {
+  display: inline-grid;
+  grid-template-columns: auto;
+  gap: 4px;
+  min-width: 124px;
+  padding: 7px 9px;
+  border: 1px solid rgba(24, 36, 40, 0.16);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #182428;
+  font: 500 12px/1.25 "DM Mono", "SFMono-Regular", Consolas, monospace;
+}
+
+.mkj-reputation-title {
+  color: #12775b;
+  font-weight: 700;
+}
+
+.mkj-reputation-details,
+.mkj-reputation-next {
+  color: #5c686b;
+  font-size: 11px;
+}
+
+.mkj-reputation-progress {
+  display: block;
+  height: 4px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: #dce5e4;
+}
+
+.mkj-reputation-progress-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #139b72;
+}
+
+.mkj-reputation-badge-compact {
+  display: inline-flex;
+  min-width: 0;
+  padding: 3px 6px;
+}
+
+.mkj-reputation-badge-loading {
+  color: #778184;
+}

@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="航线论坛帖子详情。" />
+    <title>论坛帖子｜航线</title>
+    <link rel="stylesheet" href="/MKJ/styles.css" />
+    <link rel="stylesheet" href="/MKJ/assets/css/global-modules.css" />
+    <link rel="stylesheet" href="/MKJ/assets/css/forum.css" />
+    <link rel="stylesheet" href="/MKJ/forum/forum.css" />
+  </head>
+  <body data-forum-page="post">
+    <header class="forum-site-header">
+      <div class="forum-site-header-inner">
+        <a class="forum-brand" href="/MKJ/" aria-label="航线首页"><span class="forum-brand-mark" aria-hidden="true">航</span><span><strong>航线</strong><small>CAREER CALIBRATION</small></span></a>
+        <nav class="forum-site-nav" aria-label="主导航"><a aria-current="page" href="/MKJ/forum/">论坛</a><a href="/MKJ/tasks/">任务广场</a><a href="/MKJ/#assessment">评估工具</a><a class="forum-account-link" data-forum-account-link data-forum-account-state="signed-out" href="/MKJ/#account" aria-label="登录或注册航线账号">登录 / 注册</a></nav>
+      </div>
+    </header>
+
+    <main class="forum-thread-page">
+      <div class="forum-container forum-thread-layout">
+        <section class="forum-thread-main">
+          <a class="forum-breadcrumb" href="/MKJ/forum/">论坛广场</a>
+          <div class="forum-detail" data-forum-detail aria-live="polite"></div>
+          <section class="forum-comments-section" aria-labelledby="forum-comments-heading">
+            <div class="forum-comments-heading"><p class="forum-kicker">REPLIES</p><h2 id="forum-comments-heading">继续把事情说清楚</h2></div>
+            <div class="forum-comment-form-slot" data-forum-comment-form></div>
+            <div class="forum-comment-list" data-forum-comments aria-live="polite"></div>
+          </section>
+        </section>
+        <aside class="forum-thread-aside"><div class="forum-aside-rule"><span>讨论提示</span><p>补充一个你亲自处理过的场景，比重复结论更有价值。</p></div><a class="forum-button forum-button-secondary" href="/MKJ/forum/new/">发起新的讨论</a></aside>
+      </div>
+    </main>
+
+    <footer class="forum-site-footer"><div class="forum-container"><span>© 2026 航线</span><a href="/MKJ/forum/">返回论坛广场</a></div></footer>
+    <script src="/MKJ/assets/vendor/supabase-2.111.0.js"></script>
+    <script src="/MKJ/supabase-config.js"></script>
+    <script type="module" src="/MKJ/assets/js/core/runtime.js"></script>
+    <!-- legacy contract path: /MKJ/assets/js/forum/forum-events.js -->
+    <script type="module" src="/MKJ/forum/forum-events.js"></script>
+  </body>
+</html>

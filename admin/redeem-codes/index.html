@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>礼包码管理｜航线后台</title>
+    <link rel="stylesheet" href="/MKJ/styles.css" />
+    <link rel="stylesheet" href="/MKJ/assets/css/admin.css" />
+    <link rel="stylesheet" href="/MKJ/admin/admin.css" />
+  </head>
+  <body data-admin-page="redeem">
+    <header class="admin-header">
+      <div class="admin-header-inner">
+        <a class="admin-brand" href="/MKJ/admin/">航线 <span>GLOBAL ADMIN</span></a>
+        <a class="admin-return" href="/MKJ/">返回网站</a>
+      </div>
+    </header>
+    <main class="admin-container admin-shell">
+      <aside class="admin-sidebar"><span>管理控制台</span><nav class="admin-nav" data-admin-nav></nav></aside>
+      <section class="admin-main" data-admin-content>
+        <p class="admin-kicker">GLOBAL REWARDS</p>
+        <h1>礼包码管理</h1>
+        <p class="admin-lead">生成、停用和追踪全局声望、角色与精确权限奖励。</p>
+        <form class="admin-form" data-admin-redeem-form>
+          <div class="admin-form-grid">
+            <label>生成数量<input name="quantity" type="number" min="1" max="100" value="1" required /></label>
+            <label>奖励声望<input name="rewardReputation" type="number" min="1" max="10000" value="10" required /></label>
+            <label>最大使用次数<input name="maxUses" type="number" min="1" value="1" required /></label>
+            <label>失效时间<input name="expiresAt" type="datetime-local" /></label>
+            <label>可选称号<input name="rewardTitle" maxlength="80" /></label>
+          </div>
+          <div class="admin-form-actions"><button class="admin-primary-button" type="submit">生成礼包码</button></div>
+        </form>
+        <p class="admin-status" data-admin-status hidden></p>
+        <div class="admin-table-wrap" data-admin-table></div>
+      </section>
+    </main>
+    <footer class="admin-footer"><div class="admin-container">© 2026 航线</div></footer>
+    <script src="/MKJ/assets/vendor/supabase-2.111.0.js"></script>
+    <script src="/MKJ/supabase-config.js"></script>
+    <script type="module" src="/MKJ/assets/js/core/runtime.js"></script>
+    <!-- legacy contract path: /MKJ/assets/js/admin/admin-events.js -->
+    <script type="module" src="/MKJ/admin/admin-events.js"></script>
+  </body>
+</html>

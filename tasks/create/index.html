@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>发布任务 - 航线</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/MKJ/assets/css/tasks.css" />
+  </head>
+  <body class="task-page" data-task-create-view>
+    <header class="task-topbar">
+      <a class="task-brand" href="/MKJ/" aria-label="返回航线首页"><span>航</span><strong>航线</strong></a>
+      <nav class="task-nav" aria-label="任务导航"><a href="/MKJ/tasks/">任务广场</a><a href="/MKJ/tasks/my/">我的任务</a></nav>
+      <div class="task-user-slot" data-task-reputation-badge aria-live="polite"></div>
+    </header>
+
+    <main class="task-shell task-create-shell">
+      <a class="task-back-link" href="/MKJ/tasks/">返回任务广场</a>
+      <section class="task-heading">
+        <div><p class="task-kicker">TASK BUILDER / 任务发布</p><h1>把需要完成的事说清楚</h1><p>选择方向和子类，补充交付标准，发布后等待合适的申请。</p></div>
+      </section>
+      <div class="task-notice" data-task-message role="status" hidden></div>
+
+      <form class="task-create-form" data-task-create-form>
+        <div class="task-create-fields">
+          <label><span>任务标题</span><input name="title" required maxlength="120" /></label>
+          <label><span>任务摘要</span><textarea name="summary" required maxlength="280" rows="3"></textarea></label>
+          <label><span>任务内容</span><textarea name="body" required maxlength="8000" rows="12"></textarea></label>
+          <div class="task-field-grid">
+            <label><span>大类</span><select name="categoryId" required data-task-category-select><option value="">正在读取分类</option></select></label>
+            <label><span>小类</span><select name="subcategoryId" data-task-subcategory-select><option value="">先选择大类</option></select></label>
+            <label><span>完成奖励</span><input name="rewardPoints" type="number" min="0" max="10000" step="1" value="0" required /></label>
+            <label><span>可接人数</span><input name="applicationLimit" type="number" min="1" max="1000" step="1" value="1" required /></label>
+            <label><span>截止时间</span><input name="deadlineAt" type="datetime-local" required /></label>
+          </div>
+          <label><span>能力标签</span><input name="skillTags" maxlength="300" placeholder="用逗号分隔" /></label>
+          <label><span>任务附件</span><input type="file" name="attachments" accept="image/*,video/*" data-task-attachment-input multiple /></label>
+          <p class="task-field-hint">仅支持图片或视频，单个文件不超过 50 MB。附件会绑定到任务记录。</p>
+          <ul class="task-attachment-list" data-task-attachment-list aria-live="polite"></ul>
+        </div>
+        <aside class="task-create-actions">
+          <h2>发布前检查</h2>
+          <ul><li>标题、摘要和正文完整</li><li>分类与子类匹配</li><li>截止时间晚于当前时间</li><li>发布前会再次过滤敏感内容</li></ul>
+          <p class="task-form-message" data-task-form-message role="status"></p>
+          <button class="task-button task-button-secondary task-full-button" type="submit" name="intent" value="draft" data-task-create-draft>保存草稿</button>
+          <button class="task-button task-button-primary task-full-button" type="submit" name="intent" value="publish" data-task-create-publish>发布任务</button>
+        </aside>
+      </form>
+    </main>
+
+    <script src="/MKJ/assets/vendor/supabase-2.111.0.js"></script>
+    <script src="/MKJ/supabase-config.js"></script>
+    <script type="module" src="/MKJ/assets/js/core/runtime.js"></script>
+    <script type="module" src="/MKJ/assets/js/core/task-integration.js"></script>
+    <script type="module" src="/MKJ/assets/js/tasks/task-create.js"></script>
+  </body>
+</html>

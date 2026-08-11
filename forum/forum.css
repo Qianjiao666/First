@@ -1,0 +1,20 @@
+/* Local forum surface additions. Existing global tokens remain the source of truth. */
+.forum-filters { align-items: end; background: #f5f8fa; border: 1px solid #dfe7ec; display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; padding: 12px; }
+.forum-filter-control, .forum-filter-search { color: #182428; display: grid; font-size: 11px; font-weight: 800; gap: 5px; min-width: 120px; }
+.forum-filter-search { flex: 1 1 220px; }
+.forum-filter-control select, .forum-filter-search input { background: #fff; border: 1px solid #dfe7ec; border-radius: 5px; color: #182428; min-height: 34px; padding: 6px 8px; }
+.forum-filter-control select:focus, .forum-filter-search input:focus { border-color: #2b6ef0; outline: 3px solid #e9f0ff; }
+.forum-filters .forum-button { min-height: 34px; }
+.forum-author-meta { color: #5c686b; font: 500 9px/1.2 "DM Mono", Consolas, monospace; }
+.forum-error { display: grid; gap: 8px; justify-items: center; }
+.forum-error-title, .forum-error-copy { margin: 0; }
+.forum-error-copy { line-height: 1.6; }
+.forum-loading { min-height: 70px; }
+.forum-post-tags .forum-tag { text-decoration: none; }
+.forum-button[disabled], .forum-vote-button[disabled] { cursor: progress; opacity: .55; }
+.forum-comment-form.is-busy, .forum-editor-form.is-busy { opacity: .76; }
+@media (max-width: 680px) {
+  .forum-filters { align-items: stretch; display: grid; grid-template-columns: 1fr 1fr; }
+  .forum-filter-search { grid-column: 1 / -1; }
+  .forum-filters .forum-button { width: 100%; }
+}

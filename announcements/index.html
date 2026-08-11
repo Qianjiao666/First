@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="航线公告" />
+    <title>公告 - 航线</title>
+    <link rel="stylesheet" href="/MKJ/styles.css" />
+    <link rel="stylesheet" href="/MKJ/announcements/announcements.css" />
+  </head>
+  <body class="announce-page">
+    <header class="announce-header"><div class="announce-header-inner"><a class="announce-brand" href="/MKJ/" aria-label="返回航线首页"><span class="announce-brand-mark" aria-hidden="true">航</span><span><strong>航线</strong><small>COMMUNITY BULLETIN</small></span></a><nav class="announce-nav" aria-label="公告导航"><a aria-current="page" href="/MKJ/announcements/">公告</a><a href="/MKJ/forum/">论坛</a><a href="/MKJ/tasks/">任务广场</a><a href="/MKJ/#account">登录 / 注册</a></nav></div></header>
+    <main class="announce-shell" data-announce-root>
+      <section class="announce-hero"><p class="announce-kicker">COMMUNITY BULLETIN / 01</p><h1>重要消息，集中在这里</h1><p>公告使用 Markdown 编写，置顶内容会同步出现在论坛与任务广场的顶部。</p></section>
+      <div class="announce-status" data-announce-status role="status" hidden></div>
+      <section class="announce-editor" data-announce-capability="announce:create" aria-labelledby="announce-editor-title"><div class="announce-section-heading"><div><p class="announce-kicker">PUBLISH</p><h2 id="announce-editor-title">发布公告</h2></div><span>仅管理员和版主可见</span></div><form data-announce-form><input type="hidden" name="id" /><label><span>标题</span><input name="title" maxlength="160" required /></label><label><span>Markdown 正文</span><textarea name="markdown" rows="9" maxlength="20000" required></textarea></label><div class="announce-form-actions"><button class="announce-button announce-button-primary" type="submit">发布公告</button><button class="announce-button announce-button-quiet" type="reset">清空</button></div></form></section>
+      <section class="announce-list-section" aria-labelledby="announce-list-title"><div class="announce-section-heading"><div><p class="announce-kicker">LATEST</p><h2 id="announce-list-title">全部公告</h2></div><span>置顶公告优先显示</span></div><div class="announce-list" data-announce-list aria-live="polite"><p class="announce-loading">正在读取公告…</p></div></section>
+    </main>
+    <footer class="announce-footer"><div>© 2026 航线</div></footer>
+    <script src="/MKJ/assets/vendor/supabase-2.111.0.js"></script><script src="/MKJ/supabase-config.js"></script><script type="module" src="/MKJ/assets/js/core/runtime.js"></script><script type="module" src="/MKJ/announcements/announcements.js"></script>
+  </body>
+</html>
+

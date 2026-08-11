@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>我的任务 - 航线</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/MKJ/assets/css/tasks.css" />
+  </head>
+  <body class="task-page">
+    <header class="task-topbar">
+      <a class="task-brand" href="/MKJ/"><span>航</span><strong>航线</strong></a>
+      <nav class="task-nav" aria-label="任务导航"><a href="/MKJ/tasks/">任务广场</a><a aria-current="page" href="/MKJ/tasks/my/">我的任务</a></nav>
+      <div class="task-user-slot" data-task-reputation-badge aria-live="polite"></div>
+    </header>
+
+    <main class="task-shell">
+      <section class="task-heading" aria-labelledby="task-my-title">
+        <div><p class="task-kicker">MY TASKS / 个人任务</p><h1 id="task-my-title">把申请变成进展</h1><p>跟踪分配、提交与核验状态，按当前步骤完成任务。</p></div>
+        <a class="task-button task-button-secondary" href="/MKJ/tasks/">继续找任务</a>
+      </section>
+
+      <div class="task-notice" data-task-message role="status" hidden></div>
+      <div class="task-tabs" role="tablist" aria-label="任务状态筛选">
+        <button class="task-tab is-active" type="button" role="tab" aria-selected="true" data-task-tab="active">进行中</button>
+        <button class="task-tab" type="button" role="tab" aria-selected="false" data-task-tab="submitted">待核验</button>
+        <button class="task-tab" type="button" role="tab" aria-selected="false" data-task-tab="completed">已完成</button>
+        <button class="task-tab" type="button" role="tab" aria-selected="false" data-task-tab="closed">其他</button>
+      </div>
+
+      <section class="task-my-list" data-task-my-list aria-live="polite" aria-busy="true"></section>
+    </main>
+
+    <dialog class="task-dialog" id="task-submit-dialog" aria-labelledby="task-submit-title">
+      <form method="dialog" class="task-dialog-close"><button aria-label="关闭提交窗口" title="关闭">×</button></form>
+      <form id="task-submit-form" data-task-submit-form>
+        <p class="task-kicker">DELIVERY / 提交</p>
+        <h2 id="task-submit-title">提交完成说明</h2>
+        <input type="hidden" name="applicationId" />
+        <input type="hidden" name="taskId" />
+        <label><span>交付说明</span><textarea name="submissionNote" required maxlength="1200" rows="7" placeholder="说明完成内容、结果链接或需要管理员核验的事项"></textarea></label>
+        <label><span>完成附件</span><input type="file" name="attachments" accept="image/*,video/*" data-task-attachment-input multiple /></label>
+        <p class="task-field-hint">仅支持图片或视频，单个文件不超过 50 MB。</p>
+        <p class="task-form-message" data-task-form-message role="status"></p>
+        <button class="task-button task-button-primary task-full-button" type="submit">提交核验</button>
+      </form>
+    </dialog>
+
+    <template id="task-my-item-template">
+      <article class="task-my-item">
+        <div><span class="task-status" data-task-status></span><h2><a data-task-title></a></h2><p data-task-deadline></p></div>
+        <div class="task-my-actions" data-task-actions></div>
+      </article>
+    </template>
+
+    <script src="/MKJ/assets/vendor/supabase-2.111.0.js"></script>
+    <script src="/MKJ/supabase-config.js"></script>
+    <script type="module" src="/MKJ/assets/js/core/runtime.js"></script>
+    <script type="module" src="/MKJ/assets/js/core/task-integration.js"></script>
+    <script type="module" src="/MKJ/assets/js/tasks/task-my.js"></script>
+  </body>
+</html>

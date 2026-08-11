@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>账号数据转移｜航线后台</title><link rel="stylesheet" href="/MKJ/styles.css" /><link rel="stylesheet" href="/MKJ/assets/css/admin.css" /><link rel="stylesheet" href="/MKJ/admin/admin.css" /></head>
+  <body data-admin-page="transfer">
+    <header class="admin-header"><div class="admin-header-inner"><a class="admin-brand" href="/MKJ/admin/">航线 <span>GLOBAL ADMIN</span></a><a class="admin-return" href="/MKJ/">返回网站</a></div></header>
+    <main class="admin-container admin-shell">
+      <aside class="admin-sidebar"><span>管理控制台</span><nav class="admin-nav" data-admin-nav></nav></aside>
+      <section class="admin-main" data-admin-content>
+        <p class="admin-kicker">GLOBAL DATA TRANSFER</p><h1>账号数据转移</h1><p class="admin-lead">事务化转移论坛帖子、评论和全局声望，并写入不可变操作日志。</p>
+        <form class="admin-form" data-admin-transfer-form><div class="admin-form-grid"><label>源用户 ID<input name="fromUserId" required /></label><label>目标用户 ID<input name="toUserId" required /></label></div><div class="admin-form-actions"><button class="admin-primary-button" type="submit">执行不可逆转移</button></div></form>
+        <p class="admin-status" data-admin-status hidden></p>
+      </section>
+    </main>
+    <footer class="admin-footer"><div class="admin-container">© 2026 航线</div></footer>
+    <script src="/MKJ/assets/vendor/supabase-2.111.0.js"></script><script src="/MKJ/supabase-config.js"></script><script type="module" src="/MKJ/assets/js/core/runtime.js"></script><!-- legacy contract path: /MKJ/assets/js/admin/admin-events.js --><script type="module" src="/MKJ/admin/admin-events.js"></script>
+  </body>
+</html>
