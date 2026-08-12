@@ -28,6 +28,11 @@ function runtime() {
   return window.MKJApp;
 }
 
+function requireAuthenticatedAction(reason) {
+  return runtime()?.requireAuthenticatedAction?.({ reason })
+    ?? Promise.reject(Object.assign(new Error(reason), { code: "UNAUTHENTICATED" }));
+}
+
 async function loadCapabilities() {
   const app = runtime();
   if (!app?.getCapabilities) throw new Error("Sign in to access community actions.");
@@ -178,6 +183,7 @@ function appendCommentForm(container, postId) {
     event.preventDefault();
     setBusy(form, true);
     try {
+      await requireAuthenticatedAction("发布评论");
       await writeComment({ action: "create", postId, content: new FormData(form).get("content") });
       window.location.reload();
     } catch (error) {
@@ -195,6 +201,7 @@ function bindPostActions(post) {
     button.addEventListener("click", async () => {
       button.disabled = true;
       try {
+        await requireAuthenticatedAction("参与投票");
         const target = button.dataset.postId ? { postId: post.id } : { commentId: button.dataset.commentId };
         await writeVote({ ...target, value: normalizeVote(Number(button.dataset.forumVote)) });
         window.location.reload();
@@ -206,7 +213,7 @@ function bindPostActions(post) {
     button.addEventListener("click", async () => {
       if (!window.confirm("Delete this reply?")) return;
       button.disabled = true;
-      try { await writeComment({ action: "delete", commentId: button.dataset.deleteComment }); window.location.reload(); }
+      try { await requireAuthenticatedAction("删除评论"); await writeComment({ action: "delete", commentId: button.dataset.deleteComment }); window.location.reload(); }
       catch (error) { button.disabled = false; status(error.message, true); }
     });
   });
@@ -235,6 +242,7 @@ function appendModerationActions(container, post) {
       button.disabled = true;
       message.textContent = "";
       try {
+        await requireAuthenticatedAction("管理论坛内容");
         await moderateContent({ target: "post", targetId: post.id, action: operation.action });
         window.location.reload();
       } catch (error) {
@@ -290,6 +298,7 @@ async function bootstrapNewPost() {
     notice.className = "forum-locked-notice";
     notice.textContent = "Sign in with post permission to start a discussion.";
     form.append(notice);
+    void requireAuthenticatedAction("发布帖子").catch(() => {});
     return;
   }
   const editId = new URLSearchParams(window.location.search).get("id");
@@ -320,6 +329,7 @@ async function bootstrapNewPost() {
     setBusy(form, true);
     const data = new FormData(form);
     try {
+      await requireAuthenticatedAction("发布帖子");
       const result = await writePost({ action: editId ? "update" : "create", postId: editId, categoryId: data.get("categoryId"), title: data.get("title"), content: data.get("content"), tagIds: data.getAll("tagIds") });
       window.location.assign(postUrl(result.post?.id || editId));
     } catch (error) { status(error.message, true); setBusy(form, false); }
@@ -381,7 +391,8 @@ function subscribeAccountSync() {
 }
 
 async function boot() {
-  void syncAccount();
+  await runtime()?.ready?.();
+  await syncAccount();
   subscribeAccountSync();
   try {
     await loadCapabilities();

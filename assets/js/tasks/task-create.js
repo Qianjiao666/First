@@ -1,6 +1,6 @@
 import { hasTaskCapability } from "./task-domain.js";
 import { TASK_ATTACHMENT_MAX_BYTES, validateTaskAttachment } from "./task-attachments.js";
-import { asItems, createTaskServices, mountTaskChrome, showTaskMessage, taskErrorMessage } from "./task-common.js";
+import { asItems, createTaskServices, mountTaskChrome, requireAuthenticatedAction, showTaskMessage, taskErrorMessage } from "./task-common.js";
 
 const services = createTaskServices();
 const form = document.querySelector("[data-task-create-form]");
@@ -78,6 +78,7 @@ async function handleSubmit(event) {
   }
 
   try {
+    await requireAuthenticatedAction(services.runtime, "创建任务");
     const saved = await services.api.saveTask(payloadFromForm(data));
     const taskId = saved.taskId ?? saved.id;
     if (files.length && taskId) {
@@ -112,6 +113,7 @@ async function bootstrap() {
   currentUser = user;
   if (!user) {
     blockCreate();
+    void requireAuthenticatedAction(services.runtime, "创建任务").catch(() => {});
     return;
   }
   try {

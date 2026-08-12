@@ -1,5 +1,5 @@
 import { buildTaskDetailUrl, hasTaskCapability, taskActionForApplication } from "./task-domain.js";
-import { asItems, createTaskServices, mountTaskChrome, showTaskMessage, taskErrorMessage } from "./task-common.js";
+import { asItems, createTaskServices, mountTaskChrome, requireAuthenticatedAction, showTaskMessage, taskErrorMessage } from "./task-common.js";
 import { validateTaskAttachment } from "./task-attachments.js";
 import { formatTaskDeadline, getApplicationGroup, statusLabel } from "./task-view.js";
 
@@ -40,6 +40,7 @@ function renderApplications() {
       cancelButton.addEventListener("click", async () => {
         if (!window.confirm("确认取消领取这个任务？取消后不能恢复本次申请。")) return;
         try {
+          await requireAuthenticatedAction(services.runtime, "取消任务申领");
           await services.api.cancel(application.id);
           await loadApplications();
           showTaskMessage(message, "任务领取已取消。", "info");
@@ -75,6 +76,7 @@ async function bootstrap() {
   const user = await mountTaskChrome(services.runtime);
   if (!user) {
     showTaskMessage(message, "登录后可以查看自己的任务进度。", "error");
+    void requireAuthenticatedAction(services.runtime, "查看我的任务").catch(() => {});
     return;
   }
 
@@ -106,6 +108,7 @@ async function bootstrap() {
       return;
     }
     try {
+      await requireAuthenticatedAction(services.runtime, "提交任务");
       const applicationId = String(data.get("applicationId"));
       const taskId = String(data.get("taskId") ?? "");
       const userId = user.userId ?? user.id;

@@ -14,6 +14,7 @@ export function createTaskServices(host = window) {
 }
 
 export async function mountTaskChrome(runtime, documentRef = document) {
+  await runtime.waitForSession?.();
   const slots = documentRef.querySelectorAll("[data-task-reputation-badge]");
   const user = await runtime.getCurrentUser();
 
@@ -32,6 +33,10 @@ export async function mountTaskChrome(runtime, documentRef = document) {
   }
 
   return user;
+}
+
+export function requireAuthenticatedAction(runtime, reason) {
+  return runtime.requireAuthenticatedAction({ reason });
 }
 
 export function showTaskMessage(node, message, tone = "info") {

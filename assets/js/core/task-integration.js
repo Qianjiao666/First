@@ -223,6 +223,8 @@ export function createTaskIntegration({
   getPublicUserIdentity,
   getCapabilities,
   fetch: fetchImpl = globalThis.fetch,
+  waitForSession = async () => {},
+  requireAuthenticatedAction = async () => null,
 } = {}) {
   const activeClient = requireClient(client);
 
@@ -293,7 +295,15 @@ export function createTaskIntegration({
     return result ?? {};
   }
 
-  return Object.freeze({ getCurrentUser, getCapabilities: loadCapabilities, queryTasks, invokeTaskFunction, uploadTaskAttachment });
+  return Object.freeze({
+    getCurrentUser,
+    getCapabilities: loadCapabilities,
+    queryTasks,
+    invokeTaskFunction,
+    uploadTaskAttachment,
+    waitForSession,
+    requireAuthenticatedAction,
+  });
 }
 
 const app = globalThis.window?.MKJApp;
@@ -304,6 +314,8 @@ if (app?.client) {
     getSession: app.getSession,
     getPublicUserIdentity: app.getPublicUserIdentity,
     getCapabilities: app.getCapabilities,
+    waitForSession: app.ready,
+    requireAuthenticatedAction: app.requireAuthenticatedAction,
     fetch: globalThis.fetch.bind(globalThis),
   });
 }

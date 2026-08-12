@@ -57,6 +57,7 @@ export function createShopApi(runtime = globalThis.MKJApp) {
     },
     async redeem(productId, idempotencyKey = createIdempotencyKey()) {
       if (!String(productId || "").trim()) throw new Error("请选择要兑换的商品。");
+      await runtime?.requireAuthenticatedAction?.({ reason: "兑换商品" });
       if (typeof runtime?.getSession === "function" && !(await runtime.getSession())) {
         throw new Error("请先登录后再兑换商品。");
       }
@@ -147,6 +148,7 @@ async function bootstrap() {
   const runtime = globalThis.MKJApp;
   const root = document.querySelector("[data-shop-root]");
   if (!root) return;
+  await runtime?.ready?.();
   const api = createShopApi(runtime);
   const grid = root.querySelector("[data-shop-products]");
   const status = root.querySelector("[data-shop-status]");
@@ -202,7 +204,7 @@ async function bootstrap() {
   }
 
   await loadOrders();
-  runtime?.onSessionChange?.(() => window.location.reload());
+  runtime?.onSessionChange?.(() => { void loadOrders(); });
 }
 
 if (typeof document !== "undefined") bootstrap();

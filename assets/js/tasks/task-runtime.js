@@ -34,6 +34,8 @@ export function resolveTaskRuntime(host = globalThis) {
       uploadTaskAttachment: unavailableAttachment,
       getCurrentUser: async () => null,
       getCapabilities: async () => [],
+      waitForSession: async () => null,
+      requireAuthenticatedAction: unavailable,
     });
   }
 
@@ -44,5 +46,8 @@ export function resolveTaskRuntime(host = globalThis) {
     uploadTaskAttachment: (request) => integration.uploadTaskAttachment?.(request) ?? unavailableAttachment(),
     getCurrentUser: () => integration.getCurrentUser(),
     getCapabilities: () => integration.getCapabilities?.() ?? Promise.resolve([]),
+    waitForSession: () => integration.waitForSession?.() ?? Promise.resolve(null),
+    requireAuthenticatedAction: (options) => integration.requireAuthenticatedAction?.(options)
+      ?? integration.getCurrentUser().then((user) => user || unavailable()),
   });
 }

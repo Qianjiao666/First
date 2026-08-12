@@ -280,6 +280,7 @@ function bootstrapDashboard() {
 
 async function boot() {
   try {
+    await window.MKJApp?.ready?.();
     capabilities = await window.MKJApp?.getCapabilities?.() || [];
     if (!canAccessAdmin()) return showPanel(content(), "Access restricted", "Sign in with an admin capability to continue.");
     renderNav(document.querySelector("[data-admin-nav]"), capabilities);

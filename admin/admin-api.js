@@ -4,8 +4,10 @@ function app() {
   return value;
 }
 
-function invoke(name, payload) {
-  return app().invokeFunction(name, payload);
+async function invoke(name, payload) {
+  const runtime = app();
+  await runtime.requireAuthenticatedAction?.({ reason: "执行管理操作" });
+  return runtime.invokeFunction(name, payload);
 }
 
 export const adminUsers = (payload) => invoke("admin-users", payload);

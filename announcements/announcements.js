@@ -60,6 +60,7 @@ export function createAnnouncementsApi(runtime = globalThis.MKJApp) {
       return unwrapItems(result).map(normalizeAnnouncement);
     },
     async create({ title, markdown, slug, status = "published", isPinned = false }) {
+      await runtime?.requireAuthenticatedAction?.({ reason: "发布公告" });
       return invokePublic(runtime, {
         action: "upsert",
         slug: String(slug || fallbackSlug(title)),
@@ -70,6 +71,7 @@ export function createAnnouncementsApi(runtime = globalThis.MKJApp) {
       });
     },
     async update(id, { title, markdown, slug, status = "published", isPinned = false }) {
+      await runtime?.requireAuthenticatedAction?.({ reason: "编辑公告" });
       return invokePublic(runtime, {
         action: "upsert",
         id: String(id),
@@ -81,6 +83,7 @@ export function createAnnouncementsApi(runtime = globalThis.MKJApp) {
       });
     },
     async setPinned(id, isPinned, current = {}) {
+      await runtime?.requireAuthenticatedAction?.({ reason: "管理公告" });
       return invokePublic(runtime, {
         action: "upsert",
         id: String(id),
@@ -92,6 +95,7 @@ export function createAnnouncementsApi(runtime = globalThis.MKJApp) {
       });
     },
     async remove(id) {
+      await runtime?.requireAuthenticatedAction?.({ reason: "删除公告" });
       return invokePublic(runtime, { action: "delete", id: String(id) });
     },
   };
@@ -253,6 +257,7 @@ async function bootstrap() {
   const root = document.querySelector("[data-announce-root]");
   if (!root) return;
   const runtime = globalThis.MKJApp;
+  await runtime?.ready?.();
   const api = createAnnouncementsApi(runtime);
   const capabilities = await runtime?.getCapabilities?.().catch(() => []) ?? [];
   const list = root.querySelector("[data-announce-list]");

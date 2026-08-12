@@ -14,6 +14,8 @@ test("task controllers consume the shared badge without implementing it", async 
   assert.match(common, /\.\.\/core\/reputation\.js/);
   assert.match(common, /renderReputationBadge/);
   assert.doesNotMatch(common, /customElements\.define/);
+  assert.match(common, /await runtime\.waitForSession\?\.\(\)/);
+  assert.match(common, /requireAuthenticatedAction/);
 });
 
 test("public controllers route writes through the task API wrapper", async () => {
@@ -30,6 +32,8 @@ test("public controllers route writes through the task API wrapper", async () =>
   assert.match(list, /currentPage/);
   assert.match(detail, /api\.apply/);
   assert.match(mine, /api\.submit/);
+  assert.match(detail, /requireAuthenticatedAction\(services\.runtime, "申领任务"\)/);
+  assert.match(mine, /requireAuthenticatedAction\(services\.runtime, "提交任务"\)/);
   assert.doesNotMatch(`${list}\n${detail}\n${mine}`, /from\s+["'][^"']*forum/);
 });
 
@@ -49,6 +53,16 @@ test("admin controller keeps all privileged actions behind the API wrapper", asy
   assert.match(admin, /saved\.warnings/);
   assert.match(admin, /敏感内容/);
   assert.match(admin, /applicationPanel\.addEventListener\("click"/);
+  assert.match(admin, /requireAuthenticatedAction\(services\.runtime, "管理任务"\)/);
+});
+
+test("task creation is guarded before the existing save call", async () => {
+  const create = await read("assets/js/tasks/task-create.js");
+  const guardIndex = create.indexOf('requireAuthenticatedAction(services.runtime, "创建任务")');
+  const saveIndex = create.indexOf("services.api.saveTask");
+
+  assert.notEqual(guardIndex, -1);
+  assert.ok(guardIndex < saveIndex);
 });
 
 test("personal task controller exposes accepted-application cancellation", async () => {

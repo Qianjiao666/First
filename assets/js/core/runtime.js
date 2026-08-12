@@ -18,7 +18,11 @@ function requireClient() {
   return client;
 }
 
-const session = createSessionCoordinator({ client });
+function requestLogin(reason) {
+  document.dispatchEvent(new CustomEvent("mkj:login-required", { detail: { reason } }));
+}
+
+const session = createSessionCoordinator({ client, openLogin: requestLogin });
 
 async function getSession() {
   requireClient();
@@ -115,3 +119,4 @@ const runtime = {
 
 configureReputationBadge({ loadPublicIdentity: getPublicUserIdentity });
 window.MKJApp = runtime;
+window.MKJSession = session;

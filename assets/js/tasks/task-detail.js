@@ -1,5 +1,5 @@
 import { hasTaskCapability, parseTaskId } from "./task-domain.js";
-import { asItems, createTag, createTaskServices, mountTaskChrome, showTaskMessage, taskErrorMessage } from "./task-common.js";
+import { asItems, createTag, createTaskServices, mountTaskChrome, requireAuthenticatedAction, showTaskMessage, taskErrorMessage } from "./task-common.js";
 import { formatTaskDeadline, normalizeTaskTimeline, statusLabel, taskTimelineLabel, toTaskListingModel } from "./task-view.js";
 
 const services = createTaskServices();
@@ -106,6 +106,7 @@ async function handleApply(event) {
   if (!note) return;
 
   try {
+    await requireAuthenticatedAction(services.runtime, "申领任务");
     const result = await services.api.apply(taskId, note);
     form.reset();
     dialog.close();
@@ -138,6 +139,11 @@ async function bootstrap() {
   }
   if (applyButton) applyButton.hidden = Boolean(user && !canApply);
   applyButton?.addEventListener("click", async () => {
+    try {
+      await requireAuthenticatedAction(services.runtime, "申领任务");
+    } catch {
+      return;
+    }
     const user = await services.runtime.getCurrentUser();
     if (!user) {
       showTaskMessage(message, "请先从航线首页登录账户后再申请任务。", "error");

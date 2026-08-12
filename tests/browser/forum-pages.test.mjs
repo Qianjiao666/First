@@ -25,7 +25,8 @@ test("forum routes provide page markers and shared forum assets", async () => {
     assert.ok(source, `${path} exists`);
     assert.match(source, new RegExp(`data-forum-page=["']${page}["']`));
     assert.match(source, /assets\/css\/forum\.css\?v=20260811-r8\.1/);
-    assert.match(source, /assets\/js\/core\/runtime\.js\?v=20260811-r8\.1/);
+    assert.match(source, /assets\/js\/core\/runtime\.js\?v=20260812-v1\.1/);
+    assert.match(source, /assets\/js\/core\/app-shell\.js\?v=20260812-v1\.1/);
     assert.match(source, /forum\/forum-events\.js\?v=20260811-r8\.1/);
     assert.match(source, /data-forum-account-link/);
     assert.match(source, /href=["']\/MKJ\/#account["']/);

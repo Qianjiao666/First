@@ -17,8 +17,53 @@ test("the real forum controller synchronizes the shared authentication session",
   assert.match(source, /登录 \/ 注册/);
   assert.doesNotMatch(source, /user\?\.email\?\.split\("@"\)\[0\]/);
   assert.match(source, /航线同学/);
-  assert.match(source, /void syncAccount\(\);[\s\S]*?await loadCapabilities\(\)/);
+  assert.match(source, /await runtime\(\)\?\.ready\?\.\(\);[\s\S]*?await syncAccount\(\);[\s\S]*?await loadCapabilities\(\)/);
   assert.match(source, /session\?\.user \|\| null/);
+  assert.match(source, /await runtime\(\)\?\.ready\?\.\(\)/);
+  assert.match(source, /requireAuthenticatedAction/);
+});
+
+test("forum boot does not paint a signed-out account before session readiness resolves", async () => {
+  const attributes = new Map();
+  const link = {
+    textContent: "unchanged",
+    dataset: {},
+    setAttribute(name, value) { attributes.set(name, value); },
+  };
+  let resolveReady;
+  const ready = new Promise((resolve) => { resolveReady = resolve; });
+  const context = {
+    URLSearchParams,
+    document: {
+      body: { dataset: { forumPage: "" } },
+      querySelector(selector) {
+        return selector === "[data-forum-account-link]" ? link : null;
+      },
+      querySelectorAll() { return []; },
+    },
+    window: {
+      MKJApp: {
+        ready: () => ready,
+        getCurrentUser: async () => ({ id: "ready-user", user_metadata: { display_name: "就绪用户" } }),
+        getPublicUserIdentity: async () => ({ displayName: "就绪用户", role: "MEMBER" }),
+        getCapabilities: async () => [],
+        onSessionChange: () => () => {},
+      },
+    },
+  };
+  const executable = source
+    .replace(/^import[\s\S]*?;\r?\n/gm, "")
+    .replace(/^export \{[^}]+\};\r?\n?$/gm, "");
+
+  vm.runInNewContext(`${executable}\nglobalThis.__forumReadyTest = { boot };`, context);
+  const booting = context.__forumReadyTest.boot();
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.equal(link.textContent, "unchanged");
+
+  resolveReady({ status: "signed-in" });
+  await booting;
+  assert.equal(link.textContent, "已登录 · 就绪用户 · 账户");
+  assert.equal(attributes.get("aria-label"), "当前已登录：就绪用户，账户。打开我的账户");
 });
 
 test("the forum account link follows login and logout session changes without exposing email", async () => {

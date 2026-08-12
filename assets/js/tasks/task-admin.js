@@ -1,5 +1,5 @@
 import { hasTaskCapability, hasTaskManageCapability } from "./task-domain.js";
-import { asItems, createTaskServices, mountTaskChrome, showTaskMessage, taskErrorMessage } from "./task-common.js";
+import { asItems, createTaskServices, mountTaskChrome, requireAuthenticatedAction, showTaskMessage, taskErrorMessage } from "./task-common.js";
 import { formatTaskDeadline, statusLabel } from "./task-view.js";
 
 const TASK_MANAGE_CAPABILITY = "tasks:manage";
@@ -21,6 +21,7 @@ function button(label, action, id, tone = "secondary", metadata = {}) {
 }
 
 async function runAdminAction(action, id, taskId = id, userId = "") {
+  await requireAuthenticatedAction(services.runtime, "管理任务");
   const reason = action.startsWith("arbitrate")
     ? window.prompt("请输入仲裁原因", "超时仲裁")
     : "";
@@ -247,6 +248,7 @@ async function setupList() {
     const formMessage = reviewForm.querySelector("[data-task-form-message]");
     const data = new FormData(reviewForm);
     try {
+      await requireAuthenticatedAction(services.runtime, "管理任务");
       await services.api.complete(String(data.get("applicationId")), {
         rating: Number(data.get("rating")),
         content: String(data.get("content")).trim(),
@@ -290,6 +292,7 @@ async function setupList() {
       return;
     }
     try {
+      await requireAuthenticatedAction(services.runtime, "管理任务分类");
       await services.api.saveCategory({
         kind,
         categoryId: String(data.get("categoryId") ?? "") || undefined,
@@ -341,6 +344,7 @@ async function setupEditor() {
     };
     const formMessage = form.querySelector("[data-task-form-message]");
     try {
+      await requireAuthenticatedAction(services.runtime, "管理任务");
       const saved = await services.api.saveTask(payload);
       if (intent === "publish") {
         await services.api.publish(saved.taskId ?? saved.id);
