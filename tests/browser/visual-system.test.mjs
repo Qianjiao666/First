@@ -28,10 +28,11 @@ const productionPages = [
   "admin/tasks/edit/index.html",
 ];
 
-test("every production page loads the versioned v1 visual system last", async () => {
+test("every production page loads its current versioned v1 visual system last", async () => {
   for (const relativePath of productionPages) {
     const source = await fs.readFile(fileURLToPath(new URL(relativePath, root)), "utf8");
-    const visualLink = '<link rel="stylesheet" href="/MKJ/assets/css/visual-v1.css?v=20260812-v1.0" />';
+    const releaseVersion = relativePath === "index.html" ? "v1.1" : "v1.0";
+    const visualLink = `<link rel="stylesheet" href="/MKJ/assets/css/visual-v1.css?v=20260812-${releaseVersion}" />`;
     assert.match(source, new RegExp(visualLink.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")), `${relativePath} is missing the v1 visual system`);
     assert.match(source, /<link rel="icon" href="data:,"\s*\/>/, `${relativePath} must suppress implicit favicon requests`);
     const stylesheetLinks = source.match(/<link rel="stylesheet"[^>]*\/>/g) ?? [];

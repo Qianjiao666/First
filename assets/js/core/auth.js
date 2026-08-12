@@ -4,6 +4,14 @@ export async function requireSession() {
   return session;
 }
 
+export async function requireAuthenticatedAction(options) {
+  if (window.MKJApp?.requireAuthenticatedAction) {
+    return window.MKJApp.requireAuthenticatedAction(options);
+  }
+  const session = await requireSession();
+  return session.user;
+}
+
 export async function getCurrentUser() {
   return window.MKJApp?.getCurrentUser?.() ?? null;
 }

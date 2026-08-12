@@ -1,4 +1,5 @@
 import { configureReputationBadge } from "/MKJ/assets/js/core/reputation.js";
+import { createSessionCoordinator } from "/MKJ/assets/js/core/session-coordinator.js";
 
 const config = window.SUPABASE_CONFIG || {};
 const canCreateClient = Boolean(
@@ -17,18 +18,20 @@ function requireClient() {
   return client;
 }
 
+const session = createSessionCoordinator({ client });
+
 async function getSession() {
-  const activeClient = requireClient();
-  const { data, error } = await activeClient.auth.getSession();
-  if (error) throw new Error("无法读取登录状态，请重新登录。");
-  return data.session;
+  requireClient();
+  const state = await session.ready();
+  if (state.status === "expired") throw new Error(state.reason);
+  if (state.status === "unavailable") throw new Error(state.reason);
+  return state.session;
 }
 
 async function getCurrentUser() {
-  const activeClient = requireClient();
-  const { data, error } = await activeClient.auth.getUser();
-  if (error) return null;
-  return data.user;
+  requireClient();
+  const state = await session.ready();
+  return state.user;
 }
 
 async function getPublicUserIdentity(userId) {
@@ -81,6 +84,7 @@ async function invokeFunction(name, payload = {}, method = "POST") {
     const message = result?.error?.message || "操作未完成，请稍后重试。";
     const error = new Error(message);
     error.code = result?.error?.code || "INTERNAL_ERROR";
+    session.handleApiAuthFailure(error);
     throw error;
   }
 
@@ -88,13 +92,10 @@ async function invokeFunction(name, payload = {}, method = "POST") {
 }
 
 function onSessionChange(callback) {
-  if (!client) return () => {};
-
-  const { data } = client.auth.onAuthStateChange((_event, session) => {
+  return session.subscribe((state) => {
     capabilitiesCache = null;
-    callback(session);
-  });
-  return () => data.subscription.unsubscribe();
+    callback(state.session);
+  }, { immediate: false });
 }
 
 const runtime = {
@@ -106,6 +107,10 @@ const runtime = {
   getCapabilities,
   invokeFunction,
   onSessionChange,
+  session,
+  ready: session.ready,
+  requireAuthenticatedAction: session.requireAuthenticatedAction,
+  handleApiAuthFailure: session.handleApiAuthFailure,
 };
 
 configureReputationBadge({ loadPublicIdentity: getPublicUserIdentity });
