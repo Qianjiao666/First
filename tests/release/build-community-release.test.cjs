@@ -6,8 +6,9 @@ const test = require("node:test");
 
 const root = path.resolve(__dirname, "../..");
 const deployment = path.join(root, "deployment");
+const releaseDate = "20260812";
 const revision = "checksum-eol-test";
-const releasePrefix = `MKJ-community-forum-tasks-20260811-`;
+const releasePrefix = `MKJ-community-forum-tasks-${releaseDate}-`;
 
 function generatedPaths(packageType) {
   const stem = `${releasePrefix}${packageType}-${revision}`;
@@ -28,6 +29,8 @@ test("writes Linux-compatible checksum files", () => {
         "Bypass",
         "-File",
         path.join(deployment, "build-community-release.ps1"),
+        "-ReleaseDate",
+        releaseDate,
         "-Revision",
         revision,
       ],
