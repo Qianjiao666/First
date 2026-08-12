@@ -40,7 +40,7 @@ async function attachAuthors(records) {
   const client = requireClient();
   const { data, error } = await client
     .from("user_public_profiles")
-    .select("user_id, display_name, role, reputation")
+    .select("user_id, display_name, role, reputation, avatar")
     .in("user_id", authorIds);
   if (error) throw new Error("无法读取作者公开资料。");
 

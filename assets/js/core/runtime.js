@@ -42,7 +42,7 @@ async function getPublicUserIdentity(userId) {
   const activeClient = requireClient();
   const { data, error } = await activeClient
     .from("user_public_profiles")
-    .select("user_id, display_name, role, reputation")
+    .select("user_id, display_name, role, reputation, avatar")
     .eq("user_id", userId)
     .maybeSingle();
   if (error) throw new Error("无法读取用户公开资料。");
@@ -53,6 +53,7 @@ async function getPublicUserIdentity(userId) {
     displayName: data.display_name,
     role: data.role,
     reputation: data.reputation,
+    avatar: data.avatar,
   };
 }
 

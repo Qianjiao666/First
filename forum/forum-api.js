@@ -87,7 +87,7 @@ async function attachAuthors(records) {
   const ids = [...new Set(records.map((record) => record.author_id).filter(Boolean))];
   if (!ids.length) return records;
   const { data, error } = await client().from("user_public_profiles")
-    .select("user_id, display_name, role, reputation").in("user_id", ids);
+    .select("user_id, display_name, role, reputation, avatar").in("user_id", ids);
   if (error) throw new Error("Unable to load author profiles.");
   const authors = new Map((data || []).map((author) => [author.user_id, author]));
   return records.map((record) => ({ ...record, author: authors.get(record.author_id) || null }));

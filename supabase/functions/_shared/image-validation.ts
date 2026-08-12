@@ -41,6 +41,7 @@ function parsePng(bytes: Uint8Array): { width: number; height: number } {
   let width = 0;
   let height = 0;
   let sawHeader = false;
+  let sawImageData = false;
   let sawEnd = false;
   while (offset + 12 <= bytes.length) {
     const length = view.getUint32(offset, false);
@@ -57,6 +58,7 @@ function parsePng(bytes: Uint8Array): { width: number; height: number } {
       if (!validDepth || bytes[offset + 18] !== 0 || bytes[offset + 19] !== 0 || bytes[offset + 20] > 1) invalid("头像图片结构损坏，请重新选择。");
       sawHeader = true;
     }
+    if (type === "IDAT" && length > 0) sawImageData = true;
     if (type === "IEND") {
       if (length !== 0 || end !== bytes.length) invalid("头像图片结构损坏，请重新选择。");
       sawEnd = true;
@@ -64,7 +66,7 @@ function parsePng(bytes: Uint8Array): { width: number; height: number } {
     }
     offset = end;
   }
-  if (!sawHeader || !sawEnd) invalid("头像图片结构损坏，请重新选择。");
+  if (!sawHeader || !sawImageData || !sawEnd) invalid("头像图片结构损坏，请重新选择。");
   return { width, height };
 }
 

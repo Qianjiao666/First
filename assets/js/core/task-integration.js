@@ -174,15 +174,19 @@ async function queryApplications(client, taskId) {
   if (!applicantIds.length) return { items: [] };
 
   const profilesResult = await readQuery(
-    client.from("user_public_profiles").select("user_id, display_name").in("user_id", applicantIds),
+    client.from("user_public_profiles").select("user_id, display_name, avatar").in("user_id", applicantIds),
     "申请人资料读取失败，请稍后重试。",
   );
-  const names = new Map((profilesResult.data ?? []).map((profile) => [profile.user_id, profile.display_name]));
+  const profiles = new Map((profilesResult.data ?? []).map((profile) => [profile.user_id, profile]));
   return {
-    items: applications.map((application) => ({
-      ...application,
-      applicant_name: names.get(application.applicant_id) ?? "申请人",
-    })),
+    items: applications.map((application) => {
+      const profile = profiles.get(application.applicant_id);
+      return {
+        ...application,
+        applicant_name: profile?.display_name ?? "申请人",
+        applicant_avatar: profile?.avatar ?? null,
+      };
+    }),
   };
 }
 
