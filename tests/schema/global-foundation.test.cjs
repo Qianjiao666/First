@@ -12,6 +12,24 @@ test("defines global role and separated public identity tables", () => {
   assert.match(schema, /create table if not exists public\.user_moderation_state/i);
   assert.match(schema, /role public\.user_role not null default 'USER'/i);
   assert.match(schema, /reputation integer not null default 0 check \(reputation >= 0\)/i);
+  const publicProfileDefinition = schema.match(
+    /create table if not exists public\.user_public_profiles\s*\(([\s\S]*?)\n\);/i,
+  );
+  assert.ok(publicProfileDefinition, "user_public_profiles must remain in the canonical schema");
+  assert.equal((publicProfileDefinition[1].match(/\bavatar\s+text\b/gi) || []).length, 1);
+});
+
+test("v1.1 avatar schema keeps the existing business table set", () => {
+  const migration = fs.readFileSync(
+    path.resolve(__dirname, "../../supabase/migrations/20260812_v1_1_avatar.sql"),
+    "utf8",
+  );
+  assert.doesNotMatch(migration, /\bcreate\s+table\b/i);
+  assert.deepEqual(
+    [...migration.matchAll(/\badd\s+column\s+if\s+not\s+exists\s+([a-z_][a-z0-9_]*)/gi)]
+      .map((match) => match[1].toLowerCase()),
+    ["avatar"],
+  );
 });
 
 test("defines an idempotent reputation ledger with service-only execution", () => {
