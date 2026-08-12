@@ -1,6 +1,50 @@
 # 航线 MKJ 项目接手文档
 
-更新时间：2026-08-10
+更新时间：2026-08-12
+
+## 14. v1.0 全站视觉重构状态（2026-08-12）
+
+- 本次只重构视觉表现，不改变页面路由、DOM 功能契约、表单字段、事件选择器、Supabase 数据流、权限或已有功能。
+- 新增统一视觉层 `assets/css/visual-v1.css`，覆盖首页、社区、论坛、任务广场、商城、公告、通知组件和管理后台；20 个生产 HTML 页面均在原样式之后加载 `/MKJ/assets/css/visual-v1.css?v=20260812-v1.0`。
+- 视觉方向为“职业校准台”：墨黑与纸白为基础，航线蓝表示定位和主要动作，信号绿表示完成与声望，奖励橙只用于商城和任务奖励。
+- 公开更新日志版本统一使用 `v0.x/v1.x`：原公开 `r8` 调整为 `v0.7`，原公开 `r8.1` 调整为 `v0.8`，本次视觉升级为 `v1.0`。`r` 前缀只可作为内部压缩包 revision，不得再出现在用户可见版本号中。
+- 新增视觉规格 `docs/superpowers/specs/2026-08-12-v1-visual-redesign-design.md`、实施计划 `docs/superpowers/plans/2026-08-12-v1-visual-redesign.md`、产品说明 `PRODUCT.md` 和契约测试 `tests/browser/visual-system.test.mjs`；稳定设计系统已归档至 `DESIGN.md` 与 `.impeccable/design.json`，后者可由 JSON parser 正确解析。
+- 完整 Node 自动测试收集 21 个 `*.test.mjs` 与 7 个 `*.test.cjs`，结果为 `87/87` 通过、0 失败；93 个 JavaScript 文件（`.js/.mjs/.cjs`）`node --check` 通过。
+- 可重复执行的冷启动脚本 `tests/browser/visual-matrix-cdp-smoke.mjs` 在 20 个生产路由、375/768/1280/1920 四种宽度共完成 `80/80` 组合检查：HTTP 失败、横向溢出、控制台错误、网络错误、视觉层缺失和 token 错误均为 0。本地报告与 14 张代表截图位于 `output/playwright/visual-v1-final/`。
+- 冷启动检查发现 `admin/sensitive-words/` 首次请求 `/favicon.ico` 返回 404；根因是两个后台页面漏写空 favicon 声明，现已为 `admin/sensitive-words/index.html` 和 `admin/account-transfer/index.html` 补齐 `<link rel="icon" href="data:," />`，并由视觉契约测试保护全部 20 个生产页面。
+- 独立 Impeccable finish review 最终结论为 `PASS WITH NOTES`；placeholder 对比度、任务/公告颜色语义、重复分类眉标和 Unicode 功能图标问题均已修复并复核为 resolved。唯一备注是缺少真实登录及授权账号的固定种子截图，尚未展示论坛长帖、密集任务/商品/公告列表和已授权后台表格；这是视觉证据覆盖缺口，不是已识别的产品代码缺陷，不应通过伪造生产数据消除。
+- 本地发布候选已生成并校验：静态包 `deployment/MKJ-community-forum-tasks-20260812-static-v1.0.zip`，SHA-256 `ED2492C3CDF3ADE887AE250DBB3454727DEF11ACF3B1F8C038881EA736E88BD4`；后端包 `deployment/MKJ-community-forum-tasks-20260812-backend-v1.0.zip`，SHA-256 `50294A9F64C82B0B96C3F5079CD84E4E608EB808382418B66A6F99DF6C21304C`。
+- 静态 ZIP 共 81 个条目，其中 `RELEASE-MANIFEST.txt` 记录 80 个部署文件；manifest mismatch 为 0，外层 ZIP 哈希与相邻 `.sha256` 一致，禁止目录为 0。与 `20260811-static-r8.1.zip` 比较为旧包 80 条、新包 81 条：新增 1 个 `assets/css/visual-v1.css`，修改 20 个生产 HTML 与 manifest，无删除项。
+- `v1.0` 已于 2026-08-12 正式部署到腾讯云 CVM `ins-6xonyz5y`（南京三区，公网 IP `119.45.253.94`），线上目录严格限定为 `/var/www/MKJ`；线上 `RELEASE-MANIFEST.txt` 显示 `Release: 20260812`、`Revision: v1.0`、`Files: 80`。
+- 正式部署使用静态包 SHA-256 `ED2492C3CDF3ADE887AE250DBB3454727DEF11ACF3B1F8C038881EA736E88BD4`；线上 manifest 与本地发布包文本完全一致，SHA-256 均为 `3D6FD011E18A3E53881E72153091B103AB934AD432A46DDFF555412C3DE32257`。部署后通过 HTTPS 逐一下载并核对 80 个 manifest 文件，结果 `80/80` SHA-256 匹配、0 失败。
+- 线上浏览器矩阵再次覆盖 20 路由 × 4 视口，共 `80/80` 项；HTTP 失败、主内容缺失、横向溢出、控制台错误、网络错误、视觉层缺失和 token 错误均为 0。生产报告与 14 张代表截图位于 `output/playwright/visual-v1-production/`。
+- 原子切换前版本保存在 `/var/www/.mkj-community-releases/20260812-053614.previous`，部署前 tar 备份保存在 `/var/www/.mkj-community-releases/20260812-053614.before-v1.0.tar.gz`；需要回滚时以这两个路径为准。
+- 主站 `https://dsxnb.com/` 保持 HTTP 200、标题仍为“大师兄牛啵网 - 助力大学生开启职场未来”，且未加载 `visual-v1.css`。本次未修改 Nginx，未上传或部署后端 ZIP，未执行 Supabase schema、函数或数据迁移。
+- 本次源码改动仍未提交或推送 GitHub；生产状态已经从公开 `v0.8` 更新为正式 `v1.0`，不得再描述为“待部署”或“发布候选”。
+
+## 12. r8.1 生产收尾状态（2026-08-11）
+
+- r8.1 以已上线的 r8 为唯一基线，仅修复论坛账号状态同步、更新日志内容和资源缓存版本标记。
+- 论坛真实控制器为 `forum/forum-events.js`；登录状态显示“已登录 · 昵称 · 管理员/版主/账户”，公开资料不可用时回退为“航线同学”，不显示邮箱。
+- 首页更新日志已包含 `r8.1`、`r8`、`v0.6`，入口文字显示为“更新日志 · r8.1”。
+- 首页与四个论坛路由的受影响资源使用 `?v=20260811-r8.1`；商城、公告、通知、任务、后台、共享组件、数据库和 Edge Functions 未修改。
+- 静态包：`deployment/MKJ-community-forum-tasks-20260811-static-r8.1.zip`
+- 静态包 SHA-256：`C72730353582D49C05B65A4E41967137CB51EF942199B4871EBC937156459901`
+- 静态包清单 `79/79` 校验通过；与 r8 比对仅 6 个预期文件内容变化。
+- WebShell 已完成 `/var/www/MKJ` 原子切换，旧站备份保存在 `/var/www/.mkj-community-releases/20260811-r8.1.previous`，不得删除，直到下一版完成独立验收。
+- 本地完整 Node 回归 `84/84` 通过，JavaScript 语法检查通过，375/768/1280/1920 浏览器冒烟无横向溢出和运行时异常。
+- 本地恢复提交：`1502293 fix: polish r8.1 forum identity and changelog`。
+
+## 13. 后续版本变更纪律（长期有效）
+
+每次对项目作出任何代码、配置、功能、文案、文档或部署调整，必须同步更新首页更新日志并按以下顺序完成：
+
+1. 同步更新根目录 `index.html` 的更新日志；版本条目必须置于历史版本之前，并同步更新 `tests/browser/changelog.test.mjs`。
+2. 在当前生产基线之上做增量修改，运行完整 Node 测试、语法检查、清单校验和浏览器冒烟；禁止用旧版本包覆盖新功能。
+3. 生成完整静态包，核对 SHA-256 和 `RELEASE-MANIFEST.txt`，不得把后端、schema 或测试文件复制到静态目录。
+4. 将相关源码、测试、交接文档一起 `git add`，提交清晰的版本 commit，并执行 `git push origin <当前分支>` 同步 GitHub；不提交密码、token、service role key、数据库密码或 SSH 私钥。
+5. 生产部署只切换 `/var/www/MKJ`，部署前创建带时间戳的 tar 备份，保留 `.previous` 回滚目录，不修改主站根路由或 Nginx。
+6. 部署后检查首页、论坛、任务、商城、公告、共享组件和代表性静态资源；确认登录态、更新日志和控制台无异常后，才可标记版本完成。
 
 ## 0b. 2026-08-11 社区发布候选状态
 
