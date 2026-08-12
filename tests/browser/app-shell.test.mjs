@@ -86,3 +86,11 @@ test("a protected-action event opens login UI without replacing page content", a
   assert.equal(opened, true);
   assert.equal(main.textContent, "public forum remains visible");
 });
+
+test("subpages receive a mobile navigation trigger without replacing the existing nav", async () => {
+  const source = await fs.readFile(moduleUrl, "utf8");
+  assert.match(source, /createMobileNavTrigger/);
+  assert.match(source, /dataset\.mkjMobileNavTrigger/);
+  assert.match(source, /nav\.classList\.toggle\("mkj-mobile-nav-open-v11"/);
+  assert.match(source, /documentRef\.querySelector\("#mkj-menu-button"\)/);
+});

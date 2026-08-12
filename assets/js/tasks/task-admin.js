@@ -2,6 +2,7 @@ import { hasTaskCapability, hasTaskManageCapability } from "./task-domain.js";
 import { asItems, createTaskServices, mountTaskChrome, requireAuthenticatedAction, showTaskMessage, taskErrorMessage } from "./task-common.js";
 import { formatTaskDeadline, statusLabel } from "./task-view.js";
 import { guardFormData } from "../security/form-guard.js";
+import { renderAvatar } from "../profile/avatar.js";
 
 const TASK_MANAGE_CAPABILITY = "tasks:manage";
 const TASK_MANAGE_MARKER = "task:manage";
@@ -85,7 +86,17 @@ function renderApplications(applications) {
     const item = document.createElement("article");
     item.className = "task-my-item";
     const copy = document.createElement("div");
-    copy.textContent = `${application.applicant_name ?? "申请人"} · ${statusLabel(application.status)}`;
+    copy.className = "task-applicant-identity-v11";
+    const avatar = document.createElement("span");
+    avatar.className = "task-applicant-avatar-v11";
+    avatar.setAttribute("aria-hidden", "true");
+    renderAvatar(avatar, {
+      avatar: application.applicant_avatar,
+      displayName: application.applicant_name,
+    });
+    const label = document.createElement("span");
+    label.textContent = `${application.applicant_name ?? "申请人"} · ${statusLabel(application.status)}`;
+    copy.append(avatar, label);
     const actions = document.createElement("div");
     actions.className = "task-my-actions";
     if (application.status === "pending") {

@@ -1,4 +1,5 @@
 import { createReputationBadge } from "/MKJ/assets/js/core/reputation.js";
+import { renderAvatar } from "/MKJ/assets/js/profile/avatar.js";
 
 function element(tag, className = "", text = "") {
   const node = document.createElement(tag);
@@ -14,15 +15,11 @@ function formatDate(value) {
   return new Intl.DateTimeFormat("zh-CN", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }).format(date);
 }
 
-function avatarFor(author) {
-  const name = author?.display_name || "航线同学";
-  return name.slice(0, 1);
-}
-
 export function renderAuthor(author, { compact = false } = {}) {
   const wrapper = element("div", `forum-author${compact ? " forum-author-compact" : ""}`);
-  const avatar = element("span", "forum-author-avatar", avatarFor(author));
+  const avatar = element("span", "forum-author-avatar");
   avatar.setAttribute("aria-hidden", "true");
+  renderAvatar(avatar, author);
   const info = element("span", "forum-author-info");
   info.append(element("strong", "forum-author-name", author?.display_name || "航线同学"));
   if (!compact) {

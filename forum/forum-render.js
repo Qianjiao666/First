@@ -1,3 +1,5 @@
+import { renderAvatar } from "/MKJ/assets/js/profile/avatar.js";
+
 function node(tag, className, text) {
   const value = document.createElement(tag);
   if (className) value.className = className;
@@ -40,8 +42,9 @@ function authorName(author) {
 
 export function renderAuthor(author, compact = false) {
   const wrapper = node("span", `forum-author${compact ? " forum-author-compact" : ""}`);
-  const avatar = node("span", "forum-author-avatar", authorName(author).slice(0, 1).toUpperCase());
+  const avatar = node("span", "forum-author-avatar");
   avatar.setAttribute("aria-hidden", "true");
+  renderAvatar(avatar, author);
   const info = node("span", "forum-author-info");
   info.append(node("span", "forum-author-name", authorName(author)));
   if (author?.role || author?.reputation !== undefined) info.append(node("span", "forum-author-meta", `${author?.role || "USER"} · ${author?.reputation ?? 0} rep`));
