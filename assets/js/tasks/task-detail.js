@@ -1,6 +1,7 @@
 import { hasTaskCapability, parseTaskId } from "./task-domain.js";
 import { asItems, createTag, createTaskServices, mountTaskChrome, requireAuthenticatedAction, showTaskMessage, taskErrorMessage } from "./task-common.js";
 import { formatTaskDeadline, normalizeTaskTimeline, statusLabel, taskTimelineLabel, toTaskListingModel } from "./task-view.js";
+import { guardFormData } from "../security/form-guard.js";
 
 const services = createTaskServices();
 const message = document.querySelector("[data-task-message]");
@@ -107,7 +108,8 @@ async function handleApply(event) {
 
   try {
     await requireAuthenticatedAction(services.runtime, "申领任务");
-    const result = await services.api.apply(taskId, note);
+    const guarded = guardFormData(form, ["applicationNote"], formMessage);
+    const result = await services.api.apply(taskId, guarded.values.applicationNote.trim());
     form.reset();
     dialog.close();
     const warningCount = Array.isArray(result?.warnings) ? result.warnings.length : 0;

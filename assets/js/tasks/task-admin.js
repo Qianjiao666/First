@@ -1,6 +1,7 @@
 import { hasTaskCapability, hasTaskManageCapability } from "./task-domain.js";
 import { asItems, createTaskServices, mountTaskChrome, requireAuthenticatedAction, showTaskMessage, taskErrorMessage } from "./task-common.js";
 import { formatTaskDeadline, statusLabel } from "./task-view.js";
+import { guardFormData } from "../security/form-guard.js";
 
 const TASK_MANAGE_CAPABILITY = "tasks:manage";
 const TASK_MANAGE_MARKER = "task:manage";
@@ -249,9 +250,10 @@ async function setupList() {
     const data = new FormData(reviewForm);
     try {
       await requireAuthenticatedAction(services.runtime, "管理任务");
+      const guarded = guardFormData(reviewForm, ["content"], formMessage);
       await services.api.complete(String(data.get("applicationId")), {
         rating: Number(data.get("rating")),
-        content: String(data.get("content")).trim(),
+        content: guarded.values.content.trim(),
       });
       reviewDialog.close();
       reviewForm.reset();
@@ -293,12 +295,13 @@ async function setupList() {
     }
     try {
       await requireAuthenticatedAction(services.runtime, "管理任务分类");
+      const guarded = guardFormData(categoryForm, ["name", "description"], formMessage);
       await services.api.saveCategory({
         kind,
         categoryId: String(data.get("categoryId") ?? "") || undefined,
-        name: String(data.get("name")).trim(),
+        name: guarded.values.name.trim(),
         slug: String(data.get("slug")).trim(),
-        description: String(data.get("description") ?? "").trim(),
+        description: String(guarded.values.description ?? "").trim(),
         sortOrder: Number(data.get("sortOrder")),
         isActive: data.get("isActive") === "on",
       });
@@ -345,7 +348,8 @@ async function setupEditor() {
     const formMessage = form.querySelector("[data-task-form-message]");
     try {
       await requireAuthenticatedAction(services.runtime, "管理任务");
-      const saved = await services.api.saveTask(payload);
+      const guarded = guardFormData(form, ["title", "summary", "body"], formMessage);
+      const saved = await services.api.saveTask({ ...payload, ...guarded.values });
       if (intent === "publish") {
         await services.api.publish(saved.taskId ?? saved.id);
         showTaskMessage(message, "任务已发布。", "info");

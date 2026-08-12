@@ -1,4 +1,5 @@
 import { redeemCode } from "/MKJ/assets/js/core/redeem.js";
+import { guardFormData } from "/MKJ/assets/js/security/form-guard.js";
 
 /* MKJ 单页应用逻辑：题目、评分、雷达图、动效与内容模块均在此集中管理。 */
 (function(){
@@ -430,7 +431,7 @@ import { redeemCode } from "/MKJ/assets/js/core/redeem.js";
       try{const{error}=await mkjSupabaseClient.auth.signInWithPassword({email:String(data.get("email")).trim(),password:String(data.get("password"))});if(error){setMessage(formatError(error,"登录失败，请稍后再试"));return}mkjCloseModal(authModal);mkjShowToast("登录成功，欢迎回到航线")}catch(error){setMessage(formatError(error,"登录失败，请稍后再试"))}finally{setBusy(form,false)}
     });
     mkj$("#mkj-register-form").addEventListener("submit",async event=>{
-      event.preventDefault();if(!requireClient())return;const form=event.currentTarget,data=new FormData(form);const displayName=String(data.get("displayName")).trim()||"航线同学";setMessage("");setBusy(form,true);
+      event.preventDefault();if(!requireClient())return;const form=event.currentTarget,data=new FormData(form);setMessage("");let displayName;try{displayName=String(guardFormData(form,["displayName"],authMessage).values.displayName).trim()||"航线同学"}catch(error){setMessage(error.message);return}setBusy(form,true);
       try{const{data:result,error}=await mkjSupabaseClient.auth.signUp({email:String(data.get("email")).trim(),password:String(data.get("password")),options:{data:{display_name:displayName},emailRedirectTo:mkjAuthRedirectUrl}});if(error){setMessage(formatError(error,"注册失败，验证邮件未能发送"));return}if(result.session){mkjCloseModal(authModal);mkjShowToast("账户创建成功")}else{setMessage("注册成功，请查收验证邮件后再登录。","success");startCooldown()}}catch(error){setMessage(formatError(error,"注册失败，验证邮件未能发送"))}finally{setBusy(form,false)}
     });
     resendButton.addEventListener("click",async()=>{if(!requireClient())return;const email=String(mkj$("#mkj-register-form [name='email']").value).trim();if(!email){setMessage("请先填写需要验证的邮箱");return}resendButton.disabled=true;setMessage("");try{const{error}=await mkjSupabaseClient.auth.resend({type:"signup",email,options:{emailRedirectTo:mkjAuthRedirectUrl}});if(error)throw error;setMessage("验证邮件已重新发送，请检查收件箱和垃圾邮件。","success");startCooldown()}catch(error){setMessage(formatError(error,"验证邮件发送失败，请稍后再试"));resendButton.disabled=false}});

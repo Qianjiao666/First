@@ -1,13 +1,10 @@
 import { createClient } from "npm:@supabase/supabase-js@2.111.0";
 import { ApiError, createAuthService } from "../_shared/auth.ts";
+import { guardPublicText } from "../_shared/content-guard.ts";
 import { errorResponse, jsonResponse, optionsResponse, parseJsonBody } from "../_shared/http.ts";
-import { replaceSensitive } from "../_shared/sensitive-filter.ts";
 
 type ServiceClient = {
   rpc: (functionName: string, args: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string } | null }>;
-  from: (table: string) => {
-    select: (columns: string) => Promise<{ data: Array<{ word: string; level: "WARN" | "MUTE" }> | null; error: { message: string } | null }>;
-  };
 };
 
 type TaskContentClient = {
@@ -62,29 +59,32 @@ async function callTaskRpc(client: ServiceClient, functionName: string, args: Re
   return data;
 }
 
-async function filterTaskPayload(client: ServiceClient, actorId: string, payload: Record<string, unknown>) {
+function filterTaskPayload(payload: Record<string, unknown>) {
   const filteredPayload = { ...payload };
   const matches = new Set<string>();
-  let hasSensitiveContent = false;
 
   for (const field of ["title", "summary", "body"]) {
-    const result = await replaceSensitive(client, {
-      text: asString(payload[field], field),
-      userId: actorId,
-      enforceMute: false,
-    });
+    const result = guardPublicText(asString(payload[field], field), { required: true, maxLength: field === "title" ? 160 : 50_000 });
     filteredPayload[field] = result.text;
     result.matches.forEach((match) => matches.add(match));
-    hasSensitiveContent ||= result.severity !== "NONE";
   }
 
-  return { filteredPayload, hasSensitiveContent, matches: [...matches] };
+  return { filteredPayload, matches: [...matches] };
 }
 
-async function filterReason(client: ServiceClient, actorId: string, value: unknown, field = "reason") {
+function filterReason(value: unknown, field = "reason") {
   const reason = asString(value, field);
-  const filtered = await replaceSensitive(client, { text: reason, userId: actorId, enforceMute: true });
+  const filtered = guardPublicText(reason, { required: true, maxLength: 2_000 });
   return { text: filtered.text, warnings: filtered.matches };
+}
+
+function filterCategoryPayload(payload: Record<string, unknown>) {
+  const name = guardPublicText(asString(payload.name, "name"), { required: true, maxLength: 120 });
+  const description = guardPublicText(typeof payload.description === "string" ? payload.description : "", { maxLength: 2_000 });
+  return {
+    payload: { ...payload, name: name.text, description: description.text },
+    warnings: [...new Set([...name.matches, ...description.matches])],
+  };
 }
 
 async function loadTaskForPublish(client: ServiceClient, taskId: string): Promise<Record<string, unknown>> {
@@ -136,10 +136,7 @@ Deno.serve(async (request) => {
     if (["create", "update", "publish", "edit"].includes(action)) {
       const existingTaskId = action === "create" ? null : asString(payload.id ?? payload.taskId, "taskId");
       const taskPayload = action === "publish" ? await loadTaskForPublish(client, existingTaskId) : payload;
-      const content = await filterTaskPayload(client, context.userId, taskPayload);
-      if (action === "publish" && content.hasSensitiveContent) {
-        throw new ApiError("SENSITIVE_CONTENT", 400, "任务内容命中敏感词，修改后才能发布。");
-      }
+      const content = filterTaskPayload(taskPayload);
       const resultTaskId = action === "create"
         ? await callTaskRpc(client, "create_task", { p_actor_id: context.userId, p_filtered_payload: content.filteredPayload })
         : await callTaskRpc(client, action === "update" ? "update_task" : action === "edit" ? "admin_edit_task" : "publish_task", {
@@ -153,17 +150,19 @@ Deno.serve(async (request) => {
 
     if (action === "arbitrate") {
       const decision = asString(payload.decision, "decision");
-      const reason = await filterReason(client, context.userId, payload.reason, "reason");
+      const reason = filterReason(payload.reason, "reason");
       const taskId = asString(payload.taskId, "taskId");
       const applicationId = payload.applicationId ? asString(payload.applicationId, "applicationId") : null;
       let result: unknown;
       if (decision === "force_complete") {
+        const completionNote = filterReason(payload.completionNote ?? payload.note, "completionNote");
         result = await callTaskRpc(client, "admin_force_complete_task", {
           p_actor_id: context.userId,
           p_application_id: asString(applicationId, "applicationId"),
-          p_filtered_completion_note: asString(payload.completionNote ?? payload.note, "completionNote"),
+          p_filtered_completion_note: completionNote.text,
           p_filtered_reason: reason.text,
         });
+        completionNote.warnings.forEach((warning) => reason.warnings.push(warning));
       } else if (decision === "cancel_refund") {
         result = await callTaskRpc(client, "admin_cancel_task_refund", {
           p_actor_id: context.userId,
@@ -186,16 +185,18 @@ Deno.serve(async (request) => {
 
     if (["force_complete", "cancel_refund", "deduct_reputation"].includes(action)) {
       const decision = action;
-      const reason = await filterReason(client, context.userId, payload.reason, "reason");
+      const reason = filterReason(payload.reason, "reason");
       const taskId = asString(payload.taskId, "taskId");
       let result: unknown;
       if (decision === "force_complete") {
+        const completionNote = filterReason(payload.completionNote ?? payload.note, "completionNote");
         result = await callTaskRpc(client, "admin_force_complete_task", {
           p_actor_id: context.userId,
           p_application_id: asString(payload.applicationId, "applicationId"),
-          p_filtered_completion_note: asString(payload.completionNote ?? payload.note, "completionNote"),
+          p_filtered_completion_note: completionNote.text,
           p_filtered_reason: reason.text,
         });
+        completionNote.warnings.forEach((warning) => reason.warnings.push(warning));
       } else if (decision === "cancel_refund") {
         result = await callTaskRpc(client, "admin_cancel_task_refund", {
           p_actor_id: context.userId,
@@ -224,11 +225,12 @@ Deno.serve(async (request) => {
     }
 
     if (action === "manageCategories") {
+      const category = filterCategoryPayload(payload);
       const categoryId = await callTaskRpc(client, "upsert_task_category", {
         p_actor_id: context.userId,
-        p_payload: payload,
+        p_payload: category.payload,
       });
-      return jsonResponse({ data: { categoryId } });
+      return jsonResponse({ data: { categoryId }, warnings: category.warnings });
     }
 
     const taskId = asString(payload.taskId, "taskId");

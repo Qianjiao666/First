@@ -58,15 +58,15 @@ test("task Edge Functions expose attachment-aware completion and privileged arbi
   ]);
 
   assert.match(complete, /\.\.\/_shared\/auth\.ts/);
-  assert.match(complete, /\.\.\/_shared\/sensitive-filter\.ts/);
+  assert.match(complete, /\.\.\/_shared\/content-guard\.ts/);
   assert.match(complete, /checkPermission\(request, "tasks",/);
   assert.match(complete, /(?:submissionNote|completion(?:Note|Explanation|Description))/i);
   assert.match(complete, /attachment|task_attachments|storage/i);
   assert.match(complete, /(?:timeout|expired|overdue|arbitrat)/i);
-  assert.match(complete, /enforceMute:\s*true/);
+  assert.match(complete, /guardPublicText/);
 
   assert.match(admin, /\.\.\/_shared\/auth\.ts/);
-  assert.match(admin, /\.\.\/_shared\/sensitive-filter\.ts/);
+  assert.match(admin, /\.\.\/_shared\/content-guard\.ts/);
   assert.match(admin, /checkPermission\(request, "tasks",/);
   assert.match(admin, /(?:force[_-]?complete|cancel[_-]?refund|deduct[_-]?reputation|arbitrat)/i);
   assert.match(admin, /(?:task_activity_log|activity|audit)/i);

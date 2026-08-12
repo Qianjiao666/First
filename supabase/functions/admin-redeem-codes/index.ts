@@ -1,4 +1,5 @@
 import { createEdgeServices } from "../_shared/supabase.ts";
+import { guardPublicText } from "../_shared/content-guard.ts";
 import { ApiError, databaseError, errorResponse, jsonResponse, optionsResponse, parseJsonBody } from "../_shared/http.ts";
 
 const { auth, adminClient } = createEdgeServices();
@@ -60,7 +61,9 @@ Deno.serve(async (request) => {
       const quantity = positiveInteger(body.quantity, "生成数量", 100);
       const rewardReputation = positiveInteger(body.rewardReputation, "声望奖励", 10000);
       const maxUses = positiveInteger(body.maxUses, "最大使用次数", 1_000_000);
-      const rewardTitle = typeof body.rewardTitle === "string" && body.rewardTitle.trim() ? body.rewardTitle.trim().slice(0, 80) : null;
+      const rewardTitle = typeof body.rewardTitle === "string" && body.rewardTitle.trim()
+        ? guardPublicText(body.rewardTitle.trim(), { required: true, maxLength: 80 })
+        : null;
       const grantRole = rewardRole(body.rewardRole);
       const grantPermission = rewardPermission(body.rewardPermission ?? body.grantPermission);
       if (!grantRole && !grantPermission && !rewardTitle && rewardReputation < 1) {
@@ -70,7 +73,7 @@ Deno.serve(async (request) => {
       const rows = Array.from({ length: quantity }, () => ({
         code: createCode(),
         reward_reputation: rewardReputation,
-        reward_title: rewardTitle,
+        reward_title: rewardTitle?.text ?? null,
         reward_role: grantRole,
         reward_permission: grantPermission,
         max_uses: maxUses,
@@ -85,7 +88,7 @@ Deno.serve(async (request) => {
         resource_type: "redeem_codes",
         metadata: { quantity, reward_reputation: rewardReputation, reward_role: grantRole, reward_permission: grantPermission },
       });
-      return jsonResponse({ codes: data ?? [] }, 201);
+      return jsonResponse({ codes: data ?? [], warnings: rewardTitle?.matches ?? [] }, 201);
     }
 
     if (action === "setActive") {

@@ -14,6 +14,7 @@ import {
   writeVote,
 } from "./forum-api.js";
 import { renderAuthor, renderCategoryList, renderComment, renderEmpty, renderError, renderPostCard, renderPostDetail, setLoading } from "./forum-render.js";
+import { guardFormData } from "../assets/js/security/form-guard.js";
 
 const page = document.body?.dataset.forumPage;
 let capabilities = [];
@@ -184,7 +185,8 @@ function appendCommentForm(container, postId) {
     setBusy(form, true);
     try {
       await requireAuthenticatedAction("发布评论");
-      await writeComment({ action: "create", postId, content: new FormData(form).get("content") });
+      const guarded = guardFormData(form, ["content"], message);
+      await writeComment({ action: "create", postId, content: guarded.values.content });
       window.location.reload();
     } catch (error) {
       message.hidden = false;
@@ -330,7 +332,8 @@ async function bootstrapNewPost() {
     const data = new FormData(form);
     try {
       await requireAuthenticatedAction("发布帖子");
-      const result = await writePost({ action: editId ? "update" : "create", postId: editId, categoryId: data.get("categoryId"), title: data.get("title"), content: data.get("content"), tagIds: data.getAll("tagIds") });
+      const guarded = guardFormData(form, ["title", "content"], document.querySelector("[data-forum-status]"));
+      const result = await writePost({ action: editId ? "update" : "create", postId: editId, categoryId: data.get("categoryId"), title: guarded.values.title, content: guarded.values.content, tagIds: data.getAll("tagIds") });
       window.location.assign(postUrl(result.post?.id || editId));
     } catch (error) { status(error.message, true); setBusy(form, false); }
   });

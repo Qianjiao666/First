@@ -1,6 +1,6 @@
 import { createEdgeServices } from "../_shared/supabase.ts";
+import { guardPublicText } from "../_shared/content-guard.ts";
 import { ApiError, databaseError, errorResponse, jsonResponse, optionsResponse, parseJsonBody } from "../_shared/http.ts";
-import { assertSensitiveWriteAllowed, replaceSensitive } from "../_shared/sensitive-filter.ts";
 
 const { auth, adminClient } = createEdgeServices();
 const db = adminClient as any;
@@ -72,9 +72,8 @@ Deno.serve(async (request) => {
       throw new ApiError("VALIDATION_ERROR", 400, "不支持的公告操作。");
     }
     assertAnnouncementRole(context.role);
-    const title = await replaceSensitive(db, { text: requiredString(body.title, "title"), userId: context.userId, enforceMute: true });
-    const markdown = await replaceSensitive(db, { text: sanitizeMarkdown(requiredString(body.bodyMarkdown ?? body.markdown, "bodyMarkdown")), userId: context.userId, enforceMute: true });
-    assertSensitiveWriteAllowed(title); assertSensitiveWriteAllowed(markdown);
+    const title = guardPublicText(requiredString(body.title, "title"), { required: true, maxLength: 160 });
+    const markdown = guardPublicText(sanitizeMarkdown(requiredString(body.bodyMarkdown ?? body.markdown, "bodyMarkdown")), { required: true, maxLength: 50_000 });
     const status = ["draft", "published", "archived"].includes(String(body.status))
       ? body.status
       : action === "upsert" ? "draft" : "published";

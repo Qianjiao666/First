@@ -1,6 +1,6 @@
 import { createEdgeServices } from "../_shared/supabase.ts";
+import { guardPublicText } from "../_shared/content-guard.ts";
 import { ApiError, databaseError, errorResponse, jsonResponse, optionsResponse, parseJsonBody } from "../_shared/http.ts";
-import { assertSensitiveWriteAllowed, replaceSensitive } from "../_shared/sensitive-filter.ts";
 
 const { auth, adminClient } = createEdgeServices();
 const db = adminClient as any;
@@ -24,8 +24,7 @@ Deno.serve(async (request) => {
     const content = typeof body.content === "string" ? body.content.trim() : "";
     if (!applicationId || !content) throw new ApiError("VALIDATION_ERROR", 400, "评价对象和内容不能为空。");
 
-    const filtered = await replaceSensitive(db, { text: content, userId: context.userId, enforceMute: true });
-    assertSensitiveWriteAllowed(filtered);
+    const filtered = guardPublicText(content, { required: true, maxLength: 2_000 });
     const { data, error } = await db.rpc("submit_task_review", {
       p_actor_id: context.userId,
       p_application_id: applicationId,

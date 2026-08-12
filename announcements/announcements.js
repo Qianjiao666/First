@@ -1,3 +1,5 @@
+import { guardFormData } from "../assets/js/security/form-guard.js";
+
 const ANNOUNCEMENTS_FUNCTION = "announcements";
 
 export function normalizeAnnouncement(value = {}) {
@@ -323,8 +325,11 @@ async function bootstrap() {
     const markdown = markdownInput.value.trim();
     if (!title || !markdown) { setStatus("请填写标题和正文。", "error"); return; }
     const id = editingId.value;
-    const action = id ? api.update(id, { title, markdown }) : api.create({ title, markdown });
     try {
+      const guarded = guardFormData(form, ["title", "markdown"], status);
+      const action = id
+        ? api.update(id, { title: guarded.values.title, markdown: guarded.values.markdown })
+        : api.create({ title: guarded.values.title, markdown: guarded.values.markdown });
       await action;
       setStatus(id ? "公告已更新。" : "公告已发布。", "success");
       form.reset();

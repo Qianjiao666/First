@@ -1,6 +1,7 @@
 import { hasTaskCapability } from "./task-domain.js";
 import { TASK_ATTACHMENT_MAX_BYTES, validateTaskAttachment } from "./task-attachments.js";
 import { asItems, createTaskServices, mountTaskChrome, requireAuthenticatedAction, showTaskMessage, taskErrorMessage } from "./task-common.js";
+import { guardFormData } from "../security/form-guard.js";
 
 const services = createTaskServices();
 const form = document.querySelector("[data-task-create-form]");
@@ -79,7 +80,9 @@ async function handleSubmit(event) {
 
   try {
     await requireAuthenticatedAction(services.runtime, "创建任务");
-    const saved = await services.api.saveTask(payloadFromForm(data));
+    const guarded = guardFormData(form, ["title", "summary", "body"], formMessage);
+    const payload = { ...payloadFromForm(data), ...guarded.values };
+    const saved = await services.api.saveTask(payload);
     const taskId = saved.taskId ?? saved.id;
     if (files.length && taskId) {
       const userId = currentUser?.userId ?? currentUser?.id;

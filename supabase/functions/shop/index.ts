@@ -1,6 +1,6 @@
 import { createEdgeServices } from "../_shared/supabase.ts";
+import { guardPublicText } from "../_shared/content-guard.ts";
 import { ApiError, databaseError, errorResponse, jsonResponse, optionsResponse, parseJsonBody } from "../_shared/http.ts";
-import { assertSensitiveWriteAllowed, replaceSensitive } from "../_shared/sensitive-filter.ts";
 
 const { auth, adminClient } = createEdgeServices();
 const db = adminClient as any;
@@ -53,9 +53,8 @@ Deno.serve(async (request) => {
 
     if (action === "upsertProduct") {
       assertRole(context.role, ["ADMIN"]);
-      const name = await replaceSensitive(db, { text: requiredString(body.name, "name"), userId: context.userId, enforceMute: true });
-      const description = await replaceSensitive(db, { text: String(body.description ?? ""), userId: context.userId, enforceMute: true });
-      assertSensitiveWriteAllowed(name); assertSensitiveWriteAllowed(description);
+      const name = guardPublicText(requiredString(body.name, "name"), { required: true, maxLength: 160 });
+      const description = guardPublicText(String(body.description ?? ""), { maxLength: 5_000 });
       const payload = {
         sku: requiredString(body.sku, "sku"), name: name.text, description: description.text,
         pointsCost: positiveInteger(body.pointsCost, "pointsCost", 1_000_000),

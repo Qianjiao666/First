@@ -8,10 +8,13 @@ const postFunction = fs.readFileSync(path.resolve(__dirname, "../../supabase/fun
 const commentFunction = fs.readFileSync(path.resolve(__dirname, "../../supabase/functions/forum-comment/index.ts"), "utf8");
 
 test("forum writes expose replacement warnings while enforcing the shared filter", () => {
-  assert.match(postFunction, /replaceSensitive/);
+  assert.match(postFunction, /content-guard\.ts/);
+  assert.match(postFunction, /guardPublicText/);
   assert.match(postFunction, /warnings/);
-  assert.match(commentFunction, /replaceSensitive/);
+  assert.match(commentFunction, /content-guard\.ts/);
+  assert.match(commentFunction, /guardPublicText/);
   assert.match(commentFunction, /warnings/);
+  assert.doesNotMatch(`${postFunction}\n${commentFunction}`, /replaceSensitive/);
 });
 
 test("forum listing schema supports indexed tag and filter reads", () => {

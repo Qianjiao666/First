@@ -2,6 +2,7 @@ import { buildTaskDetailUrl, hasTaskCapability, taskActionForApplication } from 
 import { asItems, createTaskServices, mountTaskChrome, requireAuthenticatedAction, showTaskMessage, taskErrorMessage } from "./task-common.js";
 import { validateTaskAttachment } from "./task-attachments.js";
 import { formatTaskDeadline, getApplicationGroup, statusLabel } from "./task-view.js";
+import { guardFormData } from "../security/form-guard.js";
 
 const services = createTaskServices();
 const list = document.querySelector("[data-task-my-list]");
@@ -109,6 +110,7 @@ async function bootstrap() {
     }
     try {
       await requireAuthenticatedAction(services.runtime, "提交任务");
+      const guarded = guardFormData(form, ["submissionNote"], formMessage);
       const applicationId = String(data.get("applicationId"));
       const taskId = String(data.get("taskId") ?? "");
       const userId = user.userId ?? user.id;
@@ -121,7 +123,7 @@ async function bootstrap() {
           file,
         }));
       }
-      await services.api.submit(applicationId, String(data.get("submissionNote")).trim(), uploaded);
+      await services.api.submit(applicationId, guarded.values.submissionNote.trim(), uploaded);
       if (uploaded.length) await services.api.attach(applicationId, uploaded);
       dialog.close();
       form.reset();

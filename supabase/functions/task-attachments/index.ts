@@ -1,7 +1,7 @@
 import { createClient } from "npm:@supabase/supabase-js@2.111.0";
 import { ApiError, createAuthService } from "../_shared/auth.ts";
+import { guardPublicText } from "../_shared/content-guard.ts";
 import { errorResponse, jsonResponse, optionsResponse, parseJsonBody } from "../_shared/http.ts";
-import { replaceSensitive } from "../_shared/sensitive-filter.ts";
 
 const BUCKET = "task-attachments";
 const MAX_BYTES = 50 * 1024 * 1024;
@@ -137,7 +137,7 @@ Deno.serve(async (request) => {
 
     const objectPath = asString(payload.objectPath ?? payload.path, "objectPath");
     const captionResult = payload.caption
-      ? await replaceSensitive(client, { text: asString(payload.caption, "caption"), userId: context.userId, enforceMute: true })
+      ? guardPublicText(asString(payload.caption, "caption"), { required: true, maxLength: 500 })
       : { text: "", matches: [], severity: "NONE" as const };
     const attachmentId = await callRpc(client, "register_task_attachment", {
       p_actor_id: context.userId,

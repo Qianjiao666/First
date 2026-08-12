@@ -1,5 +1,5 @@
 import { createEdgeServices } from "../_shared/supabase.ts";
-import { assertSensitiveWriteAllowed, replaceSensitive } from "../_shared/sensitive-filter.ts";
+import { guardPublicText } from "../_shared/content-guard.ts";
 import { databaseError, errorResponse, jsonResponse, optionsResponse, parseJsonBody } from "../_shared/http.ts";
 import { ApiError } from "../_shared/http.ts";
 
@@ -44,18 +44,8 @@ Deno.serve(async (request) => {
     }
 
     const categoryId = requiredString(body.categoryId, "分类");
-    const title = await replaceSensitive(adminClient, {
-      text: requiredString(body.title, "标题"),
-      userId: context.userId,
-      enforceMute: true,
-    });
-    assertSensitiveWriteAllowed(title);
-    const content = await replaceSensitive(adminClient, {
-      text: requiredString(body.content, "正文"),
-      userId: context.userId,
-      enforceMute: true,
-    });
-    assertSensitiveWriteAllowed(content);
+    const title = guardPublicText(requiredString(body.title, "标题"), { required: true, maxLength: 160 });
+    const content = guardPublicText(requiredString(body.content, "正文"), { required: true, maxLength: 50_000 });
     const rpcName = action === "create" ? "create_forum_post" : "update_forum_post";
     const rpcArgs = {
       p_actor_id: context.userId,

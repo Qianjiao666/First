@@ -1,5 +1,6 @@
 import { adminGrantPermission, adminRedeemCodes, adminSensitiveWords, adminUsers, moderateForum, transferAccount } from "./admin-api.js";
 import { element, formatTime, renderLoading, renderNav, renderRows, showPanel } from "./admin-render.js";
+import { guardFormData } from "../assets/js/security/form-guard.js";
 
 const page = document.body?.dataset.adminPage;
 let capabilities = [];
@@ -165,7 +166,8 @@ async function bootstrapRedeem() {
     busy(form, true);
     const data = new FormData(form);
     try {
-      const result = await adminRedeemCodes({ action: "create", quantity: Number(data.get("quantity")), rewardReputation: Number(data.get("rewardReputation")), maxUses: Number(data.get("maxUses")), expiresAt: data.get("expiresAt") || null, rewardTitle: data.get("rewardTitle") || null, rewardRole: data.get("rewardRole") || null, rewardPermission: data.get("grantPermission") || null, grantPermission: data.get("grantPermission") || null, grantPermissions: data.get("grantPermission") ? [data.get("grantPermission")] : [] });
+      const guarded = guardFormData(form, ["rewardTitle"], document.querySelector("[data-admin-status]"));
+      const result = await adminRedeemCodes({ action: "create", quantity: Number(data.get("quantity")), rewardReputation: Number(data.get("rewardReputation")), maxUses: Number(data.get("maxUses")), expiresAt: data.get("expiresAt") || null, rewardTitle: guarded.values.rewardTitle || null, rewardRole: data.get("rewardRole") || null, rewardPermission: data.get("grantPermission") || null, grantPermission: data.get("grantPermission") || null, grantPermissions: data.get("grantPermission") ? [data.get("grantPermission")] : [] });
       status(`Generated ${result.codes?.length || 0} code(s).`); form.reset(); await loadRedeemCodes();
     } catch (error) { fail(error); }
     finally { busy(form, false); }

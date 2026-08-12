@@ -12,14 +12,16 @@ test("task-admin delegates permissions and content filtering to shared services"
   const source = await read("supabase/functions/task-admin/index.ts");
 
   assert.match(source, /\.\.\/_shared\/auth\.ts/);
-  assert.match(source, /\.\.\/_shared\/sensitive-filter\.ts/);
+  assert.match(source, /\.\.\/_shared\/content-guard\.ts/);
   assert.match(source, /checkPermission\(request, "tasks", ACTION_PERMISSIONS\[action\] \?\? action\)/);
-  assert.match(source, /replaceSensitive/);
+  assert.match(source, /guardPublicText/);
   assert.match(source, /p_actor_id/);
   assert.match(source, /loadTaskForPublish/);
   assert.match(source, /task_listings/);
   assert.match(source, /reject_applicant/);
   assert.match(source, /reject:\s*"assign"/);
+  assert.doesNotMatch(source, /action === "publish" && content\.hasSensitiveContent/);
+  assert.match(source, /p_filtered_completion_note:\s*completionNote\.text/);
   assert.doesNotMatch(source, /service_role[^A-Z_]/i);
 });
 
@@ -53,4 +55,23 @@ test("task-complete returns application warnings at the response envelope", asyn
 
   assert.match(source, /jsonResponse\(\{ data: \{ applicationId \}, warnings: filtered\.matches \}\)/);
   assert.doesNotMatch(source, /data: \{ applicationId, warnings: filtered\.matches \}/);
+});
+
+test("task-complete includes review and completion-note replacements in warnings", async () => {
+  const source = await read("supabase/functions/task-complete/index.ts");
+
+  assert.match(source, /const completionWarnings = new Set<string>\(\)/);
+  assert.match(source, /filtered\.matches\.forEach\(\(match\) => completionWarnings\.add\(match\)\)/);
+  assert.match(source, /warnings: \[\.\.\.completionWarnings\]/);
+});
+
+test("task-complete guards review text before any attachment registration write", async () => {
+  const source = await read("supabase/functions/task-complete/index.ts");
+  const completeBranch = source.slice(source.indexOf("const review ="));
+  const reviewGuard = completeBranch.indexOf('filterUserText(asString(review.content, "review.content")');
+  const attachmentWrite = completeBranch.indexOf("registerAttachments(client");
+
+  assert.ok(reviewGuard >= 0, "review content guard must exist in the complete branch");
+  assert.ok(attachmentWrite >= 0, "attachment registration must exist in the complete branch");
+  assert.ok(reviewGuard < attachmentWrite, "review content must be guarded before attachment records are written");
 });

@@ -1,13 +1,10 @@
 import { createClient } from "npm:@supabase/supabase-js@2.111.0";
 import { ApiError, createAuthService } from "../_shared/auth.ts";
+import { guardPublicText } from "../_shared/content-guard.ts";
 import { errorResponse, jsonResponse, optionsResponse, parseJsonBody } from "../_shared/http.ts";
-import { replaceSensitive } from "../_shared/sensitive-filter.ts";
 
 type ServiceClient = {
   rpc: (functionName: string, args: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string } | null }>;
-  from: (table: string) => {
-    select: (columns: string) => Promise<{ data: Array<{ word: string; level: "WARN" | "MUTE" }> | null; error: { message: string } | null }>;
-  };
 };
 
 const COMPLETION_ACTIONS = new Set(["apply", "submit", "cancel", "complete", "attach", "arbitrate"]);
@@ -44,12 +41,8 @@ async function callTaskRpc(client: ServiceClient, functionName: string, args: Re
   return data;
 }
 
-async function filterUserText(client: ServiceClient, actorId: string, text: string) {
-  const result = await replaceSensitive(client, { text, userId: actorId, enforceMute: true });
-  if (result.severity === "MUTE") {
-    throw new ApiError("MUTED", 403, "申请说明命中禁言级敏感词，本次操作未提交。");
-  }
-  return result;
+function filterUserText(text: string, maxLength = 5_000) {
+  return guardPublicText(text, { required: true, maxLength });
 }
 
 async function registerAttachments(client: ServiceClient, actorId: string, payload: Record<string, unknown>) {
@@ -62,7 +55,7 @@ async function registerAttachments(client: ServiceClient, actorId: string, paylo
       throw new ApiError("VALIDATION_ERROR", 400, "附件元数据格式不正确。");
     }
     const attachment = item as Record<string, unknown>;
-    const caption = attachment.caption ? await filterUserText(client, actorId, asString(attachment.caption, "attachment.caption")) : null;
+    const caption = attachment.caption ? filterUserText(asString(attachment.caption, "attachment.caption"), 500) : null;
     caption?.matches.forEach((match) => warnings.add(match));
     const id = await callTaskRpc(client, "register_task_attachment", {
       p_actor_id: actorId,
@@ -113,7 +106,7 @@ Deno.serve(async (request) => {
     }
 
     if (action === "apply") {
-      const filtered = await filterUserText(client, context.userId, asString(payload.applicationNote, "applicationNote"));
+      const filtered = filterUserText(asString(payload.applicationNote, "applicationNote"), 1_200);
       const applicationId = await callTaskRpc(client, "apply_task", {
         p_actor_id: context.userId,
         p_task_id: asString(payload.taskId, "taskId"),
@@ -128,7 +121,7 @@ Deno.serve(async (request) => {
     }
 
     if (action === "arbitrate") {
-      const filtered = await filterUserText(client, context.userId, asString(payload.reason, "reason"));
+      const filtered = filterUserText(asString(payload.reason, "reason"), 2_000);
       const applicationId = await callTaskRpc(client, "open_task_arbitration", {
         p_actor_id: context.userId,
         p_application_id: asString(payload.applicationId, "applicationId"),
@@ -138,7 +131,7 @@ Deno.serve(async (request) => {
     }
 
     if (action === "submit") {
-      const filtered = await filterUserText(client, context.userId, asString(payload.submissionNote, "submissionNote"));
+      const filtered = filterUserText(asString(payload.submissionNote, "submissionNote"), 1_200);
       const applicationId = await callTaskRpc(client, "submit_task", {
         p_actor_id: context.userId,
         p_application_id: asString(payload.applicationId, "applicationId"),
@@ -149,24 +142,24 @@ Deno.serve(async (request) => {
 
     const review = payload.review && typeof payload.review === "object" ? payload.review as Record<string, unknown> : null;
     let filteredReview: Record<string, unknown> | null = null;
+    const completionWarnings = new Set<string>();
     if (review?.content) {
-      const filtered = await replaceSensitive(client, {
-        text: asString(review.content, "review.content"),
-        userId: context.userId,
-        enforceMute: false,
-      });
-      if (filtered.severity !== "NONE") {
-        throw new ApiError("SENSITIVE_CONTENT", 400, "评价内容命中敏感词，修改后再提交。");
-      }
+      const filtered = filterUserText(asString(review.content, "review.content"), 2_000);
       filteredReview = { ...review, content: filtered.text };
+      filtered.matches.forEach((match) => completionWarnings.add(match));
     }
+    const completionNote = !filteredReview && payload.completionNote
+      ? filterUserText(asString(payload.completionNote, "completionNote"), 2_000)
+      : null;
+    completionNote?.matches.forEach((match) => completionWarnings.add(match));
     const attachmentResult = await registerAttachments(client, context.userId, payload);
+    attachmentResult.warnings.forEach((match) => completionWarnings.add(match));
     const applicationId = await callTaskRpc(client, "complete_task", {
       p_actor_id: context.userId,
       p_application_id: asString(payload.applicationId, "applicationId"),
-      p_filtered_review: filteredReview ?? (payload.completionNote ? { content: asString(payload.completionNote, "completionNote") } : null),
+      p_filtered_review: filteredReview ?? (completionNote ? { content: completionNote.text } : null),
     });
-    return jsonResponse({ data: { applicationId, status: "completed", attachmentIds: attachmentResult.registered }, warnings: attachmentResult.warnings });
+    return jsonResponse({ data: { applicationId, status: "completed", attachmentIds: attachmentResult.registered }, warnings: [...completionWarnings] });
   } catch (error) {
     return errorResponse(error);
   }

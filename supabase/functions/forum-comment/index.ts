@@ -1,5 +1,5 @@
 import { createEdgeServices } from "../_shared/supabase.ts";
-import { assertSensitiveWriteAllowed, replaceSensitive } from "../_shared/sensitive-filter.ts";
+import { guardPublicText } from "../_shared/content-guard.ts";
 import { databaseError, errorResponse, jsonResponse, optionsResponse, parseJsonBody } from "../_shared/http.ts";
 import { ApiError } from "../_shared/http.ts";
 
@@ -35,12 +35,7 @@ Deno.serve(async (request) => {
       throw new ApiError("VALIDATION_ERROR", 400, "不支持的评论操作。");
     }
 
-    const content = await replaceSensitive(adminClient, {
-      text: requiredString(body.content, "评论"),
-      userId: context.userId,
-      enforceMute: true,
-    });
-    assertSensitiveWriteAllowed(content);
+    const content = guardPublicText(requiredString(body.content, "评论"), { required: true, maxLength: 5_000 });
     const { data, error } = await adminClient.rpc("create_forum_comment", {
       p_actor_id: context.userId,
       p_post_id: requiredString(body.postId, "帖子"),
