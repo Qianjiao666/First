@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 
 import { ApiError } from "../../supabase/functions/_shared/http.ts";
 import * as sensitiveFilter from "../../supabase/functions/_shared/sensitive-filter.ts";
+import fs from "node:fs/promises";
 
 const { filterText } = sensitiveFilter;
 
@@ -56,4 +57,14 @@ test("mute matches reject the current write after applying the mute", () => {
     () => sensitiveFilter.assertSensitiveWriteAllowed(result),
     (error) => error instanceof ApiError && error.code === "MUTED" && error.status === 403,
   );
+});
+
+test("the new global DFA lexicon is code-only and does not query the legacy admin table", async () => {
+  const contentGuard = await fs.readFile(new URL("../../supabase/functions/_shared/content-guard.ts", import.meta.url), "utf8");
+  const lexicon = await fs.readFile(new URL("../../supabase/functions/_shared/sensitive-lexicon.ts", import.meta.url), "utf8");
+
+  assert.doesNotMatch(contentGuard, /\.from\(["']sensitive_words["']\)/);
+  assert.doesNotMatch(lexicon, /\.from\(|fetch\(|supabase/i);
+  assert.match(lexicon, /CUSTOM_WARN_WORDS = Object\.freeze\(\[\]\)/);
+  assert.match(lexicon, /CUSTOM_BLOCK_WORDS = Object\.freeze\(\[\]\)/);
 });
