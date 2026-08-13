@@ -1,4 +1,4 @@
-import { renderAvatar, uploadAvatar, validateAvatarFile } from "../profile/avatar.js";
+import { renderAvatar } from "../profile/avatar.js";
 import { THEMES, getTheme, setTheme } from "../theme/theme-controller.js";
 
 const LOGIN_REQUIRED_EVENT = "mkj:login-required";
@@ -97,7 +97,7 @@ function createLoginPrompt(documentRef) {
   return backdrop;
 }
 
-function createSettingsModal(documentRef, runtime) {
+function createSettingsModal(documentRef) {
   const modal = documentRef.createElement("dialog");
   modal.id = "mkj-settings-modal-v11";
   modal.className = "mkj-settings-modal-v11";
@@ -140,74 +140,7 @@ function createSettingsModal(documentRef, runtime) {
     themeSection.append(label);
   }
 
-  const avatarSection = documentRef.createElement("section");
-  avatarSection.className = "mkj-avatar-settings-v11";
-  const avatarTitle = documentRef.createElement("h3");
-  avatarTitle.textContent = "头像";
-  const preview = documentRef.createElement("span");
-  preview.className = "mkj-avatar-preview-v11";
-  preview.dataset.mkjAvatarPreview = "";
-  preview.textContent = "航";
-  const input = documentRef.createElement("input");
-  input.type = "file";
-  input.accept = "image/jpeg,image/png,image/webp";
-  input.className = "mkj-avatar-file-v11";
-  const upload = documentRef.createElement("button");
-  upload.type = "button";
-  upload.className = "mkj-settings-upload-v11";
-  upload.textContent = "上传头像";
-  upload.disabled = true;
-  const status = documentRef.createElement("p");
-  status.className = "mkj-settings-status-v11";
-  status.setAttribute("role", "status");
-  let selectedFile = null;
-
-  input.addEventListener("change", () => {
-    status.textContent = "";
-    try {
-      selectedFile = validateAvatarFile(input.files?.[0]);
-      upload.disabled = false;
-      const localUrl = URL.createObjectURL(selectedFile);
-      preview.replaceChildren();
-      const image = documentRef.createElement("img");
-      image.src = localUrl;
-      image.alt = "头像预览";
-      image.addEventListener("load", () => URL.revokeObjectURL(localUrl), { once: true });
-      preview.append(image);
-    } catch (error) {
-      selectedFile = null;
-      upload.disabled = true;
-      status.textContent = error.message;
-      status.dataset.state = "error";
-    }
-  });
-
-  upload.addEventListener("click", async () => {
-    if (!selectedFile) return;
-    upload.disabled = true;
-    input.disabled = true;
-    try {
-      const result = await uploadAvatar({
-        file: selectedFile,
-        runtime,
-        onState(state) {
-          status.textContent = state.message;
-          status.dataset.state = state.status;
-        },
-      });
-      documentRef.querySelectorAll("[data-mkj-avatar-slot]").forEach((slot) => {
-        renderAvatar(slot, { avatar: result.avatarUrl, displayName: displayName({ user: runtime?.session?.getState?.()?.user }) });
-      });
-      documentRef.dispatchEvent(new CustomEvent("mkj:avatar-updated", { detail: { avatarUrl: result.avatarUrl } }));
-    } catch {
-      // The inline status already contains the recoverable error.
-    } finally {
-      input.disabled = false;
-      upload.disabled = !selectedFile;
-    }
-  });
-  avatarSection.append(avatarTitle, preview, input, upload, status);
-  panel.append(header, themeSection, avatarSection);
+  panel.append(header, themeSection);
   modal.append(panel);
   documentRef.body.append(modal);
   return modal;

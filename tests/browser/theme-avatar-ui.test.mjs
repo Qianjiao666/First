@@ -132,7 +132,7 @@ test("all production pages bootstrap themes early and load visual v1.1 last", as
   }
 });
 
-test("v1.1 CSS and settings shell keep the approved component contracts", async () => {
+test("v1.1 CSS and settings shell keep themes while avatar upload is deferred", async () => {
   const css = await fs.readFile(new URL("../../assets/css/visual-v1.1.css", import.meta.url), "utf8");
   for (const theme of Object.keys(THEMES)) assert.match(css, new RegExp(`data-theme=["']${theme}["']`));
   assert.match(css, /prefers-reduced-motion:\s*reduce/);
@@ -141,11 +141,11 @@ test("v1.1 CSS and settings shell keep the approved component contracts", async 
 
   const shell = await fs.readFile(new URL("../../assets/js/core/app-shell.js", import.meta.url), "utf8");
   assert.match(shell, /mkj-settings-modal-v11/);
-  assert.match(shell, /accept\s*=\s*["']image\/jpeg,image\/png,image\/webp["']/);
+  assert.doesNotMatch(shell, /uploadAvatar|validateAvatarFile/);
+  assert.doesNotMatch(shell, /type\s*=\s*["']file["']|mkj-settings-upload-v11/);
   assert.match(shell, /dataset\.mkjSettingsTrigger/);
   assert.match(shell, /focus\?\.\(\)/);
   assert.match(shell, /#mkj-account-button/);
-  assert.match(shell, /catch \{\s*\/\/ The inline status already contains the recoverable error\./);
 });
 
 test("dark theme replaces legacy light homepage surfaces instead of mixing palettes", async () => {
