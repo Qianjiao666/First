@@ -72,13 +72,13 @@ async function getCapabilities() {
 }
 
 async function invokeFunction(name, payload = {}, method = "POST") {
-  const session = await getSession();
-  if (!session) throw new Error("请先登录后再继续。");
+  const activeSession = await getSession();
+  if (!activeSession) throw new Error("请先登录后再继续。");
 
   const response = await fetch(`${config.url}/functions/v1/${name}`, {
     method,
     headers: {
-      Authorization: `Bearer ${session.access_token}`,
+      Authorization: `Bearer ${activeSession.access_token}`,
       apikey: config.publishableKey,
       "content-type": "application/json",
     },
