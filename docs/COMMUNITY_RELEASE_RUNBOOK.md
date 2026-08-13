@@ -1,43 +1,43 @@
-# MKJ Community Release Runbook
+# MKJ v1.1 Community Release Runbook
 
-Release: 2026-08-11 community forum and task publishing
+Release: 2026-08-12 v1.1 security, identity, avatars and themes
+
 Target site: https://dsxnb.com/MKJ/
-Static target: /var/www/MKJ
-Supabase project ref: hzxvmrbztbyapqnwttjq
+
+Static target: `/var/www/MKJ`
+
+Supabase project ref: `hzxvmrbztbyapqnwttjq`
 
 ## Release artifacts
 
-- `deployment/MKJ-community-forum-tasks-20260811-static-r7.zip`: static browser files only.
-- `deployment/MKJ-community-forum-tasks-20260811-backend-r7.zip`: `supabase/schema.sql` and all Edge Functions.
-- Each ZIP has a neighboring `.zip.sha256` file, and each package has an internal `RELEASE-MANIFEST.txt` for source-file hashes.
+- `deployment/MKJ-community-forum-tasks-20260812-static-v1.1.zip`: static browser files only.
+- `deployment/MKJ-community-forum-tasks-20260812-backend-v1.1.zip`: canonical schema, migrations, Edge Functions and this runbook.
+- Each ZIP has a neighboring `.zip.sha256` file and an internal `RELEASE-MANIFEST.txt`.
 
-Never copy the backend package or `supabase/schema.sql` into `/var/www/MKJ`.
+Never copy the backend ZIP, `supabase/schema.sql`, migrations, tests or credentials into `/var/www/MKJ`.
 
 ## Preconditions
 
-1. Confirm the target Supabase project and the static site backup location.
-2. Use the Supabase SQL Editor or an authenticated Supabase CLI session. Do not put a database password, service role key, SMTP credential, or SSH private key in this repository or in shell history.
-3. Make sure the operator has a disposable USER account and an approved ADMIN account for the post-migration checks.
-4. Run `supabase --help` and `supabase functions deploy --help` on the deployment machine before using the CLI. CLI flags vary by version.
+1. Confirm the Supabase project ref and record the current database migration/function state without printing credentials.
+2. Run `supabase --help`, `supabase functions deploy --help` and the available database advisor command before live changes. CLI flags vary by version.
+3. Use an approved USER account and an approved ADMIN account for acceptance. Do not record their email, password, token or UUID in this repository.
+4. Keep the previous Edge Function source and `/var/www/MKJ` release available for rollback.
+5. Stop if any artifact checksum, manifest entry, database advisor, RLS probe or IMS fail-closed check fails.
 
-## 1. Apply the database schema
-
-Before extracting or applying either release artifact, validate both the
-neighboring checksum file and every source hash in the package manifest:
+## 1. Verify artifacts
 
 ```bash
 artifact_dir=/path/to/deployment
 cd "$artifact_dir"
 
-sha256sum -c MKJ-community-forum-tasks-20260811-static-r7.zip.sha256
-sha256sum -c MKJ-community-forum-tasks-20260811-backend-r7.zip.sha256
+sha256sum -c MKJ-community-forum-tasks-20260812-static-v1.1.zip.sha256
+sha256sum -c MKJ-community-forum-tasks-20260812-backend-v1.1.zip.sha256
 
 verify_manifest() {
   archive="$1"
-  manifest_name="RELEASE-MANIFEST.txt"
   verify_dir=$(mktemp -d)
   unzip -q "$archive" -d "$verify_dir"
-  manifest="$verify_dir/$manifest_name"
+  manifest="$verify_dir/RELEASE-MANIFEST.txt"
   test -f "$manifest"
   sed -n '/^[[:xdigit:]]\{64\}  /p' "$manifest" | tr -d '\r' |
     while read -r expected relative; do
@@ -51,77 +51,69 @@ verify_manifest() {
   rm -rf "$verify_dir"
 }
 
-verify_manifest MKJ-community-forum-tasks-20260811-static-r7.zip
-verify_manifest MKJ-community-forum-tasks-20260811-backend-r7.zip
+verify_manifest MKJ-community-forum-tasks-20260812-static-v1.1.zip
+verify_manifest MKJ-community-forum-tasks-20260812-backend-v1.1.zip
 ```
 
-Do not continue if any checksum or manifest validation fails.
+Do not continue if either check reports a mismatch.
 
-Before migration, inspect the default category state:
+## 2. Configure Supabase Secrets
+
+Configure these names through Supabase Secrets tooling or the dashboard:
+
+```text
+TENCENTCLOUD_SECRET_ID
+TENCENTCLOUD_SECRET_KEY
+TENCENT_IMS_BIZ_TYPE
+```
+
+`TENCENT_IMS_BIZ_TYPE` is optional when the Tencent default policy is intentionally used. Verify only that required names exist. Never print, paste into a report, or commit their values. `SUPABASE_URL`, `SUPABASE_ANON_KEY` and `SUPABASE_SERVICE_ROLE_KEY` remain platform-managed Edge Function environment variables.
+
+## 3. Apply the approved avatar migration
+
+The only v1.1 database artifact to execute is:
+
+```text
+supabase/migrations/20260812_v1_1_avatar.sql
+```
+
+Before execution, display the complete SQL to the operator as the required SQL preview. It may only:
+
+- add `public.user_public_profiles.avatar text`;
+- create/update the existing Supabase Storage bucket named `avatars`;
+- create the public-read avatar policy;
+- create no table and no other business field.
+
+Execute it through the authenticated Supabase SQL Editor or approved CLI only after that preview. Then run these read-only checks:
 
 ```sql
-select slug, is_active
-from public.task_categories
-where slug = 'career-actions';
+select table_schema, table_name, column_name, data_type
+from information_schema.columns
+where table_schema = 'public'
+  and table_name = 'user_public_profiles'
+  and column_name = 'avatar';
+
+select id, name, public, file_size_limit, allowed_mime_types
+from storage.buckets
+where id = 'avatars';
+
+select policyname, roles, cmd, qual, with_check
+from pg_policies
+where schemaname = 'storage'
+  and tablename = 'objects'
+  and (qual ilike '%avatars%' or with_check ilike '%avatars%')
+order by policyname;
 ```
 
-If the slug already exists but is inactive, decide explicitly whether it should be reactivated before the task module is enabled. The schema intentionally does not override a previous administrator's disabled state on rerun:
+Required result: exactly one avatar column; public bucket; 2MB limit; only JPG/PNG/WebP MIME types; one public SELECT policy. There must be no avatar INSERT, UPDATE or DELETE policy for `anon` or `authenticated`.
 
-```sql
-update public.task_categories
-set is_active = true, updated_at = now()
-where slug = 'career-actions' and is_active = false;
-```
+Use real browser-role probes after migration. `anon` and `authenticated` avatar insert/update/delete must return false or be rejected by RLS. A public read of a reviewed avatar may succeed. Do not use the service role for the browser-write denial probes.
 
-Then execute the complete `supabase/schema.sql` from the backend package in the target project's SQL Editor. The script is designed to be rerunnable for this release.
+Run database security/performance advisors after applying the migration. Any new security advisor finding blocks deployment.
 
-After it completes, run these read-only checks:
+## 4. Deploy Edge Functions
 
-```sql
-select slug, is_active
-from public.task_categories
-where slug = 'career-actions';
-
-select relname, relrowsecurity
-from pg_class
-where relnamespace = 'public'::regnamespace
-  and relname in (
-    'task_categories', 'task_subcategories', 'task_listings',
-    'task_applications', 'task_reviews', 'task_post_links'
-  )
-order by relname;
-
-select p.proname,
-       has_function_privilege('anon', p.oid, 'execute') as anon_execute,
-       has_function_privilege('authenticated', p.oid, 'execute') as authenticated_execute,
-       has_function_privilege('service_role', p.oid, 'execute') as service_execute
-from pg_proc p
-join pg_namespace n on n.oid = p.pronamespace
-where n.nspname = 'public'
-  and p.proname in (
-    'create_task', 'update_task', 'publish_task', 'close_task',
-    'archive_task', 'delete_task', 'apply_task', 'assign_applicant',
-    'reject_applicant', 'submit_task', 'cancel_application',
-    'complete_task', 'upsert_task_category'
-  )
-order by p.proname;
-```
-
-The category query must return the active `career-actions` row. The RLS query must report `true` for every task table. The RPC query must report `false` for both browser roles and `true` for `service_role` on every task write function.
-
-For the first administrator only, promote the approved account through the SQL Editor using its UUID. Do not use an email address in a shared script:
-
-```sql
-update public.user_public_profiles
-set role = 'ADMIN', updated_at = now()
-where user_id = '<approved-admin-user-uuid>';
-```
-
-Later role changes must use the admin UI or the protected admin function.
-
-## 2. Deploy Edge Functions
-
-Deploy the functions from the backend package with a Supabase CLI session. The shared `_shared` directory is bundled into each function and is not deployed as a function itself.
+Deploy every function from the verified backend package. `_shared` is bundled and is not deployed as a standalone function.
 
 ```bash
 export SUPABASE_PROJECT_REF=hzxvmrbztbyapqnwttjq
@@ -131,43 +123,61 @@ for function_name in \
   admin-sensitive-words \
   admin-transfer-account \
   admin-users \
+  announcements \
+  avatar-upload \
   forum-comment \
   forum-moderation \
   forum-post \
   forum-vote \
+  notifications \
   redeem \
+  shop \
   task-admin \
-  task-complete
+  task-attachments \
+  task-complete \
+  task-review
 do
   supabase functions deploy "$function_name" --project-ref "$SUPABASE_PROJECT_REF"
 done
 ```
 
-Keep the default JWT verification enabled. The functions perform a second user lookup and permission check, and the browser must send the current user's access token. Check the function logs after deployment without copying sensitive request headers or environment values into tickets or chat.
+Keep JWT verification enabled. After deployment:
 
-## 3. Deploy the static site
+1. Send an unauthenticated write probe to every state-changing function and require `401`.
+2. Send malformed avatar data with a valid test token and require `400` without a Storage object.
+3. Verify function logs contain no Authorization header, file content or secret value.
 
-Create a server backup before changing the static directory. The release is
-staged on the same filesystem, then switched into place as a whole directory;
-this prevents files removed from the release from surviving in the live root.
+## 5. Verify real Tencent IMS
+
+Use a dedicated authenticated test user and record only timestamps, result classes and redacted request IDs.
+
+1. Upload a benign JPG, PNG or WebP under 2MB. Require Tencent `Suggestion: Pass`, profile URL update and one object at `{JWT userId}/avatar.{ext}`.
+2. Upload a controlled policy-violating test image approved for security testing. Tencent `Suggestion: Review` or `Suggestion: Block` must be rejected, and the user path must contain no object created by that request.
+3. Exercise missing/invalid IMS configuration in a non-production preview or otherwise controlled invocation. It must fail closed, preserve the prior good avatar and create no object from the rejected request.
+4. Attempt an extension/MIME mismatch, corrupt image and payload over 2MB. Each must fail before IMS/Storage as appropriate.
+
+Mock results do not satisfy this gate. Production deployment cannot proceed until both real Pass and real Review/Block behavior are observed and rejected images are proven absent from Storage.
+
+## 6. Deploy the static site
+
+Only `/var/www/MKJ` may change. Do not modify Nginx or the main `/` route.
 
 ```bash
 timestamp=$(date -u +%Y%m%d-%H%M%S)
-sudo tar -C /var/www -czf "/root/MKJ-site-before-community-${timestamp}.tar.gz" MKJ
+sudo tar -C /var/www -czf "/var/www/.mkj-community-releases/${timestamp}.before-v1.1.tar.gz" MKJ
 release_root=/var/www/.mkj-community-releases
 stage_dir="$release_root/${timestamp}.stage"
 previous_dir="$release_root/${timestamp}.previous"
 sudo install -d -m 0755 "$release_root"
 sudo rm -rf "$stage_dir"
 sudo install -d -m 0755 "$stage_dir"
-sudo unzip -q "$artifact_dir/MKJ-community-forum-tasks-20260811-static-r7.zip" -d "$stage_dir"
+sudo unzip -q "$artifact_dir/MKJ-community-forum-tasks-20260812-static-v1.1.zip" -d "$stage_dir"
 
-# Re-check the extracted manifest immediately before the cutover.
 sudo bash -c '
   set -eu
   manifest="$1/RELEASE-MANIFEST.txt"
   test -f "$manifest"
-  sed -n "/^[[:xdigit:]]\\{64\\}  /p" "$manifest" | tr -d "\r" |
+  sed -n "/^[[:xdigit:]]\{64\}  /p" "$manifest" | tr -d "\r" |
     while read -r expected relative; do
       expected=$(printf "%s" "$expected" | tr "[:upper:]" "[:lower:]")
       actual=$(sha256sum "$1/$relative" | awk "{print \$1}")
@@ -176,31 +186,32 @@ sudo bash -c '
 ' bash "$stage_dir"
 
 if sudo test -e /var/www/MKJ; then
-  sudo rm -rf "$previous_dir"
   sudo mv /var/www/MKJ "$previous_dir"
 fi
 sudo mv "$stage_dir" /var/www/MKJ
-
-# Do not change the main site's Nginx configuration or the `/` route.
 ```
 
-## 4. Production acceptance
+Do not delete older `.previous` or tar backups during this deployment.
 
-Run the following checks in order:
+## 7. Production acceptance
 
-1. Anonymous user: `/MKJ/`, `/MKJ/community/`, `/MKJ/forum/`, and `/MKJ/tasks/` load; published forum and task reads work; task writes return `401`.
-2. USER: forum post/comment/vote works; published task application and submission work; a muted account cannot write.
-3. MODERATOR: forum moderation works; `/MKJ/admin/` is available; task admin write controls remain unavailable without `tasks:manage`.
-4. ADMIN: task create/save draft/publish/close/archive, category management, application assignment/rejection, completion review, user management, redeem codes, sensitive words, and account transfer work.
-5. Sensitive words: draft WARN is replaced and reported, publish is blocked, application WARN is replaced, application MUTE sets a 24-hour mute and rejects the write.
-6. Completion retry: repeat the same completion request and verify the application cannot be completed twice and the global reputation event count does not increase.
-7. Confirm the forum author's reputation badge reflects the updated global reputation.
-8. Check the original assessment, account, progress, redemption, and feedback flows for regressions at desktop and mobile widths.
+Run the authenticated and anonymous smoke suite before declaring v1.1 complete:
+
+1. Login updates the navbar without reload across home, forum and tasks; logout, expired token and remote sign-out show the re-login prompt.
+2. Guests opening forum/new or protected task actions remain on a visible page and receive the login dialog.
+3. Publish a benign post/comment and complete cleanup through existing business actions.
+4. Apply to and submit a task, then clean up test data through existing workflow actions.
+5. XSS is rejected in the browser and by direct backend invocation. WARN text is persisted with `*`; BLOCK content persists nothing.
+6. A benign avatar appears in navigation, posts and comments. A real IMS Review/Block avatar is rejected and creates no object.
+7. Complete all 10 assessment questions and verify unchanged score/report behavior.
+8. Verify all three themes, localStorage persistence, 20 pages at 375/768/1280/1920, mobile navigation, task table reflow, modal backdrop and one disclaimer per page.
+9. Verify `https://dsxnb.com/` remains HTTP 200 and does not load MKJ v1.1 assets.
 
 ## Rollback
 
-- Static rollback: move the current `/var/www/MKJ` directory aside, move the timestamped `previous_dir` back to `/var/www/MKJ`, then re-run the URL and browser smoke checks. Use the tarball only if the previous directory is unavailable.
-- Edge rollback: redeploy the previous known-good function source for the affected function using the same CLI command.
-- Database rollback: do not drop community tables during an incident. Preserve user data, roll back the static/Edge layers first, and investigate with the database advisors and logs before planning a separate additive migration.
+- Static: move the current `/var/www/MKJ` aside and restore the timestamped `.previous`; use the tar backup only if needed.
+- Edge: redeploy the previous known-good source for affected functions.
+- Database: do not drop tables or remove the avatar column during an incident. Roll back static/Edge layers first and investigate with advisors/logs before a separately reviewed additive migration.
+- IMS: if real moderation cannot be verified, keep `avatar-upload` unavailable. Never bypass or disable moderation.
 
-Do not declare the release production-complete until the database checks, Edge deployment, role matrix, sensitive-word cases, idempotent completion, and static/browser checks all pass in the target environment.
+Do not declare production complete until SQL/RLS checks, real IMS Pass and Review/Block, function auth probes, static integrity and all production smoke cases pass.

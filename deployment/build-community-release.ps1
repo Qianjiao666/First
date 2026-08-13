@@ -37,7 +37,10 @@ function Copy-RelativeTree {
   }
 
   Get-ChildItem -LiteralPath $sourceDirectory -Recurse -File |
-    Where-Object { $_.FullName -notmatch '[\\/](tests|docs)([\\/]|$)' } |
+    Where-Object {
+      $_.FullName -notmatch '[\\/](tests|docs)([\\/]|$)' -and
+      $_.FullName -notmatch '[\\/]assets[\\/]data[\\/]sensitive-lexicon-source([\\/]|$)'
+    } |
     ForEach-Object {
       $relative = $_.FullName.Substring($SourceRoot.Length).TrimStart('\', '/')
       Copy-RelativeFile -SourceRoot $SourceRoot -RelativePath $relative -DestinationRoot $DestinationRoot
