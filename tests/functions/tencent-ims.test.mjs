@@ -23,6 +23,58 @@ const options = (fetchImpl) => ({
   secretKey: "unit-test-secret-key",
   bizType: "avatar-biz",
   timeoutMs: 20,
+  logger: () => {},
+});
+
+test("emits allowlisted diagnostics without secrets, identity or image content", async () => {
+  const diagnostics = [];
+  await assert.rejects(
+    () => moderateImage({
+      ...options(async () => response({
+        Response: {
+          Error: { Code: "AuthFailure.SecretIdNotFound", Message: "bad unit-test-secret-key" },
+          RequestId: "request-diagnostic-1234567890",
+        },
+      })),
+      logger: (event) => diagnostics.push(event),
+    }),
+    (error) => error instanceof ApiError && error.code === "AVATAR_REJECTED",
+  );
+
+  assert.deepEqual(diagnostics, [{
+    event: "ims_api_error",
+    errorCode: "AuthFailure.SecretIdNotFound",
+    requestId: "request-diagnostic",
+  }]);
+  const serialized = JSON.stringify(diagnostics);
+  assert.doesNotMatch(serialized, /unit-test-secret|avatar-test|AQID|bad secret|Authorization/i);
+});
+
+test("extracts only a safe missing parameter name from Tencent API errors", async () => {
+  const diagnostics = [];
+  await assert.rejects(
+    () => moderateImage({
+      ...options(async () => response({
+        Response: {
+          Error: {
+            Code: "MissingParameter",
+            Message: "The required parameter `BizType` is missing. unit-test-secret-key",
+          },
+          RequestId: "request-missing-parameter",
+        },
+      })),
+      logger: (event) => diagnostics.push(event),
+    }),
+    (error) => error instanceof ApiError && error.code === "AVATAR_REJECTED",
+  );
+
+  assert.deepEqual(diagnostics, [{
+    event: "ims_api_error",
+    errorCode: "MissingParameter",
+    parameter: "BizType",
+    requestId: "request-missing-pa",
+  }]);
+  assert.doesNotMatch(JSON.stringify(diagnostics), /unit-test-secret|required parameter|missing\./i);
 });
 
 test("signs the deterministic TC3 ImageModeration request and accepts exact Pass", async () => {
@@ -39,6 +91,7 @@ test("signs the deterministic TC3 ImageModeration request and accepts exact Pass
   assert.equal(captured.init.headers["X-TC-Action"], "ImageModeration");
   assert.equal(captured.init.headers["X-TC-Timestamp"], "1598099825");
   assert.equal(captured.init.headers["X-TC-Version"], "2020-12-29");
+  assert.equal(captured.init.headers["X-TC-Region"], "ap-guangzhou");
   assert.equal(captured.init.headers.Authorization, AUTHORIZATION);
   assert.equal(captured.init.body, '{"FileContent":"AQID","DataId":"avatar-test","BizType":"avatar-biz"}');
   assert.deepEqual(result, { suggestion: "Pass", label: "Normal", subLabel: "", requestId: "request-1" });

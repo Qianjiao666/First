@@ -5,6 +5,7 @@ const HOST = "ims.tencentcloudapi.com";
 const SERVICE = "ims";
 const ACTION = "ImageModeration";
 const VERSION = "2020-12-29";
+const REGION = "ap-guangzhou";
 const ALGORITHM = "TC3-HMAC-SHA256";
 
 type ModerateImageInput = {
@@ -16,6 +17,16 @@ type ModerateImageInput = {
   secretKey?: string;
   bizType?: string;
   timeoutMs?: number;
+  logger?: (event: ImsDiagnostic) => void;
+};
+
+type ImsDiagnostic = {
+  event: "ims_api_error" | "ims_http_error" | "ims_invalid_response" | "ims_missing_config" | "ims_network_error" | "ims_pass" | "ims_rejected";
+  errorCode?: string;
+  httpStatus?: number;
+  parameter?: string;
+  requestId?: string;
+  suggestion?: "Block" | "Review" | "Unknown";
 };
 
 export type ModerationResult = {
@@ -57,10 +68,41 @@ function rejected(status = 503): ApiError {
   return new ApiError("AVATAR_REJECTED", status, "头像安全审核未通过，请更换图片后重试。");
 }
 
+function safeToken(value: unknown, maxLength: number, fallback?: string): string | undefined {
+  if (typeof value !== "string") return fallback;
+  const token = value.match(/^[A-Za-z0-9._-]+$/)?.[0];
+  return token ? token.slice(0, maxLength) : fallback;
+}
+
+function missingParameterName(errorCode: string | undefined, message: unknown): string | undefined {
+  if (errorCode !== "MissingParameter" || typeof message !== "string") return undefined;
+  const token = "([A-Za-z][A-Za-z0-9]{0,31})";
+  const patterns = [
+    new RegExp(`(?:required\\s+)?parameter\\s+[\u0060'\"]?${token}[\u0060'\"]?\\s+is\\s+missing`, "i"),
+    new RegExp(`(?:缺少|缺失)(?:必填)?参数[：:\\s]+[\u0060'\"]?${token}[\u0060'\"]?`),
+  ];
+  for (const pattern of patterns) {
+    const match = message.match(pattern);
+    if (match) return match[1];
+  }
+  return undefined;
+}
+
+function emitDiagnostic(input: ModerateImageInput, event: ImsDiagnostic): void {
+  try {
+    (input.logger ?? ((payload) => console.warn(JSON.stringify(payload))))(event);
+  } catch {
+    // Diagnostics must never change the fail-closed moderation decision.
+  }
+}
+
 export async function moderateImage(input: ModerateImageInput): Promise<ModerationResult> {
   const secretId = input.secretId ?? environment("TENCENTCLOUD_SECRET_ID");
   const secretKey = input.secretKey ?? environment("TENCENTCLOUD_SECRET_KEY");
-  if (!secretId || !secretKey) throw rejected();
+  if (!secretId || !secretKey) {
+    emitDiagnostic(input, { event: "ims_missing_config" });
+    throw rejected();
+  }
 
   const now = input.now?.() ?? new Date();
   const timestamp = Math.floor(now.getTime() / 1000);
@@ -91,6 +133,7 @@ export async function moderateImage(input: ModerateImageInput): Promise<Moderati
         "Content-Type": "application/json; charset=utf-8",
         Host: HOST,
         "X-TC-Action": ACTION,
+        "X-TC-Region": REGION,
         "X-TC-Timestamp": String(timestamp),
         "X-TC-Version": VERSION,
         Authorization: authorization,
@@ -98,7 +141,10 @@ export async function moderateImage(input: ModerateImageInput): Promise<Moderati
       body,
       signal: AbortSignal.timeout(input.timeoutMs ?? 10_000),
     });
-    if (!response.ok) throw rejected();
+    if (!response.ok) {
+      emitDiagnostic(input, { event: "ims_http_error", httpStatus: response.status });
+      throw rejected();
+    }
     const envelope = await response.json() as {
       Response?: {
         Suggestion?: unknown;
@@ -109,9 +155,28 @@ export async function moderateImage(input: ModerateImageInput): Promise<Moderati
       };
     };
     const result = envelope?.Response;
-    if (!result || result.Error || result.Suggestion !== "Pass" || typeof result.RequestId !== "string") {
+    const requestId = safeToken(result?.RequestId, 18);
+    if (result?.Error) {
+      const apiError = result.Error as { Code?: unknown; Message?: unknown };
+      const errorCode = safeToken(apiError.Code, 64, "Unknown");
+      const parameter = missingParameterName(errorCode, apiError.Message);
+      emitDiagnostic(input, {
+        event: "ims_api_error",
+        errorCode,
+        ...(parameter ? { parameter } : {}),
+        requestId,
+      });
       throw rejected(400);
     }
+    if (result?.Suggestion === "Review" || result?.Suggestion === "Block") {
+      emitDiagnostic(input, { event: "ims_rejected", requestId, suggestion: result.Suggestion });
+      throw rejected(400);
+    }
+    if (!result || result.Suggestion !== "Pass" || typeof result.RequestId !== "string") {
+      emitDiagnostic(input, { event: "ims_invalid_response", requestId });
+      throw rejected(400);
+    }
+    emitDiagnostic(input, { event: "ims_pass", requestId });
     return {
       suggestion: "Pass",
       label: typeof result.Label === "string" ? result.Label : "",
@@ -120,6 +185,7 @@ export async function moderateImage(input: ModerateImageInput): Promise<Moderati
     };
   } catch (error) {
     if (error instanceof ApiError) throw error;
+    emitDiagnostic(input, { event: "ims_network_error" });
     throw rejected();
   }
 }
