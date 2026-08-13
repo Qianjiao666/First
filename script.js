@@ -252,7 +252,7 @@ import { guardFormData } from "/MKJ/assets/js/security/form-guard.js";
     window.setTimeout(() => {
       if(mkjCurrent < mkjQuestions.length-1){ mkjCurrent += 1; mkjPersistAssessmentProgress(); mkjRenderQuestion(); }
       else mkjFinishAssessment();
-    }, 360);
+    }, 220);
   }
   function mkjFinishAssessment(){
     localStorage.removeItem(mkjProgressStorageKey);

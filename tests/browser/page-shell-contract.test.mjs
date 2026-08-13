@@ -55,3 +55,9 @@ test("production pages load the controllers that Task 4 adapts", async () => {
     assert.match(source, new RegExp(controller.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")), `${relativePath} does not load ${controller}`);
   }
 });
+
+test("the shared shell owns the single disclaimer contract", async () => {
+  const source = await fs.readFile(fileURLToPath(new URL("assets/js/core/app-shell.js", root)), "utf8");
+  assert.match(source, /data-mkj-disclaimer/);
+  assert.match(source, /本项目仅为学习演示Demo，请勿直接线上投入正式生产使用。/);
+});

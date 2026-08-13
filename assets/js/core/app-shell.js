@@ -3,6 +3,30 @@ import { THEMES, getTheme, setTheme } from "../theme/theme-controller.js";
 
 const LOGIN_REQUIRED_EVENT = "mkj:login-required";
 const EXPIRED_MESSAGE = "登录已失效，请重新登录。";
+const DISCLAIMER_TEXT = "本项目仅为学习演示Demo，请勿直接线上投入正式生产使用。";
+
+function mountDisclaimer(documentRef) {
+  if (typeof documentRef?.createElement !== "function") return;
+  if (documentRef.querySelector("[data-mkj-disclaimer]")) return;
+  const existing = [...documentRef.querySelectorAll("footer, p")].find((node) => node.textContent?.trim() === DISCLAIMER_TEXT);
+  if (existing) {
+    existing.dataset.mkjDisclaimer = "";
+    return existing;
+  }
+  let disclaimer;
+  try {
+    disclaimer = documentRef.createElement("p");
+  } catch {
+    return;
+  }
+  disclaimer.className = "mkj-disclaimer-v11";
+  disclaimer.dataset.mkjDisclaimer = "";
+  disclaimer.textContent = DISCLAIMER_TEXT;
+  const footer = documentRef.querySelector("footer");
+  if (footer) footer.append(disclaimer);
+  else documentRef.querySelector("main")?.insertAdjacentElement("afterend", disclaimer) || documentRef.body.append(disclaimer);
+  return disclaimer;
+}
 
 function displayName(state) {
   return state?.user?.user_metadata?.display_name || "航线同学";
@@ -251,6 +275,7 @@ export async function mountAppShell({
   locationRef = window.location,
   session = window.MKJSession || window.MKJApp?.session,
 } = {}) {
+  mountDisclaimer(documentRef);
   const mobileNavigation = mountMobileNavigation(documentRef);
   const closeMobileNavigation = (event) => {
     if (event.key === "Escape") mobileNavigation?.close();

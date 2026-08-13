@@ -221,6 +221,11 @@ for (const viewport of viewports) {
         hasPrimaryContent: Boolean(document.querySelector(${JSON.stringify(selector)})),
         scrollWidth: Math.max(documentElement.scrollWidth, body.scrollWidth),
         clientWidth: documentElement.clientWidth,
+        disclaimerCount: [...document.querySelectorAll('[data-mkj-disclaimer]')].filter((node) => {
+          const style = getComputedStyle(node);
+          return style.display !== 'none' && style.visibility !== 'hidden' && node.getClientRects().length > 0;
+        }).length,
+        taskTableOverflow: Boolean(document.querySelector('.task-table')) && document.querySelector('.task-table').scrollWidth > document.querySelector('.task-table').clientWidth,
         visualSheet: [...document.styleSheets].some((sheet) => sheet.href?.includes('/assets/css/visual-v1.css')),
         routeBlue: getComputedStyle(documentElement).getPropertyValue('--hx-blue').trim(),
         bodyBackground: getComputedStyle(body).backgroundColor
@@ -241,8 +246,12 @@ for (const viewport of viewports) {
     assert.equal(report.hasPrimaryContent, true, `${name} primary content missing at ${viewport.name}px`);
     assert.ok(report.textLength > 20, `${name} has too little visible content at ${viewport.name}px`);
     assert.equal(report.visualSheet, true, `${name} visual layer missing at ${viewport.name}px`);
+    assert.equal(report.disclaimerCount, 1, `${name} must render one visible disclaimer at ${viewport.name}px`);
     assert.equal(report.routeBlue, "#165dff", `${name} v1 tokens missing at ${viewport.name}px`);
     assert.equal(report.overflow, false, `${name} overflows at ${viewport.name}px`);
+    if ((viewport.name === "375" || viewport.name === "768") && name === "admin-tasks") {
+      assert.equal(report.taskTableOverflow, false, `${name} task table overflows at ${viewport.name}px`);
+    }
     assert.deepEqual(report.network, [], `${name} had failed browser requests at ${viewport.name}px`);
     assert.deepEqual(report.errors, [], `${name} logged browser errors at ${viewport.name}px`);
 

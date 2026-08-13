@@ -53,19 +53,23 @@ function renderAdminRows(tasks) {
     const title = document.createElement("a");
     title.href = `/MKJ/admin/tasks/edit/?id=${encodeURIComponent(task.id)}`;
     title.textContent = task.title ?? "未命名任务";
-    const cells = [
+    const contents = [
       title,
       statusLabel(task.status),
       String(task.application_count ?? 0),
       String(task.reward_points ?? 0),
       formatTaskDeadline(task.deadline_at),
-    ].map((content) => {
+    ];
+    const labels = ["任务", "状态", "申请", "奖励", "截止时间"];
+    const cells = contents.map((content, index) => {
       const cell = document.createElement("td");
+      cell.dataset.label = labels[index];
       if (content instanceof Node) cell.append(content);
       else cell.textContent = content;
       return cell;
     });
     const actions = document.createElement("td");
+    actions.dataset.label = "操作";
     actions.append(button("申请", "applications", task.id));
     if (task.status === "draft") actions.append(button("发布", "publish", task.id));
     if (task.status === "published") actions.append(button("关闭", "close", task.id));
