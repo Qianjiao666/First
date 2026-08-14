@@ -79,3 +79,13 @@ test("admin editor loads existing task data before submitting an update", async 
   assert.match(admin, /data-task-editor-form/);
   assert.match(admin, /deadline_at|deadlineAt/);
 });
+
+test("task plaza forwards collaboration filters without losing existing filters", async () => {
+  const source = await readFile("assets/js/tasks/task-list.js", "utf8");
+  assert.match(source, /buildTaskListFilters/);
+  assert.match(source, /data-task-filter-status/);
+  assert.match(source, /data-task-filter-reward/);
+  assert.match(source, /data-task-filter-deadline/);
+  assert.match(source, /data-task-filter-skill-tags/);
+  assert.match(source, /skillTags/);
+});

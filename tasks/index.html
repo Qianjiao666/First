@@ -56,6 +56,35 @@
             <option value="reward_points.desc">奖励较高</option>
           </select>
         </label>
+        <label>
+          <span>状态</span>
+          <select data-task-filter-status>
+            <option value="">全部状态</option>
+            <option value="open">可申请</option>
+            <option value="closing_soon">即将截止</option>
+            <option value="in_progress">进行中</option>
+            <option value="completed">已完成</option>
+          </select>
+        </label>
+        <label>
+          <span>奖励</span>
+          <select data-task-filter-reward>
+            <option value="">不限奖励</option>
+            <option value="low">低奖励</option>
+            <option value="medium">中奖励</option>
+            <option value="high">高奖励</option>
+          </select>
+        </label>
+        <label>
+          <span>截止</span>
+          <select data-task-filter-deadline>
+            <option value="">不限截止</option>
+            <option value="this_week">本周截止</option>
+            <option value="this_month">本月截止</option>
+            <option value="none">无截止时间</option>
+          </select>
+        </label>
+        <div class="task-filter-tags" data-task-filter-skill-tags aria-label="技能标签筛选"></div>
         <button class="task-icon-button" type="button" data-task-filter-reset title="清除筛选" aria-label="清除筛选">×</button>
       </section>
 

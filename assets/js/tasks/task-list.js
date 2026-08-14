@@ -1,6 +1,6 @@
 import { buildTaskDetailUrl, hasTaskCapability } from "./task-domain.js";
 import { asItems, createTag, createTaskServices, mountTaskChrome, showTaskMessage, taskErrorMessage } from "./task-common.js";
-import { formatTaskDeadline, toTaskListingModel } from "./task-view.js";
+import { buildTaskListFilters, formatTaskDeadline, toTaskListingModel } from "./task-view.js";
 
 const services = createTaskServices();
 const list = document.querySelector("[data-task-list]");
@@ -9,7 +9,12 @@ const count = document.querySelector("[data-task-result-count]");
 const queryInput = document.querySelector("[data-task-filter-query]");
 const categorySelect = document.querySelector("[data-task-filter-category]");
 const sortSelect = document.querySelector("[data-task-filter-sort]");
+const statusSelect = document.querySelector("[data-task-filter-status]");
+const rewardSelect = document.querySelector("[data-task-filter-reward]");
+const deadlineSelect = document.querySelector("[data-task-filter-deadline]");
+const skillTagContainer = document.querySelector("[data-task-filter-skill-tags]");
 const pagination = document.querySelector("[data-task-pagination]");
+const selectedSkillTags = new Set();
 let currentPage = 1;
 
 function renderListing(task) {
@@ -29,12 +34,36 @@ function renderListing(task) {
 }
 
 function currentFilters() {
-  return {
-    query: queryInput.value.trim(),
+  return buildTaskListFilters({
+    query: queryInput.value,
     category: categorySelect.value,
     sort: sortSelect.value,
     page: currentPage,
-  };
+    status: statusSelect?.value ?? "",
+    rewardRange: rewardSelect?.value ?? "",
+    deadlineWindow: deadlineSelect?.value ?? "",
+    skillTags: [...selectedSkillTags],
+  });
+}
+
+function renderSkillFilters(items) {
+  if (!skillTagContainer) return;
+  const tags = [...new Set(items.flatMap((item) => toTaskListingModel(item).tags))].sort((a, b) => a.localeCompare(b, "zh-CN"));
+  const buttons = tags.slice(0, 12).map((tag) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "task-filter-chip";
+    button.textContent = tag;
+    button.setAttribute("aria-pressed", String(selectedSkillTags.has(tag)));
+    button.addEventListener("click", () => {
+      if (selectedSkillTags.has(tag)) selectedSkillTags.delete(tag);
+      else selectedSkillTags.add(tag);
+      button.setAttribute("aria-pressed", String(selectedSkillTags.has(tag)));
+      loadFirstPage();
+    });
+    return button;
+  });
+  skillTagContainer.replaceChildren(...buttons);
 }
 
 function renderPagination(result) {
@@ -84,11 +113,16 @@ async function loadTasks() {
   try {
     const result = await services.api.listPublished(currentFilters());
     const items = asItems(result);
+    renderSkillFilters(items);
     const fragments = items.map(renderListing);
     list.replaceChildren(...fragments);
     count.value = `${result?.total ?? items.length} 项任务`;
     renderPagination(result);
-    if (!items.length) showTaskMessage(message, "没有符合当前筛选条件的任务。");
+    if (!items.length) {
+      const filters = currentFilters();
+      const hasFilters = Boolean(filters.query || filters.category || filters.status || filters.rewardRange || filters.deadlineWindow || filters.skillTags.length);
+      showTaskMessage(message, hasFilters ? "没有符合当前筛选条件的任务。可清除筛选后重新查看。" : "当前暂无公开任务。");
+    }
   } catch (error) {
     list.replaceChildren();
     count.value = "--";
@@ -116,11 +150,19 @@ async function bootstrap() {
     queryInput.value = "";
     categorySelect.value = "";
     sortSelect.value = "published_at.desc";
+    statusSelect.value = "";
+    rewardSelect.value = "";
+    deadlineSelect.value = "";
+    selectedSkillTags.clear();
+    renderSkillFilters([]);
     loadFirstPage();
   });
   queryInput.addEventListener("search", loadFirstPage);
   categorySelect.addEventListener("change", loadFirstPage);
   sortSelect.addEventListener("change", loadFirstPage);
+  statusSelect?.addEventListener("change", loadFirstPage);
+  rewardSelect?.addEventListener("change", loadFirstPage);
+  deadlineSelect?.addEventListener("change", loadFirstPage);
   await loadTasks();
 }
 
