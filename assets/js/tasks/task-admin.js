@@ -22,12 +22,23 @@ function button(label, action, id, tone = "secondary", metadata = {}) {
   return element;
 }
 
-async function runAdminAction(action, id, taskId = id, userId = "") {
+function openArbitrationDialog({ action, taskId, applicationId = "", userId = "" } = {}) {
+  const dialog = document.querySelector("#task-arbitration-dialog");
+  const form = dialog?.querySelector("[data-task-arbitration-form]");
+  if (!dialog || !form) throw new Error("仲裁弹窗不可用。");
+  form.elements.namedItem("action").value = action;
+  form.elements.namedItem("taskId").value = taskId;
+  form.elements.namedItem("applicationId").value = applicationId;
+  form.elements.namedItem("userId").value = userId;
+  form.querySelector("[data-task-form-message]").textContent = "";
+  dialog.showModal();
+}
+
+async function runAdminAction(action, id, taskId = id, userId = "", options = {}) {
   await requireAuthenticatedAction(services.runtime, "管理任务");
-  const reason = action.startsWith("arbitrate")
-    ? window.prompt("请输入仲裁原因", "超时仲裁")
-    : "";
-  if (action.startsWith("arbitrate") && reason === null) return;
+  const reason = options.reason ?? "";
+  const targetUserId = options.userId ?? userId;
+  const applicationId = options.applicationId ?? id;
   const methods = {
     publish: () => services.api.publish(id),
     close: () => services.api.close(id),
@@ -37,11 +48,11 @@ async function runAdminAction(action, id, taskId = id, userId = "") {
     reject: () => services.api.reject(id),
     arbitrateForce: () => services.api.forceComplete(taskId, reason),
     arbitrateForceApplication: () => services.api.forceComplete(taskId, reason, {
-      applicationId: id,
+      applicationId,
       completionNote: reason,
     }),
     arbitrateRefund: () => services.api.cancelRefund(id, reason),
-    arbitrateDeduct: () => services.api.deductReputation(taskId, 1, reason, userId ? { userId } : {}),
+    arbitrateDeduct: () => services.api.deductReputation(taskId, 1, reason, targetUserId ? { userId: targetUserId } : {}),
   };
   if (methods[action]) await methods[action]();
 }
@@ -216,6 +227,8 @@ async function setupList() {
   const reviewForm = document.querySelector("[data-task-review-form]");
   const categoryDialog = document.querySelector("#task-category-dialog");
   const categoryForm = document.querySelector("[data-task-category-form]");
+  const arbitrationDialog = document.querySelector("#task-arbitration-dialog");
+  const arbitrationForm = document.querySelector("[data-task-arbitration-form]");
   let activeApplicationTaskId = null;
 
   const load = async () => {
@@ -247,6 +260,13 @@ async function setupList() {
       } else if (action === "complete") {
         reviewForm.elements.namedItem("applicationId").value = trigger.dataset.taskId;
         reviewDialog.showModal();
+      } else if (action.startsWith("arbitrate")) {
+        openArbitrationDialog({
+          action,
+          taskId: activeApplicationTaskId ?? trigger.dataset.taskId,
+          applicationId: trigger.dataset.taskId,
+          userId: trigger.dataset.taskUserId ?? "",
+        });
       } else {
         await runAdminAction(action, trigger.dataset.taskId, activeApplicationTaskId, trigger.dataset.taskUserId);
         await loadApplications();
@@ -278,6 +298,42 @@ async function setupList() {
     } catch (error) {
       formMessage.textContent = taskErrorMessage(error);
     }
+  });
+
+  arbitrationForm?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const formMessage = form.querySelector("[data-task-form-message]");
+    const data = new FormData(form);
+    const details = String(data.get("reasonDetails") ?? "").trim();
+    const category = String(data.get("reasonCategory") ?? "");
+    if (!category) {
+      formMessage.textContent = "请选择仲裁原因分类。";
+      return;
+    }
+    if (details.length < 20 || details.length > 800) {
+      formMessage.textContent = "详细原因需为 20 到 800 字。";
+      return;
+    }
+    try {
+      const guarded = guardFormData(form, ["reasonDetails"], formMessage);
+      const reason = `${category}: ${guarded.values.reasonDetails.trim()}`;
+      await runAdminAction(String(data.get("action")), String(data.get("taskId") || data.get("applicationId")), activeApplicationTaskId, String(data.get("userId") ?? ""), {
+        reason,
+        userId: String(data.get("userId") ?? ""),
+        applicationId: String(data.get("applicationId") ?? ""),
+      });
+      arbitrationDialog.close();
+      form.reset();
+      await loadApplications();
+      await load();
+    } catch (error) {
+      formMessage.textContent = taskErrorMessage(error);
+    }
+  });
+
+  document.querySelectorAll("[data-task-dialog-close]").forEach((button) => {
+    button.addEventListener("click", () => button.closest("dialog")?.close());
   });
 
   async function refreshCategoryDialog() {

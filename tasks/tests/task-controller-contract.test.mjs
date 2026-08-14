@@ -100,3 +100,11 @@ test("my tasks supports action grouping and supplement delivery", async () => {
   assert.match(source, /services\.api\.attach/);
   assert.match(source, /supplementNote/);
 });
+
+test("admin task arbitration uses a validated dialog instead of prompt", async () => {
+  const source = await readFile("assets/js/tasks/task-admin.js", "utf8");
+  assert.doesNotMatch(source, /window\.prompt/);
+  assert.match(source, /data-task-arbitration-form/);
+  assert.match(source, /reasonCategory/);
+  assert.match(source, /reasonDetails/);
+});
