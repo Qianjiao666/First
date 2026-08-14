@@ -601,7 +601,7 @@ git commit -m "feat: show task collaboration next steps"
 
 **Interfaces:**
 - Consumes: `canSupplementApplication(application)`, `taskNextAction(record, "applicant", capabilities)`, existing `services.api.attach(applicationId, attachments)`, existing `uploadAttachment`.
-- Produces: supplement dialog and grouped personal task rendering.
+- Produces: supplement dialog, grouped personal task rendering, and persisted supplement notes recorded through the existing task activity log.
 
 - [ ] **Step 1: Add failing contract test**
 
@@ -734,7 +734,7 @@ document.querySelector("[data-task-supplement-form]")?.addEventListener("submit"
   }
   try {
     await requireAuthenticatedAction(services.runtime, "补充任务交付");
-    guardFormData(form, ["supplementNote"], formMessage);
+    const guarded = guardFormData(form, ["supplementNote"], formMessage);
     const applicationId = String(data.get("applicationId"));
     const taskId = String(data.get("taskId") ?? "");
     const userId = user.userId ?? user.id;
@@ -747,7 +747,7 @@ document.querySelector("[data-task-supplement-form]")?.addEventListener("submit"
         file,
       }));
     }
-    await services.api.attach(applicationId, uploaded);
+    await services.api.attach(applicationId, uploaded, guarded.values.supplementNote.trim());
     document.querySelector("#task-supplement-dialog").close();
     form.reset();
     await loadApplications();
@@ -758,7 +758,7 @@ document.querySelector("[data-task-supplement-form]")?.addEventListener("submit"
 });
 ```
 
-For this version, supplement text is guarded but not persisted unless a backend note extension is added later. Do not overload attachment captions with the note.
+Supplement text must be persisted. If the current `attach` action does not accept a note, extend the existing task completion Edge/RPC path minimally so `attach(applicationId, attachments, supplementNote)` writes a `supplemented` event into the existing `task_activity_log`. Do not add a new comments table and do not overload attachment captions with the note.
 
 - [ ] **Step 8: Wire dialog close buttons**
 
@@ -773,15 +773,37 @@ document.querySelectorAll("[data-task-dialog-close]").forEach((button) => {
 - [ ] **Step 9: Run tests**
 
 ```powershell
-node --test tasks/tests/task-controller-contract.test.mjs tasks/tests/task-view.test.mjs
+node --test tasks/tests/task-controller-contract.test.mjs tasks/tests/task-view.test.mjs tasks/tests/task-edge-contract.test.mjs tasks/tests/task-sql.test.mjs
 ```
 
 Expected: pass.
 
-- [ ] **Step 10: Commit**
+- [ ] **Step 10: Add the minimal backend extension if needed**
+
+If `assets/js/tasks/task-api.js` and `supabase/functions/task-complete/index.ts` do not already forward an attach note, update them so:
+
+```js
+attach: (applicationId, attachments = [], supplementNote = "") => invokeCompletion("attach", {
+  applicationId,
+  attachments,
+  supplementNote,
+})
+```
+
+and the Edge Function guards `supplementNote` before calling the service-only RPC. Add or extend an RPC in `supabase/modules/tasks.sql`, synchronized into `supabase/schema.sql`, that inserts a `task_activity_log` row with event type `supplemented` and the guarded note. Browser roles must not receive direct execution privileges for the RPC.
+
+- [ ] **Step 11: Run backend contract tests**
 
 ```powershell
-git add tasks/my/index.html assets/js/tasks/task-my.js tasks/tests/task-controller-contract.test.mjs
+node --test tasks/tests/task-api.test.mjs tasks/tests/task-edge-contract.test.mjs tasks/tests/task-sql.test.mjs tests/functions/content-coverage.test.mjs
+```
+
+Expected: pass.
+
+- [ ] **Step 12: Commit**
+
+```powershell
+git add tasks/my/index.html assets/js/tasks/task-my.js assets/js/tasks/task-api.js supabase/functions/task-complete/index.ts supabase/modules/tasks.sql supabase/schema.sql tasks/tests/task-controller-contract.test.mjs tasks/tests/task-api.test.mjs tasks/tests/task-edge-contract.test.mjs tasks/tests/task-sql.test.mjs
 git commit -m "feat: add task supplement workflow"
 ```
 
