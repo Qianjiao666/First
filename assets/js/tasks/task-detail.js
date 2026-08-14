@@ -94,12 +94,12 @@ function renderTimeline(events) {
   container.replaceChildren(...rows);
 }
 
-function renderNextStep(rawTask, availableCapabilities = []) {
+function renderNextStep(rawTask, availableCapabilities = [], viewer = null) {
   const panel = detail.querySelector("[data-task-next-step]");
   if (!panel) return;
   const actor = availableCapabilities.includes("task:manage") || availableCapabilities.includes("tasks:manage")
     ? "admin"
-    : "visitor";
+    : viewer ? "applicant" : "visitor";
   const action = taskNextAction(rawTask, actor, availableCapabilities);
   panel.querySelector("[data-task-next-step-label]").textContent = action.label;
   panel.querySelector("[data-task-next-step-note]").textContent = action.disabledReason || taskCollaborationStage(rawTask);
@@ -215,7 +215,7 @@ async function bootstrap() {
     const result = await services.api.getDetail(taskId);
     const rawTask = result?.task ?? result;
     renderTask(rawTask, result?.relatedPosts ?? []);
-    renderNextStep(rawTask, capabilities);
+    renderNextStep(rawTask, capabilities, user);
     const [timelineResult, attachmentResult] = await Promise.allSettled([
       services.api.getTimeline(taskId),
       services.api.getAttachments(taskId),

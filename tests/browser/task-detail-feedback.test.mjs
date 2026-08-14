@@ -20,3 +20,9 @@ test("task detail exposes next-step and collaboration activity slots", async () 
   assert.match(source, /data-task-next-step/);
   assert.match(source, /data-task-activity/);
 });
+
+test("task detail treats signed-in non-manager viewers as applicants for next step", () => {
+  assert.match(source, /function renderNextStep\(rawTask, availableCapabilities = \[\], viewer = null\)/);
+  assert.match(source, /viewer\s*\?\s*"applicant"\s*:\s*"visitor"/);
+  assert.match(source, /renderNextStep\(rawTask, capabilities, user\)/);
+});
