@@ -952,6 +952,44 @@ begin
 end;
 $$;
 
+create or replace function public.record_task_supplement(p_actor_id uuid, p_application_id uuid, p_filtered_supplement_note text)
+returns uuid
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  v_application public.task_applications;
+begin
+  if p_actor_id is null then
+    raise exception using errcode = 'P0001', message = 'Trusted task actor is required.';
+  end if;
+  select * into v_application
+  from public.task_applications
+  where id = p_application_id
+    and applicant_id = p_actor_id
+    and status = 'submitted'
+  for update;
+  if not found then
+    raise exception using errcode = 'P0001', message = 'Submitted application not found.';
+  end if;
+  if char_length(trim(p_filtered_supplement_note)) < 1 then
+    raise exception using errcode = '22023', message = 'Supplement note is required.';
+  end if;
+
+  return public.write_task_activity(
+    p_actor_id,
+    v_application.task_id,
+    'supplemented',
+    v_application.id,
+    v_application.status,
+    v_application.status,
+    jsonb_build_object('note', trim(p_filtered_supplement_note)),
+    format('task:%s:application:%s:supplement:%s', v_application.task_id, v_application.id, gen_random_uuid())
+  );
+end;
+$$;
+
 create or replace function public.task_listing_activity_trigger()
 returns trigger
 language plpgsql
@@ -1462,6 +1500,7 @@ revoke all on function public.register_task_attachment(uuid, jsonb) from public,
 revoke all on function public.delete_task_attachment(uuid, uuid) from public, anon, authenticated;
 revoke all on function public.assert_task_admin(uuid) from public, anon, authenticated;
 revoke all on function public.open_task_arbitration(uuid, uuid, text) from public, anon, authenticated;
+revoke all on function public.record_task_supplement(uuid, uuid, text) from public, anon, authenticated;
 revoke all on function public.admin_force_complete_task(uuid, uuid, text, text) from public, anon, authenticated;
 revoke all on function public.admin_cancel_task_refund(uuid, uuid, text) from public, anon, authenticated;
 revoke all on function public.admin_edit_task(uuid, uuid, jsonb, text) from public, anon, authenticated;
@@ -1471,6 +1510,7 @@ grant execute on function public.record_task_activity(uuid, uuid, text, uuid, te
 grant execute on function public.register_task_attachment(uuid, jsonb) to service_role;
 grant execute on function public.delete_task_attachment(uuid, uuid) to service_role;
 grant execute on function public.open_task_arbitration(uuid, uuid, text) to service_role;
+grant execute on function public.record_task_supplement(uuid, uuid, text) to service_role;
 grant execute on function public.admin_force_complete_task(uuid, uuid, text, text) to service_role;
 grant execute on function public.admin_cancel_task_refund(uuid, uuid, text) to service_role;
 grant execute on function public.admin_edit_task(uuid, uuid, jsonb, text) to service_role;

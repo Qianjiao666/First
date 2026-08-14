@@ -75,3 +75,14 @@ test("task-complete guards review text before any attachment registration write"
   assert.ok(attachmentWrite >= 0, "attachment registration must exist in the complete branch");
   assert.ok(reviewGuard < attachmentWrite, "review content must be guarded before attachment records are written");
 });
+
+test("task-complete guards supplement notes before recording activity", async () => {
+  const source = await read("supabase/functions/task-complete/index.ts");
+  const attachBranch = source.slice(source.indexOf('if (action === "attach")'), source.indexOf('if (action === "arbitrate")'));
+  const noteGuard = attachBranch.indexOf('filterUserText(asString(payload.supplementNote, "supplementNote"), 1_200)');
+  const activityWrite = attachBranch.indexOf('"record_task_supplement"');
+
+  assert.ok(noteGuard >= 0, "supplement note guard must exist in the attach branch");
+  assert.ok(activityWrite >= 0, "supplement activity RPC must be called in the attach branch");
+  assert.ok(noteGuard < activityWrite, "supplement note must be guarded before the activity log write");
+});

@@ -1,20 +1,31 @@
 import { buildTaskDetailUrl, hasTaskCapability, taskActionForApplication } from "./task-domain.js";
 import { asItems, createTaskServices, mountTaskChrome, requireAuthenticatedAction, showTaskMessage, taskErrorMessage } from "./task-common.js";
 import { validateTaskAttachment } from "./task-attachments.js";
-import { formatTaskDeadline, getApplicationGroup, statusLabel } from "./task-view.js";
+import { canSupplementApplication, formatTaskDeadline, getApplicationGroup, statusLabel } from "./task-view.js";
 import { guardFormData } from "../security/form-guard.js";
 
 const services = createTaskServices();
 const list = document.querySelector("[data-task-my-list]");
 const message = document.querySelector("[data-task-message]");
 const dialog = document.querySelector("#task-submit-dialog");
+const supplementDialog = document.querySelector("#task-supplement-dialog");
 let applications = [];
 let activeGroup = "active";
 let capabilities = [];
 
+function actionGroupFor(application) {
+  if (["accepted", "submitted"].includes(application.status)) return "needs-action";
+  if (["pending"].includes(application.status)) return "in-progress";
+  return "history";
+}
+
 function renderApplications() {
   const template = document.querySelector("#task-my-item-template");
-  const filtered = applications.filter((item) => getApplicationGroup(item.status) === activeGroup);
+  const groupTargets = new Map([...document.querySelectorAll("[data-task-group-list]")]
+    .map((node) => [node.dataset.taskGroupList, node]));
+  groupTargets.forEach((node) => node.replaceChildren());
+  const groupedView = groupTargets.size > 0;
+  const filtered = groupedView ? applications : applications.filter((item) => getApplicationGroup(item.status) === activeGroup);
   const fragments = filtered.map((application) => {
     const fragment = template.content.cloneNode(true);
     const task = application.task ?? application.task_listing ?? {};
@@ -49,13 +60,28 @@ function renderApplications() {
           showTaskMessage(message, taskErrorMessage(error), "error");
         }
       });
-      if (hasTaskCapability(capabilities, "submit")) fragment.querySelector("[data-task-actions]").append(submitButton);
-      if (hasTaskCapability(capabilities, "submit")) fragment.querySelector("[data-task-actions]").append(cancelButton);
+      fragment.querySelector("[data-task-actions]").append(submitButton, cancelButton);
+    }
+    if (canSupplementApplication(application) && hasTaskCapability(capabilities, "submit")) {
+      const supplementButton = document.createElement("button");
+      supplementButton.className = "task-button task-button-secondary";
+      supplementButton.type = "button";
+      supplementButton.textContent = "补充交付";
+      supplementButton.addEventListener("click", () => {
+        supplementDialog.querySelector("[name='applicationId']").value = application.id;
+        supplementDialog.querySelector("[name='taskId']").value = application.task_id ?? task.id ?? "";
+        supplementDialog.showModal();
+      });
+      fragment.querySelector("[data-task-actions]").append(supplementButton);
+    }
+    if (groupedView) {
+      (groupTargets.get(actionGroupFor(application)) ?? list).append(fragment);
+      return null;
     }
     return fragment;
   });
 
-  list.replaceChildren(...fragments);
+  list.replaceChildren(...fragments.filter(Boolean));
   if (!filtered.length) showTaskMessage(message, "当前分类下没有任务记录。");
 }
 
@@ -71,6 +97,26 @@ async function loadApplications() {
   } finally {
     list.setAttribute("aria-busy", "false");
   }
+}
+
+async function uploadFiles(files, taskId, userId, prefix = "") {
+  const uploaded = [];
+  for (const [index, file] of files.entries()) {
+    uploaded.push(await services.api.uploadAttachment({
+      userId,
+      resourceId: taskId,
+      objectId: `${prefix}${Date.now()}-${index}`,
+      file,
+    }));
+  }
+  return uploaded;
+}
+
+function validateFiles(files, formMessage) {
+  const invalid = files.find((file) => !validateTaskAttachment(file).ok);
+  if (!invalid) return true;
+  formMessage.textContent = `附件 ${invalid.name} 不符合图片/视频和 50 MB 限制。`;
+  return false;
 }
 
 async function bootstrap() {
@@ -103,26 +149,14 @@ async function bootstrap() {
     const formMessage = form.querySelector("[data-task-form-message]");
     const data = new FormData(form);
     const files = [...(form.elements.namedItem("attachments")?.files ?? [])];
-    const invalid = files.find((file) => !validateTaskAttachment(file).ok);
-    if (invalid) {
-      formMessage.textContent = `附件 ${invalid.name} 不符合图片/视频和 50 MB 限制。`;
-      return;
-    }
+    if (!validateFiles(files, formMessage)) return;
     try {
       await requireAuthenticatedAction(services.runtime, "提交任务");
       const guarded = guardFormData(form, ["submissionNote"], formMessage);
       const applicationId = String(data.get("applicationId"));
       const taskId = String(data.get("taskId") ?? "");
       const userId = user.userId ?? user.id;
-      const uploaded = [];
-      for (const [index, file] of files.entries()) {
-        uploaded.push(await services.api.uploadAttachment({
-          userId,
-          resourceId: taskId,
-          objectId: `${Date.now()}-${index}`,
-          file,
-        }));
-      }
+      const uploaded = await uploadFiles(files, taskId, userId);
       await services.api.submit(applicationId, guarded.values.submissionNote.trim(), uploaded);
       if (uploaded.length) await services.api.attach(applicationId, uploaded);
       dialog.close();
@@ -132,6 +166,34 @@ async function bootstrap() {
     } catch (error) {
       formMessage.textContent = taskErrorMessage(error);
     }
+  });
+
+  document.querySelector("[data-task-supplement-form]")?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const formMessage = form.querySelector("[data-task-form-message]");
+    const data = new FormData(form);
+    const files = [...(form.elements.namedItem("attachments")?.files ?? [])];
+    if (!validateFiles(files, formMessage)) return;
+    try {
+      await requireAuthenticatedAction(services.runtime, "补充任务交付");
+      const guarded = guardFormData(form, ["supplementNote"], formMessage);
+      const applicationId = String(data.get("applicationId"));
+      const taskId = String(data.get("taskId") ?? "");
+      const userId = user.userId ?? user.id;
+      const uploaded = await uploadFiles(files, taskId, userId, "supplement-");
+      await services.api.attach(applicationId, uploaded, guarded.values.supplementNote.trim());
+      supplementDialog.close();
+      form.reset();
+      await loadApplications();
+      showTaskMessage(message, "补充交付已提交。", "info");
+    } catch (error) {
+      formMessage.textContent = taskErrorMessage(error);
+    }
+  });
+
+  document.querySelectorAll("[data-task-dialog-close]").forEach((button) => {
+    button.addEventListener("click", () => button.closest("dialog")?.close());
   });
 
   await loadApplications();

@@ -31,6 +31,18 @@
         <button class="task-tab" type="button" role="tab" aria-selected="false" data-task-tab="closed">其他</button>
       </div>
 
+      <section class="task-action-group" data-task-group-needs-action>
+        <h2>需要我处理</h2>
+        <div data-task-group-list="needs-action"></div>
+      </section>
+      <section class="task-action-group" data-task-group-in-progress>
+        <h2>进行中</h2>
+        <div data-task-group-list="in-progress"></div>
+      </section>
+      <section class="task-action-group" data-task-group-history>
+        <h2>历史记录</h2>
+        <div data-task-group-list="history"></div>
+      </section>
       <section class="task-my-list" data-task-my-list aria-live="polite" aria-busy="true"></section>
     </main>
 
@@ -46,6 +58,21 @@
         <p class="task-field-hint">仅支持图片或视频，单个文件不超过 50 MB。</p>
         <p class="task-form-message" data-task-form-message role="status"></p>
         <button class="task-button task-button-primary task-full-button" type="submit">提交核验</button>
+      </form>
+    </dialog>
+
+    <dialog id="task-supplement-dialog" class="task-dialog">
+      <form method="dialog" data-task-supplement-form>
+        <input type="hidden" name="applicationId" />
+        <input type="hidden" name="taskId" />
+        <h2>补充交付</h2>
+        <label><span>补充说明</span><textarea name="supplementNote" required maxlength="1200" rows="6"></textarea></label>
+        <label><span>补充附件</span><input type="file" name="attachments" accept="image/*,video/*" multiple /></label>
+        <p class="task-form-message" data-task-form-message role="status"></p>
+        <div class="task-dialog-actions">
+          <button class="task-button task-button-secondary" type="button" data-task-dialog-close>取消</button>
+          <button class="task-button task-button-primary" type="submit">提交补充</button>
+        </div>
       </form>
     </dialog>
 

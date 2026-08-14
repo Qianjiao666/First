@@ -93,6 +93,51 @@ test("application rejection and cancellation use their approved edge functions",
   ]);
 });
 
+test("supplement attachment writes include the guarded supplement note", async () => {
+  const calls = [];
+  const api = createTaskApi({
+    queryTasks: async () => ({ items: [] }),
+    invokeTaskFunction: async (request) => {
+      calls.push(request);
+      return { data: { attachmentIds: ["attachment-1"] } };
+    },
+  });
+
+  await api.attach("application-1", [{ id: "attachment-1" }], "补充了交付说明。");
+
+  assert.deepEqual(calls, [{
+    functionName: "task-complete",
+    action: "attach",
+    body: {
+      applicationId: "application-1",
+      attachments: [{ id: "attachment-1" }],
+      supplementNote: "补充了交付说明。",
+    },
+  }]);
+});
+
+test("empty supplement notes are omitted from attach writes", async () => {
+  const calls = [];
+  const api = createTaskApi({
+    queryTasks: async () => ({ items: [] }),
+    invokeTaskFunction: async (request) => {
+      calls.push(request);
+      return { data: { attachmentIds: [] } };
+    },
+  });
+
+  await api.attach("application-1", [], "   ");
+
+  assert.deepEqual(calls, [{
+    functionName: "task-complete",
+    action: "attach",
+    body: {
+      applicationId: "application-1",
+      attachments: [],
+    },
+  }]);
+});
+
 test("admin editors read existing tasks through a separate privileged detail scope", async () => {
   const calls = [];
   const api = createTaskApi({

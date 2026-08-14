@@ -48,6 +48,14 @@ test("task SQL exposes service-only reject and cancel application transitions", 
   assert.match(sql, /grant execute on function public\.cancel_application\(uuid, uuid\) to service_role/);
 });
 
+test("task SQL records supplement notes through a service-only activity RPC", async () => {
+  const sql = await readFile(sqlPath, "utf8");
+  assert.match(sql, /create or replace function public\.record_task_supplement\(p_actor_id uuid, p_application_id uuid, p_filtered_supplement_note text\)/);
+  assert.match(sql, /insert into public\.task_activity_log[\s\S]*'supplemented'/);
+  assert.match(sql, /revoke all on function public\.record_task_supplement\(uuid, uuid, text\) from public, anon, authenticated/);
+  assert.match(sql, /grant execute on function public\.record_task_supplement\(uuid, uuid, text\) to service_role/);
+});
+
 test("task capability extension documents the approved action markers", async () => {
   const sql = await readFile(sqlPath, "utf8");
   for (const capability of ["tasks:create", "tasks:apply", "tasks:manageCategories"]) {

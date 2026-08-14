@@ -116,8 +116,20 @@ Deno.serve(async (request) => {
     }
 
     if (action === "attach") {
+      const supplementNote = payload.supplementNote
+        ? filterUserText(asString(payload.supplementNote, "supplementNote"), 1_200)
+        : null;
       const result = await registerAttachments(client, context.userId, payload);
-      return jsonResponse({ data: { attachmentIds: result.registered }, warnings: result.warnings });
+      const warnings = new Set(result.warnings);
+      supplementNote?.matches.forEach((match) => warnings.add(match));
+      if (supplementNote) {
+        await callTaskRpc(client, "record_task_supplement", {
+          p_actor_id: context.userId,
+          p_application_id: asString(payload.applicationId, "applicationId"),
+          p_filtered_supplement_note: supplementNote.text,
+        });
+      }
+      return jsonResponse({ data: { attachmentIds: result.registered }, warnings: [...warnings] });
     }
 
     if (action === "arbitrate") {

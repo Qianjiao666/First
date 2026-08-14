@@ -72,9 +72,10 @@ export function createTaskApi({ queryTasks, invokeTaskFunction, uploadTaskAttach
       ...(completionNote ? { completionNote } : {}),
       ...(Array.isArray(attachments) && attachments.length ? { attachments } : {}),
     }),
-    attach: (applicationId, attachments = []) => invokeCompletion("attach", {
+    attach: (applicationId, attachments = [], supplementNote = "") => invokeCompletion("attach", {
       applicationId,
       attachments,
+      ...(String(supplementNote).trim() ? { supplementNote: String(supplementNote).trim() } : {}),
     }),
     registerTaskAttachments: async (taskId, attachments = []) => {
       const registered = [];

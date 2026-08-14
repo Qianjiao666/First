@@ -89,3 +89,14 @@ test("task plaza forwards collaboration filters without losing existing filters"
   assert.match(source, /data-task-filter-skill-tags/);
   assert.match(source, /skillTags/);
 });
+
+test("my tasks supports action grouping and supplement delivery", async () => {
+  const html = await readFile("tasks/my/index.html", "utf8");
+  assert.match(html, /data-task-group-needs-action/);
+  assert.match(html, /task-supplement-dialog/);
+  assert.match(html, /name="supplementNote"/);
+  const source = await readFile("assets/js/tasks/task-my.js", "utf8");
+  assert.match(source, /canSupplementApplication/);
+  assert.match(source, /services\.api\.attach/);
+  assert.match(source, /supplementNote/);
+});
