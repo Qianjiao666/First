@@ -43,12 +43,23 @@
               <h2>进度时间轴</h2>
               <ol class="task-timeline" data-task-timeline aria-live="polite"><li>正在读取进度。</li></ol>
             </section>
+            <section class="task-activity-panel" aria-labelledby="task-activity-title">
+              <div class="task-section-heading">
+                <h2 id="task-activity-title">协作动态</h2>
+              </div>
+              <ol class="task-activity-list" data-task-activity aria-live="polite"></ol>
+            </section>
             <section>
               <h2>相关讨论</h2>
               <div class="task-related-posts" data-task-related-posts><p>暂无关联讨论。</p></div>
             </section>
           </div>
           <aside class="task-action-panel">
+            <aside class="task-next-step" data-task-next-step aria-live="polite">
+              <p class="task-kicker">NEXT STEP / 下一步</p>
+              <strong data-task-next-step-label>正在判断</strong>
+              <span data-task-next-step-note></span>
+            </aside>
             <dl>
               <div><dt>截止时间</dt><dd data-task-deadline>--</dd></div>
               <div><dt>可接人数</dt><dd data-task-capacity>--</dd></div>

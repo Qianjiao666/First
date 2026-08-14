@@ -1,6 +1,15 @@
 import { hasTaskCapability, parseTaskId } from "./task-domain.js";
 import { asItems, createTag, createTaskServices, mountTaskChrome, requireAuthenticatedAction, showTaskMessage, taskErrorMessage } from "./task-common.js";
-import { formatTaskDeadline, normalizeTaskTimeline, statusLabel, taskTimelineLabel, toTaskListingModel } from "./task-view.js";
+import {
+  formatTaskDeadline,
+  normalizeTaskTimeline,
+  statusLabel,
+  taskCollaborationStage,
+  taskNextAction,
+  taskTimelineLabel,
+  toActivitySummary,
+  toTaskListingModel,
+} from "./task-view.js";
 import { guardFormData } from "../security/form-guard.js";
 
 const services = createTaskServices();
@@ -8,6 +17,7 @@ const message = document.querySelector("[data-task-message]");
 const detail = document.querySelector("[data-task-detail]");
 const dialog = document.querySelector("#task-apply-dialog");
 const taskId = parseTaskId(window.location.search);
+let capabilities = [];
 
 function setText(selector, value) {
   detail.querySelector(selector).textContent = value;
@@ -84,6 +94,46 @@ function renderTimeline(events) {
   container.replaceChildren(...rows);
 }
 
+function renderNextStep(rawTask, availableCapabilities = []) {
+  const panel = detail.querySelector("[data-task-next-step]");
+  if (!panel) return;
+  const actor = availableCapabilities.includes("task:manage") || availableCapabilities.includes("tasks:manage")
+    ? "admin"
+    : "visitor";
+  const action = taskNextAction(rawTask, actor, availableCapabilities);
+  panel.querySelector("[data-task-next-step-label]").textContent = action.label;
+  panel.querySelector("[data-task-next-step-note]").textContent = action.disabledReason || taskCollaborationStage(rawTask);
+  panel.dataset.taskNextAction = action.key;
+}
+
+function renderActivity(events, attachments = []) {
+  const container = detail.querySelector("[data-task-activity]");
+  if (!container) return;
+  const summaries = normalizeTaskTimeline(events).map((event) => toActivitySummary(event, attachments));
+  if (!summaries.length) {
+    const item = document.createElement("li");
+    item.textContent = "暂无协作动态。";
+    container.replaceChildren(item);
+    return;
+  }
+  container.replaceChildren(...summaries.map((event) => {
+    const item = document.createElement("li");
+    item.className = "task-activity-item";
+    const label = document.createElement("strong");
+    label.textContent = event.label;
+    const meta = document.createElement("span");
+    meta.textContent = [
+      event.actor,
+      event.at ? formatTaskDeadline(event.at) : "",
+      event.attachmentCount ? `${event.attachmentCount} 个附件` : "",
+    ].filter(Boolean).join(" · ");
+    const note = document.createElement("p");
+    note.textContent = event.note || "无补充说明。";
+    item.append(label, meta, note);
+    return item;
+  }));
+}
+
 function renderTask(rawTask, relatedPosts) {
   const task = toTaskListingModel(rawTask);
   setText("[data-task-category]", task.categoryName);
@@ -134,8 +184,10 @@ async function bootstrap() {
   let canApply = false;
   if (user) {
     try {
-      canApply = hasTaskCapability(await services.runtime.getCapabilities(), "apply");
+      capabilities = await services.runtime.getCapabilities();
+      canApply = hasTaskCapability(capabilities, "apply");
     } catch {
+      capabilities = [];
       canApply = false;
     }
   }
@@ -161,13 +213,18 @@ async function bootstrap() {
 
   try {
     const result = await services.api.getDetail(taskId);
-    renderTask(result?.task ?? result, result?.relatedPosts ?? []);
+    const rawTask = result?.task ?? result;
+    renderTask(rawTask, result?.relatedPosts ?? []);
+    renderNextStep(rawTask, capabilities);
     const [timelineResult, attachmentResult] = await Promise.allSettled([
       services.api.getTimeline(taskId),
       services.api.getAttachments(taskId),
     ]);
-    renderTimeline(timelineResult.status === "fulfilled" ? timelineResult.value : []);
-    renderAttachments(attachmentResult.status === "fulfilled" ? attachmentResult.value : []);
+    const timelineItems = timelineResult.status === "fulfilled" ? timelineResult.value : [];
+    const attachmentItems = attachmentResult.status === "fulfilled" ? attachmentResult.value : [];
+    renderTimeline(timelineItems);
+    renderAttachments(attachmentItems);
+    renderActivity(timelineItems, attachmentItems);
   } catch (error) {
     detail.setAttribute("aria-busy", "false");
     showTaskMessage(message, taskErrorMessage(error), "error");
