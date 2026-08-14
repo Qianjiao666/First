@@ -39,6 +39,7 @@ async function runAdminAction(action, id, taskId = id, userId = "", options = {}
   const reason = options.reason ?? "";
   const targetUserId = options.userId ?? userId;
   const applicationId = options.applicationId ?? id;
+  const effectiveTaskId = taskId || id;
   const methods = {
     publish: () => services.api.publish(id),
     close: () => services.api.close(id),
@@ -46,13 +47,13 @@ async function runAdminAction(action, id, taskId = id, userId = "", options = {}
     delete: () => services.api.remove(id),
     assign: () => services.api.assign(id),
     reject: () => services.api.reject(id),
-    arbitrateForce: () => services.api.forceComplete(taskId, reason),
-    arbitrateForceApplication: () => services.api.forceComplete(taskId, reason, {
+    arbitrateForce: () => services.api.forceComplete(effectiveTaskId, reason),
+    arbitrateForceApplication: () => services.api.forceComplete(effectiveTaskId, reason, {
       applicationId,
       completionNote: reason,
     }),
     arbitrateRefund: () => services.api.cancelRefund(id, reason),
-    arbitrateDeduct: () => services.api.deductReputation(taskId, 1, reason, targetUserId ? { userId: targetUserId } : {}),
+    arbitrateDeduct: () => services.api.deductReputation(effectiveTaskId, 1, reason, targetUserId ? { userId: targetUserId } : {}),
   };
   if (methods[action]) await methods[action]();
 }

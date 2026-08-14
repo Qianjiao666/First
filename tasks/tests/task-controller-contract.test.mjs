@@ -108,3 +108,9 @@ test("admin task arbitration uses a validated dialog instead of prompt", async (
   assert.match(source, /reasonCategory/);
   assert.match(source, /reasonDetails/);
 });
+
+test("admin task reputation arbitration keeps a task id fallback", async () => {
+  const source = await readFile("assets/js/tasks/task-admin.js", "utf8");
+  assert.match(source, /const effectiveTaskId = taskId \|\| id/);
+  assert.match(source, /deductReputation\(effectiveTaskId, 1, reason/);
+});
