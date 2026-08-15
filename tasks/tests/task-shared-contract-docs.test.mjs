@@ -46,3 +46,27 @@ test("task scope contract defines envelopes, search, guards, and reachable actio
   assert.match(source, /manageCategories/);
   assert.match(source, /rating.*content/s);
 });
+
+test("task documentation names collaborative templates, eligibility, workspaces, and browser transports", async () => {
+  const documents = await Promise.all([
+    read("docs/task-publishing/CONTRACT.md"),
+    read("docs/task-publishing/EDGE_API.md"),
+  ]);
+  const source = documents.join("\n");
+
+  for (const contractName of [
+    "task_templates",
+    "get_task_publishing_eligibility",
+    "task_conversations",
+    "task_member_assignments",
+    "task_peer_reviews",
+    "task-collaboration",
+    "getTemplates",
+    "getPublishingEligibility",
+    "sendMessage",
+    "assignMember",
+    "submitPeerReview",
+  ]) {
+    assert.match(source, new RegExp(contractName));
+  }
+});
