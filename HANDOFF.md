@@ -462,3 +462,17 @@ Supabase service_role key 或数据库密码
 - Validation complete: 37/37 business/session/filter/XSS tests, 19/19 security/redeem/static-audit tests, and 25/25 visual/version/page-shell tests passed.
 - Impeccable detector completed in degraded regex mode because parser modules are unavailable. Its remaining advisory warnings cover the intentionally approved map grid and v1.2 tonal/type ramps documented in `DESIGN.md`; no blocking runtime issue was reported.
 - Preview: `http://127.0.0.1:4174/`, with representative routes at `/forum/` and `/tasks/`.
+
+## 13. v1.2 production deployment completed (2026-08-15)
+
+- Tencent CVM `ins-6xonyz5y` now serves static release `20260815` / `v1.2` from `/var/www/MKJ`; no backend, Supabase schema, migration, RLS, function, or main-site Nginx route was changed.
+- Release artifact: `deployment/MKJ-community-forum-tasks-20260815-static-v1.2.zip` (2,151,079 bytes), SHA-256 `6005A9F5CB19F861DFCBD768CFC2B73C68F6C9299D24012AB05A27D3FE113864`.
+- Cutover script SHA-256: `D254CF94ED5F317435A1264EF29FEED4EAA4C243E76546DAECFB40A6D89B7C3B`. The server-side artifact checksum returned `OK` before the atomic cutover.
+- Production manifest at `https://dsxnb.com/MKJ/RELEASE-MANIFEST.txt` reports `Release: 20260815`, `Revision: v1.2`, and `Files: 110`.
+- Live SHA-256 values match the manifest for `index.html`, `assets/css/visual-v1.2.css`, `assets/js/ui/visual-assets.js`, and `assets/images/visual-v1.2/hero/home-hero-grid.png`.
+- HTTP 200 verified for the main site, MKJ homepage, forum, tasks, shop, announcements, v1.2 CSS/JS, and the production manifest.
+- Playwright production smoke passed at 1440x1000 and 390x844: no horizontal overflow, broken visual assets, or console errors; the particle canvas is present and nonblank; forum and task routes render normally. The desktop changelog shows `v1.2` and not `v1.1`.
+- The main site `https://dsxnb.com/` retained its original title and loaded no `/MKJ/` or `visual-v1.2` resources.
+- Rollback directory: `/var/www/.mkj-community-releases/20260815-055547.previous`.
+- Pre-cutover backup archive: `/var/www/.mkj-community-releases/20260815-055547.before-v1.2-route-map.tar.gz`.
+- Production evidence: `output/playwright/production-v1.2-home-desktop-scrolled.png`, `production-v1.2-home-mobile-mid.png`, `production-v1.2-forum-desktop.png`, and `production-v1.2-tasks-desktop.png`.
