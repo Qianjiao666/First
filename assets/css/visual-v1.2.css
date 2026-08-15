@@ -1,0 +1,50 @@
+/* 航线 v1.2 Signal Horizon overlay. Presentation-only; business selectors stay intact. */
+:root {
+  --hx-radius-xs: 6px;
+  --hx-radius-md: 14px;
+  --hx-radius-xl: 24px;
+  --hx-glass: color-mix(in srgb, var(--hx-surface) 82%, transparent);
+  --hx-gradient: linear-gradient(135deg, var(--hx-blue-soft), color-mix(in srgb, var(--hx-green-soft) 70%, var(--hx-surface)));
+  --hx-ease-v12: cubic-bezier(.2,.8,.2,1);
+}
+
+html { scroll-behavior: smooth; }
+body { background-color: var(--hx-paper); }
+
+:where(button, a, input, textarea, select):focus-visible { outline: 3px solid color-mix(in srgb, var(--hx-focus) 45%, transparent); outline-offset: 3px; }
+:where(button, .mkj-button, .forum-button, .task-button, .shop-button, .announce-button, .admin-button) { border-radius: var(--hx-radius-xs); transition: transform 160ms var(--hx-ease-v12), box-shadow 160ms var(--hx-ease-v12), background-color 160ms var(--hx-ease-v12), border-color 160ms var(--hx-ease-v12); }
+:where(button, .mkj-button, .forum-button, .task-button, .shop-button, .announce-button, .admin-button):hover:not(:disabled) { transform: translateY(-2px); box-shadow: var(--hx-shadow-1); }
+:where(button, .mkj-button, .forum-button, .task-button, .shop-button, .announce-button, .admin-button):active:not(:disabled) { transform: translateY(0); box-shadow: none; }
+:where(input, textarea, select) { border-radius: var(--hx-radius-xs); min-height: 44px; transition: border-color 160ms var(--hx-ease-v12), box-shadow 160ms var(--hx-ease-v12); }
+:where(input, textarea, select):focus { border-color: var(--hx-focus); box-shadow: 0 0 0 4px color-mix(in srgb, var(--hx-focus) 15%, transparent); }
+
+:where(.mkj-header, .community-header, .forum-site-header, .task-topbar, .task-site-header, .shop-header, .announce-header, .admin-header) { backdrop-filter: blur(16px); box-shadow: 0 1px 0 var(--hx-line); }
+:where(.mkj-header-inner, .forum-site-header-inner, .task-topbar, .shop-header-inner, .announce-header-inner) { min-height: 68px; }
+:where(.mkj-logo-mark, .mkj-icon-box, .forum-category-icon, .task-icon, .shop-product-icon) { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--hx-blue) 25%, transparent), 0 8px 20px color-mix(in srgb, var(--hx-blue) 15%, transparent); }
+:where(.mkj-feature-card, .mkj-process-card, .forum-panel, .forum-post-card, .task-panel, .task-card, .shop-product-card, .announce-card, .admin-panel) { border-radius: var(--hx-radius-md); box-shadow: var(--hx-shadow-1); transition: transform 180ms var(--hx-ease-v12), box-shadow 180ms var(--hx-ease-v12), border-color 180ms var(--hx-ease-v12); }
+:where(.mkj-feature-card, .mkj-process-card, .forum-panel, .forum-post-card, .task-panel, .task-card, .shop-product-card, .announce-card, .admin-panel):hover { border-color: color-mix(in srgb, var(--hx-blue) 45%, var(--hx-line)); box-shadow: var(--hx-shadow-2); transform: translateY(-3px); }
+
+.mkj-hero { isolation: isolate; overflow: hidden; }
+.mkj-hero::after { background: url('/MKJ/assets/images/visual-v1.2/hero/home-hero-grid.png') center/cover no-repeat; content: ''; inset: 0; opacity: .28; pointer-events: none; position: absolute; z-index: -1; }
+.mkj-hero-copy, .mkj-hero-visual { position: relative; z-index: 1; }
+.forum-masthead, .forum-category-masthead { background-image: linear-gradient(90deg, color-mix(in srgb, var(--hx-inverse) 90%, transparent), color-mix(in srgb, var(--hx-inverse) 55%, transparent)), url('/MKJ/assets/images/visual-v1.2/forum/forum-header.png'); background-position: center; background-size: cover; }
+.task-main::after { background: url('/MKJ/assets/images/visual-v1.2/tasks/progress.png') right 10% center/220px no-repeat; content: ''; inset: 0; opacity: .08; pointer-events: none; position: absolute; }
+
+.visual-asset { display: block; height: auto; max-height: 220px; max-width: 100%; object-fit: contain; opacity: .92; pointer-events: none; width: 100%; }
+.visual-asset--hero { left: 0; max-height: none; opacity: .18; position: absolute; top: 0; width: 100%; z-index: -1; }
+.visual-asset--feature { aspect-ratio: 4 / 3; margin: 0 auto 14px; }
+.visual-asset--empty { margin: 0 auto 18px; max-width: 320px; }
+.visual-asset.is-failed { display: none; }
+
+html[data-theme="tech-dark"] .mkj-hero::after { opacity: .42; }
+html[data-theme="tech-dark"] :where(.mkj-feature-card, .mkj-process-card, .forum-panel, .forum-post-card, .task-panel, .task-card, .shop-product-card, .announce-card, .admin-panel) { background: linear-gradient(145deg, color-mix(in srgb, var(--hx-surface) 93%, var(--hx-blue-soft)), var(--hx-surface)); }
+
+@media (max-width: 780px) {
+  .mkj-hero::after { background-position: 68% center; opacity: .2; }
+  .visual-asset { max-height: 160px; }
+  .visual-asset--empty { max-width: 240px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  :where(button, a, .mkj-button, .forum-button, .task-button, .shop-button, .announce-button, .admin-button, .mkj-feature-card, .mkj-process-card, .forum-panel, .forum-post-card, .task-panel, .task-card, .shop-product-card, .announce-card, .admin-panel) { transition: none; }
+}

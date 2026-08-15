@@ -46,3 +46,10 @@
 
 - 增强跨页面会话、XSS 与敏感词防护、三套主题和移动端组件一致性。
 - 头像显示兼容与后端安全实现保留；头像上传入口因腾讯 IMS 账号权限尚未开通而延期，不计入本次交付验收。
+
+
+## v1.2
+
+- Added the Signal Horizon v1.2 presentation overlay with unified light/dark theme tokens, focus states, hover/active feedback, and restrained motion.
+- Added 19 local PNG technology illustrations for home, forum, tasks, profile, and empty states with lazy loading, explicit dimensions, alt text, and error fallback.
+- Preserved all business entry points, sensitive-word filtering, Supabase session behavior, API contracts, and data structures.
