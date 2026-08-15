@@ -347,6 +347,7 @@ textarea[aria-invalid="true"]{
 .mkj-footer-column h3{color:#fff;font-size:13px;margin:0 0 8px}
 .mkj-footer-column a,.mkj-footer-column span{color:#9aa5b5;font-size:12px;transition:color .2s ease}
 .mkj-footer-column a:hover{color:#fff}
+.mkj-footer-disclaimer{border-top:1px solid rgba(255,255,255,.1);color:#a9b4c5;font-size:12px;line-height:1.8;margin:48px 0 0;padding-top:22px}
 .mkj-footer-bottom{align-items:center;border-top:1px solid rgba(255,255,255,.1);display:flex;justify-content:space-between;margin-top:56px;padding-top:24px}
 .mkj-footer-bottom>span{color:#7f8a9c;font-size:11px}
 .mkj-back-top{align-items:center;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:999px;color:#dbe1eb;cursor:pointer;display:inline-flex;font-size:12px;gap:8px;min-height:44px;padding:0 16px;transition:background .2s ease,color .2s ease}
