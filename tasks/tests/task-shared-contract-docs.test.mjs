@@ -63,9 +63,15 @@ test("task documentation names collaborative templates, eligibility, workspaces,
     "task-collaboration",
     "getTemplates",
     "getPublishingEligibility",
+    "saveTemplate",
+    "savePublishingRule",
+    "savePublishingOverride",
+    "getCollaboration",
+    "getConsultation",
     "sendMessage",
     "assignMember",
     "submitPeerReview",
+    "getAuditContext",
   ]) {
     assert.match(source, new RegExp(contractName));
   }

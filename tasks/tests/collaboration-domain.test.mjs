@@ -7,5 +7,7 @@ test("campus collaboration has no money workflow", () => {
   const model = taskDomain.toCollaborativeTaskModel({ task_mode: "collaboration" });
 
   assert.equal(model.isCollaboration, true);
-  assert.equal("payment" in model, false);
+  for (const field of ["price", "payment", "escrow", "refund", "wallet", "payout", "withdraw"]) {
+    assert.equal(field in model, false);
+  }
 });
