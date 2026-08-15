@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>任务管理 - 航线后台</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/MKJ/assets/css/tasks.css" />
+    <link rel="stylesheet" href="/MKJ/assets/css/visual-v1.css?v=20260812-v1.0" />
+    <link rel="stylesheet" href="/MKJ/assets/css/visual-v1.1.css?v=20260812-v1.1" />
+    <script type="module" src="/MKJ/assets/js/theme/theme-controller.js?v=20260812-v1.1"></script>
+  </head>
+  <body class="task-page task-admin-page" data-task-admin-view="list">
+    <header class="task-topbar task-admin-topbar">
+      <a class="task-brand" href="/MKJ/admin/"><span>航</span><strong>管理后台</strong></a>
+      <nav class="task-nav" aria-label="后台导航"><a href="/MKJ/admin/">后台首页</a><a aria-current="page" href="/MKJ/admin/tasks/">任务管理</a><a href="/MKJ/forum/">论坛</a></nav>
+      <div class="task-user-slot" data-task-reputation-badge aria-live="polite"></div>
+    </header>
+
+    <main class="task-shell">
+      <section class="task-heading">
+        <div><p class="task-kicker">ADMIN / TASKS</p><h1>任务管理</h1><p>管理草稿、发布状态、申请分配与完成核验。</p></div>
+        <div class="task-heading-actions" data-task-admin-write>
+          <button class="task-button task-button-secondary" type="button" data-task-category-open>分类管理</button>
+          <a class="task-button task-button-primary" href="/MKJ/admin/tasks/edit/">新建任务</a>
+        </div>
+      </section>
+
+      <section class="task-admin-toolbar">
+        <label><span>状态</span><select data-task-admin-filter><option value="">全部</option><option value="draft">草稿</option><option value="published">已发布</option><option value="closed">已关闭</option><option value="archived">已归档</option></select></label>
+        <label class="task-search"><span>搜索</span><input type="search" data-task-admin-query placeholder="标题或能力标签" /></label>
+      </section>
+
+      <div class="task-notice" data-task-message role="status" hidden></div>
+      <section class="task-table-wrap" data-task-admin-list aria-busy="true">
+        <table class="task-table">
+          <thead><tr><th>任务</th><th>状态</th><th>申请</th><th>奖励</th><th>截止时间</th><th><span class="task-visually-hidden">操作</span></th></tr></thead>
+          <tbody data-task-admin-table-body></tbody>
+        </table>
+      </section>
+
+      <section class="task-admin-applications" data-task-admin-applications data-task-admin-write hidden>
+        <div class="task-section-heading"><h2>申请与核验</h2><button class="task-icon-button" type="button" data-task-applications-close title="关闭" aria-label="关闭申请列表">×</button></div>
+        <div data-task-applications-list></div>
+      </section>
+    </main>
+
+    <dialog class="task-dialog" id="task-review-dialog" aria-labelledby="task-review-title" data-task-admin-write>
+      <form method="dialog" class="task-dialog-close"><button aria-label="关闭评价窗口" title="关闭">×</button></form>
+      <form data-task-review-form>
+        <p class="task-kicker">REVIEW / 核验</p>
+        <h2 id="task-review-title">核验完成并评价</h2>
+        <input type="hidden" name="applicationId" />
+        <label><span>评分</span><select name="rating" required><option value="5">5 - 表现优秀</option><option value="4">4 - 符合预期</option><option value="3">3 - 基本完成</option><option value="2">2 - 仍需改进</option><option value="1">1 - 未达预期</option></select></label>
+        <label><span>评价内容</span><textarea name="content" required maxlength="1200" rows="6"></textarea></label>
+        <p class="task-form-message" data-task-form-message role="status"></p>
+        <button class="task-button task-button-primary task-full-button" type="submit">确认完成并发放奖励</button>
+      </form>
+    </dialog>
+
+    <dialog class="task-dialog task-category-dialog" id="task-category-dialog" aria-labelledby="task-category-title" data-task-admin-write>
+      <form method="dialog" class="task-dialog-close"><button aria-label="关闭分类窗口" title="关闭">×</button></form>
+      <p class="task-kicker">TAXONOMY / 分类</p>
+      <h2 id="task-category-title">任务分类管理</h2>
+      <div class="task-category-list" data-task-category-list></div>
+      <form data-task-category-form>
+        <label><span>类型</span><select name="kind"><option value="category">大类</option><option value="subcategory">子类</option></select></label>
+        <label data-task-category-parent-row hidden><span>所属大类</span><select name="categoryId" data-task-category-parent></select></label>
+        <label><span>名称</span><input name="name" required maxlength="60" /></label>
+        <label><span>标识</span><input name="slug" required maxlength="60" pattern="[a-z0-9]+(?:-[a-z0-9]+)*" placeholder="career-actions" /></label>
+        <label data-task-category-description-row><span>说明</span><textarea name="description" maxlength="280" rows="3"></textarea></label>
+        <label><span>排序</span><input name="sortOrder" type="number" value="0" step="1" /></label>
+        <label class="task-checkbox"><input name="isActive" type="checkbox" checked /><span>启用</span></label>
+        <p class="task-form-message" data-task-form-message role="status"></p>
+        <button class="task-button task-button-primary task-full-button" type="submit">保存分类</button>
+      </form>
+    </dialog>
+
+    <dialog id="task-arbitration-dialog" class="task-dialog" data-task-admin-write>
+      <form method="dialog" data-task-arbitration-form>
+        <input type="hidden" name="action" />
+        <input type="hidden" name="taskId" />
+        <input type="hidden" name="applicationId" />
+        <input type="hidden" name="userId" />
+        <h2>处理仲裁</h2>
+        <label>
+          <span>原因分类</span>
+          <select name="reasonCategory" required>
+            <option value="">请选择原因</option>
+            <option value="timeout">超时</option>
+            <option value="missing_delivery">未交付</option>
+            <option value="inappropriate_content">内容不合规</option>
+            <option value="duplicate_task">重复任务</option>
+            <option value="other">其他</option>
+          </select>
+        </label>
+        <label><span>详细原因</span><textarea name="reasonDetails" required minlength="20" maxlength="800" rows="5"></textarea></label>
+        <p class="task-form-message" data-task-form-message role="status"></p>
+        <div class="task-dialog-actions">
+          <button class="task-button task-button-secondary" type="button" data-task-dialog-close>取消</button>
+          <button class="task-button task-button-primary" type="submit">确认处理</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script src="/MKJ/assets/vendor/supabase-2.111.0.js"></script>
+    <script src="/MKJ/supabase-config.js"></script>
+    <script type="module" src="/MKJ/assets/js/core/runtime.js?v=20260812-v1.1"></script>
+    <script type="module" src="/MKJ/assets/js/core/app-shell.js?v=20260812-v1.1"></script>
+    <script type="module" src="/MKJ/assets/js/core/task-integration.js"></script>
+    <script type="module" src="/MKJ/assets/js/tasks/task-admin.js"></script>
+  </body>
+</html>

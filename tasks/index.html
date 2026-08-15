@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="航线任务广场" />
+    <title>任务广场 - 航线</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/MKJ/assets/css/tasks.css" />
+    <link rel="stylesheet" href="/MKJ/announcements/announcements.css" />
+    <link rel="stylesheet" href="/MKJ/shared/community-widgets.css" />
+    <link rel="stylesheet" href="/MKJ/assets/css/visual-v1.css?v=20260812-v1.0" />
+    <link rel="stylesheet" href="/MKJ/assets/css/visual-v1.1.css?v=20260812-v1.1" />
+    <script type="module" src="/MKJ/assets/js/theme/theme-controller.js?v=20260812-v1.1"></script>
+  </head>
+  <body class="task-page">
+    <header class="task-topbar">
+      <a class="task-brand" href="/MKJ/" aria-label="返回航线首页"><span>航</span><strong>航线</strong></a>
+      <nav class="task-nav" aria-label="任务导航">
+        <a aria-current="page" href="/MKJ/tasks/">任务广场</a>
+        <a href="/MKJ/tasks/my/">我的任务</a>
+        <a href="/MKJ/admin/">管理后台</a>
+      </nav>
+      <div class="task-user-controls">
+        <div class="task-user-slot" data-task-reputation-badge aria-live="polite"></div>
+        <div class="task-notification-slot" data-task-notification-slot></div>
+      </div>
+    </header>
+
+    <div class="task-announcement-slot" data-task-announcement-slot></div>
+
+    <main class="task-shell">
+      <section class="task-heading" aria-labelledby="task-page-title">
+        <div>
+          <p class="task-kicker">TASK EXCHANGE / 任务协作</p>
+          <h1 id="task-page-title">找到一件值得完成的事</h1>
+          <p>按方向、难度和截止时间筛选公开任务，申请后在个人任务页跟进进度。</p>
+        </div>
+        <div class="task-heading-actions"><a class="task-button task-button-secondary" href="/MKJ/tasks/create/" data-task-create-link hidden>发布任务</a><a class="task-button task-button-primary" href="/MKJ/tasks/my/">查看我的任务</a></div>
+      </section>
+
+      <section class="task-filter-band" aria-label="筛选任务">
+        <label class="task-search">
+          <span>搜索</span>
+          <input type="search" placeholder="任务标题或能力标签" data-task-filter-query />
+        </label>
+        <label>
+          <span>方向</span>
+          <select data-task-filter-category><option value="">全部方向</option></select>
+        </label>
+        <label>
+          <span>排序</span>
+          <select data-task-filter-sort>
+            <option value="published_at.desc">最新发布</option>
+            <option value="deadline_at.asc">即将截止</option>
+            <option value="reward_points.desc">奖励较高</option>
+          </select>
+        </label>
+        <label>
+          <span>状态</span>
+          <select data-task-filter-status>
+            <option value="">全部状态</option>
+            <option value="open">可申请</option>
+            <option value="closing_soon">即将截止</option>
+            <option value="in_progress">进行中</option>
+            <option value="completed">已完成</option>
+          </select>
+        </label>
+        <label>
+          <span>奖励</span>
+          <select data-task-filter-reward>
+            <option value="">不限奖励</option>
+            <option value="low">低奖励</option>
+            <option value="medium">中奖励</option>
+            <option value="high">高奖励</option>
+          </select>
+        </label>
+        <label>
+          <span>截止</span>
+          <select data-task-filter-deadline>
+            <option value="">不限截止</option>
+            <option value="this_week">本周截止</option>
+            <option value="this_month">本月截止</option>
+            <option value="none">无截止时间</option>
+          </select>
+        </label>
+        <div class="task-filter-tags" data-task-filter-skill-tags aria-label="技能标签筛选"></div>
+        <button class="task-icon-button" type="button" data-task-filter-reset title="清除筛选" aria-label="清除筛选">×</button>
+      </section>
+
+      <section class="task-content-grid">
+        <div class="task-results">
+          <div class="task-section-heading">
+            <h2>公开任务</h2>
+            <output data-task-result-count>正在读取</output>
+          </div>
+          <div class="task-notice" data-task-message role="status" hidden></div>
+          <div class="task-list" data-task-list aria-busy="true">
+            <article class="task-listing task-listing-skeleton" aria-hidden="true"></article>
+            <article class="task-listing task-listing-skeleton" aria-hidden="true"></article>
+            <article class="task-listing task-listing-skeleton" aria-hidden="true"></article>
+          </div>
+          <nav class="task-pagination" aria-label="任务分页" data-task-pagination hidden></nav>
+        </div>
+
+        <aside class="task-side-panel">
+          <h2>任务节奏</h2>
+          <dl class="task-metrics">
+            <div><dt>待申请</dt><dd data-task-metric-open>--</dd></div>
+            <div><dt>本周截止</dt><dd data-task-metric-deadline>--</dd></div>
+            <div><dt>已完成</dt><dd data-task-metric-complete>--</dd></div>
+          </dl>
+          <a class="task-text-link" href="/MKJ/forum/">进入论坛讨论 →</a>
+        </aside>
+      </section>
+    </main>
+
+    <template id="task-listing-template">
+      <article class="task-listing">
+        <div class="task-listing-main">
+          <div class="task-listing-meta"><span data-task-category></span><time data-task-deadline></time></div>
+          <h3><a data-task-title></a></h3>
+          <p data-task-summary></p>
+          <ul class="task-tag-list" data-task-tags aria-label="能力标签"></ul>
+        </div>
+        <div class="task-listing-reward"><span>奖励</span><strong data-task-reward></strong><small>声望</small></div>
+      </article>
+    </template>
+
+    <script src="/MKJ/assets/vendor/supabase-2.111.0.js"></script>
+    <script src="/MKJ/supabase-config.js"></script>
+    <script type="module" src="/MKJ/assets/js/core/runtime.js?v=20260812-v1.1"></script>
+    <script type="module" src="/MKJ/assets/js/core/app-shell.js?v=20260812-v1.1"></script>
+    <script type="module" src="/MKJ/shared/community-widgets.js"></script>
+    <script type="module" src="/MKJ/assets/js/core/task-integration.js"></script>
+    <script type="module" src="/MKJ/assets/js/tasks/task-list.js"></script>
+  </body>
+</html>

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="在航线论坛发起新讨论。" />
+    <title>发起讨论｜航线论坛</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/MKJ/styles.css?v=20260811-r8.1" />
+    <link rel="stylesheet" href="/MKJ/assets/css/global-modules.css" />
+    <link rel="stylesheet" href="/MKJ/assets/css/forum.css?v=20260811-r8.1" />
+    <link rel="stylesheet" href="/MKJ/forum/forum.css" />
+    <link rel="stylesheet" href="/MKJ/assets/css/visual-v1.css?v=20260812-v1.0" />
+    <link rel="stylesheet" href="/MKJ/assets/css/visual-v1.1.css?v=20260812-v1.1" />
+    <script type="module" src="/MKJ/assets/js/theme/theme-controller.js?v=20260812-v1.1"></script>
+  </head>
+  <body data-forum-page="new">
+    <header class="forum-site-header">
+      <div class="forum-site-header-inner">
+        <a class="forum-brand" href="/MKJ/" aria-label="航线首页"><span class="forum-brand-mark" aria-hidden="true">航</span><span><strong>航线</strong><small>CAREER CALIBRATION</small></span></a>
+        <nav class="forum-site-nav" aria-label="主导航"><a aria-current="page" href="/MKJ/forum/">论坛</a><a href="/MKJ/tasks/">任务广场</a><a href="/MKJ/#assessment">评估工具</a><a class="forum-account-link" data-forum-account-link data-forum-account-state="signed-out" href="/MKJ/#account" aria-label="登录或注册航线账号">登录 / 注册</a></nav>
+      </div>
+    </header>
+
+    <main class="forum-editor-page">
+      <div class="forum-container forum-editor-layout">
+        <section class="forum-editor-main">
+          <a class="forum-breadcrumb" href="/MKJ/forum/">论坛广场</a>
+          <p class="forum-kicker">NEW DISCUSSION</p>
+          <h1>把问题讲具体，<em>答案才会靠近。</em></h1>
+          <p class="forum-editor-intro">说明你的背景、已经尝试过的办法和真正卡住的地方。敏感内容会按全站规则处理。</p>
+          <form class="forum-editor-form" data-forum-new-form>
+            <label><span>讨论分类</span><select name="categoryId" required><option value="">请选择一个分类</option></select></label>
+            <label><span>标题</span><input name="title" type="text" minlength="4" maxlength="160" required placeholder="用一句话说明你正在解决的问题" /></label>
+            <label><span>具体情况</span><textarea name="content" rows="11" minlength="10" maxlength="20000" required placeholder="背景、已有动作、问题和你希望得到的帮助。"></textarea></label>
+            <fieldset><legend>关联标签</legend><div class="forum-tag-choices" data-forum-tags></div></fieldset>
+            <div class="forum-form-actions"><span data-forum-status hidden></span><a class="forum-button forum-button-secondary" href="/MKJ/forum/">取消</a><button class="forum-button forum-button-primary" type="submit">发布讨论 <span aria-hidden="true">→</span></button></div>
+          </form>
+        </section>
+        <aside class="forum-editor-aside"><span>写作准则</span><ol><li>只写可复现的真实经历。</li><li>避免发布他人的私密信息。</li><li>发布后可继续在评论中补充。</li></ol></aside>
+      </div>
+    </main>
+
+    <footer class="forum-site-footer"><div class="forum-container"><span>© 2026 航线</span><a href="/MKJ/forum/">返回论坛广场</a></div></footer>
+    <script src="/MKJ/assets/vendor/supabase-2.111.0.js"></script>
+    <script src="/MKJ/supabase-config.js"></script>
+    <script type="module" src="/MKJ/assets/js/core/runtime.js?v=20260812-v1.1"></script>
+    <script type="module" src="/MKJ/assets/js/core/app-shell.js?v=20260812-v1.1"></script>
+    <!-- legacy contract path: /MKJ/assets/js/forum/forum-events.js -->
+    <script type="module" src="/MKJ/forum/forum-events.js?v=20260811-r8.1"></script>
+  </body>
+</html>

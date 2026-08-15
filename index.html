@@ -5,7 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="航线求职竞争力评估工具：用 3 分钟校准你的求职准备度，并获得下一步提升建议。" />
     <title>航线｜别猜未来，现在就校准</title>
-    <link rel="stylesheet" href="/MKJ/styles.css" />
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/MKJ/styles.css?v=20260814-v1.2" />
+    <link rel="stylesheet" href="/MKJ/assets/css/global-modules.css" />
+    <link rel="stylesheet" href="/MKJ/assets/css/visual-v1.css?v=20260814-v1.2" />
+    <link rel="stylesheet" href="/MKJ/assets/css/visual-v1.1.css?v=20260814-v1.2" />
+    <script type="module" src="/MKJ/assets/js/theme/theme-controller.js?v=20260814-v1.2"></script>
   </head>
   <body>
     <!-- THESIS: 方向 A。OWN-WORLD: 航线视觉底座。STORY: token 先行。FIRST VIEWPORT: 保留首屏与导航顺序。FORM: 保留按钮拓扑与可达性。FINISH: 只改样式与注释，不动文案、DOM 顺序和功能。 -->
@@ -25,7 +30,8 @@
           <a class="mkj-nav-link" href="#team">团队</a>
           <a class="mkj-nav-link" href="#faq">FAQ</a>
           <a class="mkj-nav-link" href="#contact">联系</a>
-          <button class="mkj-log-button" id="mkj-log-button" type="button" title="查看更新日志" aria-label="查看更新日志"><span aria-hidden="true">↻</span><b>更新日志</b></button>
+          <a class="mkj-nav-link" href="/MKJ/community/">社区</a>
+          <button class="mkj-log-button" id="mkj-log-button" type="button" title="查看产品更新日志（当前 v1.2）" aria-label="查看产品更新日志（当前 v1.2）"><span aria-hidden="true">↻</span><b>更新日志 · v1.2</b></button>
           <button class="mkj-account-button" id="mkj-account-button" type="button">登录 / 注册</button>
           <a class="mkj-main-site-button" href="/">返回主站 <span aria-hidden="true">↗</span></a>
         </nav>
@@ -183,19 +189,27 @@
           <div class="mkj-footer-column"><h3>快速链接</h3><a href="#assessment">评估工具</a><a href="#testimonials">成功案例</a><a href="#team">关于我们</a><a href="#faq">常见问题</a></div>
           <div class="mkj-footer-column"><h3>联系我们</h3><a href="mailto:hello@mkj-career.com">hello@mkj-career.com</a><a href="tel:400-888-2026">400-888-2026</a><span>上海市静安区愚园路 88 号</span></div>
         </div>
+        <p class="mkj-footer-disclaimer" data-mkj-disclaimer>学习演示免责声明：本网站为求职测评与社区任务流程的学习演示项目，非官方招聘、培训或交易服务；请勿提交真实敏感身份信息、支付信息或生产业务数据。</p>
         <div class="mkj-footer-bottom"><span>© 2026 航线 - 别猜未来，现在就校准</span><button class="mkj-back-top" id="mkj-back-top" type="button">返回顶部 ↑</button></div>
       </div>
     </footer>
 
-    <button class="mkj-support-button" id="mkj-support-button" type="button" aria-label="打开客服快捷入口" aria-controls="mkj-support-menu" aria-expanded="false"><span class="mkj-support-pulse"></span><span class="mkj-support-icon">?</span></button>
-    <div class="mkj-support-menu" id="mkj-support-menu" aria-label="客服快捷入口" hidden><a href="tel:400-888-2026"><span>☎</span>电话咨询</a><a href="#contact"><span>◉</span>微信客服</a><a href="mailto:hello@mkj-career.com"><span>✉</span>邮件留言</a></div>
+    <button class="mkj-support-button" id="mkj-support-button" type="button" aria-label="打开客服快捷入口" aria-controls="mkj-support-menu" aria-expanded="false"><span class="mkj-support-pulse"></span><span class="mkj-support-icon"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/><path d="M8 9h8M8 13h5"/></svg></span></button>
+    <div class="mkj-support-menu" id="mkj-support-menu" aria-label="客服快捷入口" hidden><a href="tel:400-888-2026"><span><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.78.62 2.63a2 2 0 0 1-.45 2.11L8 9.73a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.85.29 1.73.5 2.63.62A2 2 0 0 1 22 16.92z"/></svg></span>电话咨询</a><a href="#contact"><span><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8z"/></svg></span>微信客服</a><a href="mailto:hello@mkj-career.com"><span><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><path d="m22 6-10 7L2 6"/></svg></span>邮件留言</a></div>
 
     <div class="mkj-modal-backdrop" id="mkj-changelog-modal" hidden>
       <section class="mkj-modal mkj-changelog-modal" role="dialog" aria-modal="true" aria-labelledby="mkj-changelog-title">
-        <button class="mkj-modal-close" data-mkj-close-modal type="button" aria-label="关闭更新日志">×</button>
+        <button class="mkj-modal-close" data-mkj-close-modal type="button" aria-label="关闭更新日志"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
         <span class="mkj-modal-mark">更新日志 / CHANGELOG</span>
         <h2 id="mkj-changelog-title">航线正在持续完善</h2>
         <div class="mkj-changelog-list">
+          <article class="mkj-changelog-entry"><time>2026.08.14 · v1.2</time><strong>任务协作与仲裁流程增强</strong><p>任务广场筛选、任务详情下一步、我的任务分组操作、补充交付和管理员仲裁弹窗已上线；同步补齐 Supabase RPC 与 Edge Function 的补充交付处理。</p></article>
+          <article class="mkj-changelog-entry"><time>2026.08.12 · v1.1</time><strong>安全、身份与主题增强</strong><p>增强跨页面登录状态、双层内容防护、三套主题和移动端组件一致性；头像显示与文字回退保留，头像上传入口按产品决策延期。</p></article>
+          <article class="mkj-changelog-entry"><time>2026.08.12 · v1.0</time><strong>全站视觉系统升级</strong><p>首页、社区、论坛、任务广场、商城、公告与管理后台统一为更清晰、精密的航线视觉系统；完整保留原有功能与数据流程。</p></article>
+          <article class="mkj-changelog-entry"><time>2026.08.12 · v0.9</time><strong>发布矩阵与视觉规范准备</strong><p>完成从 v0.8 到 v1.0 的全站视觉规范、页面覆盖矩阵与发布准备，确保后续静态发布可按公开版本链追溯。</p></article>
+          <article class="mkj-changelog-entry"><time>2026.08.11 · v0.8</time><strong>账户状态与版本辨识优化</strong><p>论坛现会同步显示登录昵称与身份；更新日志入口改为明确文字，并为关键资源加入版本标记，避免旧缓存遮住最新界面。</p></article>
+          <article class="mkj-changelog-entry"><time>2026.08.11 · v0.7</time><strong>社区能力与任务协作完整上线</strong><p>商城、Markdown 公告、实时通知、任务附件、时间轴、仲裁、评价、推荐与模板已上线；论坛管理、精确权限礼包码与账号转移同步可用。</p></article>
+          <article class="mkj-changelog-entry"><time>2026.08.11 · v0.6</time><strong>社区、论坛与任务协作上线</strong><p>新增社区入口、论坛与任务广场；全局声望、礼包码、敏感词过滤和角色后台现已贯通。</p></article>
           <article class="mkj-changelog-entry"><time>2026.08.10 · v0.5</time><strong>视觉升级与体验增强</strong><p>重新设计整体视觉系统，新增校准流程、评估进度保存、英雄区徽章和更清晰的响应式布局，同时保留航线账户与全部评估能力。</p></article>
           <article class="mkj-changelog-entry"><time>2026.08.10 · v0.4</time><strong>竞争力评估升级</strong><p>新增 10 题渐进评估、能力雷达、个性化建议、能力名片、内容模块和客服入口，同时保留航线账户。</p></article>
           <article class="mkj-changelog-entry"><time>2026.08.09 · v0.3</time><strong>个性化与共建</strong><p>新增多色主题、更多目标岗位、学历学校、自定义任务、更新日志和用户留言板。</p></article>
@@ -207,7 +221,7 @@
 
     <div class="mkj-modal-backdrop" id="mkj-auth-modal" hidden>
       <section class="mkj-modal mkj-auth-modal" role="dialog" aria-modal="true" aria-labelledby="mkj-auth-title">
-        <button class="mkj-modal-close" data-mkj-close-modal type="button" aria-label="关闭账户窗口">×</button>
+        <button class="mkj-modal-close" data-mkj-close-modal type="button" aria-label="关闭账户窗口"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
         <span class="mkj-modal-mark">航线账户 / ACCOUNT</span>
         <h2 id="mkj-auth-title">把你的进度，带到每一次打开。</h2>
         <p id="mkj-auth-copy">注册后，评估记录与个性化建议会安全保存在你的账户。</p>
@@ -216,6 +230,18 @@
           <div><strong id="mkj-auth-session-name">航线同学</strong><span id="mkj-auth-session-email"></span></div>
           <button class="mkj-auth-secondary" id="mkj-auth-logout" type="button">退出登录</button>
         </div>
+        <section class="mkj-reputation-panel" id="mkj-reputation-panel" aria-live="polite">
+          <div><span>全局声望</span><strong id="mkj-reputation-value">--</strong></div>
+          <p id="mkj-reputation-meta">登录后查看当前等级与下一阶段。</p>
+        </section>
+        <section class="mkj-redeem-panel" id="mkj-redeem-panel" aria-labelledby="mkj-redeem-title">
+          <div><h3 id="mkj-redeem-title">&#20817;&#25442;&#31036;&#21253;&#30721;</h3><p>&#22870;&#21169;&#20250;&#35760;&#20837;&#36134;&#25143;&#30340;&#20840;&#23616;&#22768;&#26395;&#12290;</p></div>
+          <form class="mkj-redeem-form" id="mkj-redeem-form" data-mkj-redeem-form aria-describedby="mkj-redeem-message">
+            <label>&#31036;&#21253;&#30721;<input name="code" type="text" autocomplete="off" autocapitalize="characters" maxlength="64" placeholder="e.g. MKJ-AB12" required /></label>
+            <button class="mkj-button mkj-button-primary" type="submit" data-mkj-idle-label="&#20817;&#25442;" data-mkj-busy-label="&#27491;&#22312;&#20817;&#25442;">&#20817;&#25442;</button>
+          </form>
+          <p class="mkj-redeem-message" id="mkj-redeem-message" role="status" aria-live="polite" hidden></p>
+        </section>
         <div class="mkj-auth-tabs" id="mkj-auth-tabs" role="tablist" aria-label="账户操作">
           <button class="mkj-auth-tab mkj-is-active" type="button" data-mkj-auth-view="login" role="tab" aria-selected="true">登录</button>
           <button class="mkj-auth-tab" type="button" data-mkj-auth-view="register" role="tab" aria-selected="false">注册</button>
@@ -249,7 +275,7 @@
 
     <div class="mkj-modal-backdrop" id="mkj-benefit-modal" hidden>
       <section class="mkj-modal" role="dialog" aria-modal="true" aria-labelledby="mkj-benefit-title">
-        <button class="mkj-modal-close" data-mkj-close-modal type="button" aria-label="关闭弹窗">×</button>
+        <button class="mkj-modal-close" data-mkj-close-modal type="button" aria-label="关闭弹窗"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
         <span class="mkj-modal-mark">FREE PACK / 资料包</span><h2 id="mkj-benefit-title">免费领取面经资料包</h2><p>把今天的评估结果带走，再用一套高频面经把短板练成底气。</p>
         <form id="mkj-benefit-form" aria-busy="false" aria-describedby="mkj-benefit-note"><label>姓名<input name="name" required maxlength="30" placeholder="怎么称呼你？" /></label><label>邮箱<input name="email" type="email" required placeholder="用于接收资料包" /></label><button class="mkj-button mkj-button-primary mkj-full-button" type="submit">领取资料包 →</button></form><p class="mkj-form-note" id="mkj-benefit-note" role="status" aria-live="polite"></p>
       </section>
@@ -257,12 +283,14 @@
 
     <div class="mkj-modal-backdrop" id="mkj-card-modal" hidden>
       <section class="mkj-modal mkj-card-modal" role="dialog" aria-modal="true" aria-labelledby="mkj-card-title" aria-describedby="mkj-card-note">
-        <button class="mkj-modal-close" data-mkj-close-modal type="button" aria-label="关闭弹窗">×</button><span class="mkj-modal-mark">ABILITY CARD / 能力名片</span><h2 id="mkj-card-title">你的能力名片</h2><canvas id="mkj-card-canvas" width="900" height="1125" role="img" aria-label="能力名片预览"></canvas><button class="mkj-button mkj-button-primary mkj-full-button" id="mkj-download-card" type="button">下载能力名片 ↓</button><p class="mkj-form-note" id="mkj-card-note">保存图片后即可截图分享给朋友或导师。</p>
+        <button class="mkj-modal-close" data-mkj-close-modal type="button" aria-label="关闭弹窗"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button><span class="mkj-modal-mark">ABILITY CARD / 能力名片</span><h2 id="mkj-card-title">你的能力名片</h2><canvas id="mkj-card-canvas" width="900" height="1125" role="img" aria-label="能力名片预览"></canvas><button class="mkj-button mkj-button-primary mkj-full-button" id="mkj-download-card" type="button">下载能力名片 ↓</button><p class="mkj-form-note" id="mkj-card-note">保存图片后即可截图分享给朋友或导师。</p>
       </section>
     </div>
 
     <script src="/MKJ/assets/vendor/supabase-2.111.0.js"></script>
     <script src="/MKJ/supabase-config.js"></script>
-    <script src="/MKJ/script.js"></script>
+    <script type="module" src="/MKJ/assets/js/core/runtime.js?v=20260814-v1.2"></script>
+    <script type="module" src="/MKJ/assets/js/core/app-shell.js?v=20260814-v1.2"></script>
+    <script type="module" src="/MKJ/script.js?v=20260814-v1.2"></script>
   </body>
 </html>

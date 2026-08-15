@@ -1,3 +1,6 @@
+import { redeemCode } from "/MKJ/assets/js/core/redeem.js";
+import { guardFormData } from "/MKJ/assets/js/security/form-guard.js";
+
 /* MKJ 单页应用逻辑：题目、评分、雷达图、动效与内容模块均在此集中管理。 */
 (function(){
   "use strict";
@@ -58,12 +61,12 @@
   let mkjModalTrigger = null;
   let mkjInertedElements = [];
   const mkjProgressStorageKey = "mkj-assessment-progress-v1";
-  const mkjSupabaseConfig = window.SUPABASE_CONFIG || {};
+  const mkjSupabaseConfig = window.MKJApp?.config || window.SUPABASE_CONFIG || {};
   const mkjAuthRedirectUrl = new URL("./", window.location.href).href;
-  const mkjCanUseSupabase = Boolean(mkjSupabaseConfig.url && mkjSupabaseConfig.publishableKey && window.supabase?.createClient);
-  const mkjSupabaseClient = mkjCanUseSupabase ? window.supabase.createClient(mkjSupabaseConfig.url, mkjSupabaseConfig.publishableKey, {
+  const mkjCanUseSupabase = Boolean(window.MKJApp?.client || (mkjSupabaseConfig.url && mkjSupabaseConfig.publishableKey && window.supabase?.createClient));
+  const mkjSupabaseClient = window.MKJApp?.client || (mkjCanUseSupabase ? window.supabase.createClient(mkjSupabaseConfig.url, mkjSupabaseConfig.publishableKey, {
     auth: { persistSession:true, autoRefreshToken:true, detectSessionInUrl:true }
-  }) : null;
+  }) : null);
 
   const mkjFocusableSelector = "a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex='-1'])";
   function mkjOpenModal(target,trigger=document.activeElement){
@@ -249,7 +252,7 @@
     window.setTimeout(() => {
       if(mkjCurrent < mkjQuestions.length-1){ mkjCurrent += 1; mkjPersistAssessmentProgress(); mkjRenderQuestion(); }
       else mkjFinishAssessment();
-    }, 360);
+    }, 220);
   }
   function mkjFinishAssessment(){
     localStorage.removeItem(mkjProgressStorageKey);
@@ -358,9 +361,17 @@
     const authTitle=mkj$("#mkj-auth-title");
     const authCopy=mkj$("#mkj-auth-copy");
     const resendButton=mkj$("#mkj-resend-confirmation");
+    const redeemPanel=mkj$("#mkj-redeem-panel");
+    const redeemForm=mkj$("#mkj-redeem-form");
+    const redeemMessage=mkj$("#mkj-redeem-message");
+    const reputationValue=mkj$("#mkj-reputation-value");
+    const reputationMeta=mkj$("#mkj-reputation-meta");
 
     const setMessage=(message="",tone="error")=>{
       authMessage.textContent=message;authMessage.dataset.tone=tone;authMessage.hidden=!message;authMessage.setAttribute("role",tone==="error"?"alert":"status");
+    };
+    const setRedeemMessage=(message="",tone="error")=>{
+      redeemMessage.textContent=message;redeemMessage.dataset.tone=tone;redeemMessage.hidden=!message;redeemMessage.setAttribute("role",tone==="error"?"alert":"status");
     };
     const setBusy=(form,busy)=>{
       form.setAttribute("aria-busy",String(busy));
@@ -373,6 +384,7 @@
       authTabs.forEach(tab=>{const active=tab.dataset.mkjAuthView===view;tab.classList.toggle("mkj-is-active",active);tab.setAttribute("aria-selected",String(active))});
       authForms.forEach(form=>{form.hidden=(mkjCurrentUser&&!recovery)||form.dataset.mkjAuthForm!==view});
       authTabsBox.hidden=recovery||Boolean(mkjCurrentUser);
+      redeemPanel.hidden=recovery;
       authTitle.textContent=recovery?"为账户设置新密码。":mkjCurrentUser?"你的航线账户已连接。":"把你的进度，带到每一次打开。";
       authCopy.textContent=recovery?"恢复链接已验证。保存后即可使用新密码登录。":mkjCurrentUser?"你的评估与行动记录会继续保存在这个账户中。":"注册后，评估记录与个性化建议会安全保存在你的账户。";
       setMessage("");
@@ -393,29 +405,42 @@
       window.clearInterval(mkjResendCooldownTimer);let remaining=60;resendButton.disabled=true;resendButton.textContent=`${remaining} 秒后可重新发送`;
       mkjResendCooldownTimer=window.setInterval(()=>{remaining-=1;if(remaining>0)resendButton.textContent=`${remaining} 秒后可重新发送`;else{window.clearInterval(mkjResendCooldownTimer);mkjResendCooldownTimer=null;resendButton.disabled=false;resendButton.textContent="重新发送验证邮件"}},1000);
     };
+    const loadReputation=async user=>{
+      if(!user||!mkjSupabaseClient){reputationValue.textContent="--";reputationMeta.textContent="\u767b\u5f55\u540e\u67e5\u770b\u5f53\u524d\u7b49\u7ea7\u4e0e\u4e0b\u4e00\u9636\u6bb5\u3002";return}
+      reputationValue.textContent="...";reputationMeta.textContent="\u6b63\u5728\u8bfb\u53d6\u4f60\u7684\u5168\u5c40\u58f0\u671b\u3002";
+      try{const{data,error}=await mkjSupabaseClient.from("user_public_profiles").select("reputation, role").eq("user_id",user.id).maybeSingle();if(error)throw error;if(mkjCurrentUser?.id!==user.id)return;const reputation=Math.max(0,Math.floor(Number(data?.reputation)||0));const level=reputation>=50000?"\u58f0\u671b\u4e4b\u795e":reputation>=25000?"\u81f3\u5c0a\u4f1a\u5458":reputation>=10000?"\u8bba\u575b\u5143\u8001":reputation>=4000?"\u91d1\u724c\u4f1a\u5458":reputation>=1500?"\u9ad8\u7ea7\u4f1a\u5458":reputation>=500?"\u4e2d\u7ea7\u4f1a\u5458":reputation>=100?"\u521d\u7ea7\u4f1a\u5458":reputation>=10?"\u65b0\u624b\u4e0a\u8def":"\u6e38\u5ba2";reputationValue.textContent=`${reputation.toLocaleString("zh-CN")} \u58f0\u671b`;reputationMeta.textContent=`\u5f53\u524d\u7b49\u7ea7\uff1a${data?.role==="ADMIN"?"\u7ba1\u7406\u5458":data?.role==="MODERATOR"?"\u7248\u4e3b":level}`;const displayName=user.user_metadata?.display_name||user.email?.split("@")[0]||"\u822a\u7ebf\u540c\u5b66";accountButton.textContent=`${displayName} \u00b7 ${reputation}`;}catch(error){if(mkjCurrentUser?.id!==user.id)return;reputationValue.textContent="--";reputationMeta.textContent="\u6682\u65f6\u65e0\u6cd5\u8bfb\u53d6\u58f0\u671b\uff0c\u8bf7\u7a0d\u540e\u91cd\u8bd5\u3002";}
+    };
     const updateUI=user=>{
       mkjCurrentUser=user||null;
-      if(!user){accountButton.textContent="登录 / 注册";sessionBox.hidden=true;authTabsBox.hidden=false;return}
+      redeemPanel.hidden=false;
+      if(!user){accountButton.textContent="登录 / 注册";sessionBox.hidden=true;authTabsBox.hidden=false;void loadReputation(null);return}
       const email=user.email||"";const displayName=user.user_metadata?.display_name||email.split("@")[0]||"航线同学";
-      accountButton.textContent=displayName;mkj$("#mkj-auth-session-avatar").textContent=displayName.slice(0,1);mkj$("#mkj-auth-session-name").textContent=displayName;mkj$("#mkj-auth-session-email").textContent=email;sessionBox.hidden=false;
+      accountButton.textContent=displayName;mkj$("#mkj-auth-session-avatar").textContent=displayName.slice(0,1);mkj$("#mkj-auth-session-name").textContent=displayName;mkj$("#mkj-auth-session-email").textContent=email;sessionBox.hidden=false;void loadReputation(user);
     };
     const requireClient=()=>{if(!mkjSupabaseClient){setMessage("账户服务暂未连接，请检查 /MKJ/supabase-config.js。");return false}return true};
     accountButton.addEventListener("click",()=>openAuth(mkjCurrentUser?"login":"login"));
     authTabs.forEach(tab=>tab.addEventListener("click",()=>setView(tab.dataset.mkjAuthView)));
     mkj$("#mkj-auth-logout").addEventListener("click",async()=>{if(!requireClient())return;const{error}=await mkjSupabaseClient.auth.signOut();if(error){setMessage(formatError(error,"退出登录失败"));return}mkjCloseModal(authModal);updateUI(null);mkjShowToast("已退出登录")});
+    redeemForm.addEventListener("input",()=>setRedeemMessage(""));
+    redeemForm.addEventListener("submit",async event=>{
+      event.preventDefault();if(!requireClient())return;if(!mkjCurrentUser){setRedeemMessage("\u8bf7\u5148\u767b\u5f55\u8d26\u6237\u540e\u518d\u5151\u6362\u793c\u5305\u7801\u3002");return}const form=event.currentTarget,data=new FormData(form);setRedeemMessage("");setBusy(form,true);
+      try{const result=await redeemCode(mkjSupabaseClient,data.get("code"));const reputation=Number(result?.reward?.reputation);const amount=Number.isFinite(reputation)?reputation.toLocaleString("zh-CN"):"";form.reset();setRedeemMessage(amount?`\u5151\u6362\u6210\u529f\uff0c\u5f53\u524d\u5168\u5c40\u58f0\u671b\u4e3a ${amount}\u3002`:`\u5151\u6362\u6210\u529f\uff0c\u5956\u52b1\u5df2\u8bb0\u5165\u5168\u5c40\u58f0\u671b\u3002`,"success");void loadReputation(mkjCurrentUser);mkjShowToast("\u793c\u5305\u7801\u5151\u6362\u6210\u529f")}catch(error){setRedeemMessage(formatError(error,"\u793c\u5305\u7801\u65e0\u6548\u3001\u5df2\u4f7f\u7528\u3001\u5df2\u8fc7\u671f\u6216\u6682\u4e0d\u53ef\u7528"),"error")}finally{setBusy(form,false)}
+    });
     mkj$("#mkj-login-form").addEventListener("submit",async event=>{
       event.preventDefault();if(!requireClient())return;const form=event.currentTarget,data=new FormData(form);setMessage("");setBusy(form,true);
       try{const{error}=await mkjSupabaseClient.auth.signInWithPassword({email:String(data.get("email")).trim(),password:String(data.get("password"))});if(error){setMessage(formatError(error,"登录失败，请稍后再试"));return}mkjCloseModal(authModal);mkjShowToast("登录成功，欢迎回到航线")}catch(error){setMessage(formatError(error,"登录失败，请稍后再试"))}finally{setBusy(form,false)}
     });
     mkj$("#mkj-register-form").addEventListener("submit",async event=>{
-      event.preventDefault();if(!requireClient())return;const form=event.currentTarget,data=new FormData(form);const displayName=String(data.get("displayName")).trim()||"航线同学";setMessage("");setBusy(form,true);
+      event.preventDefault();if(!requireClient())return;const form=event.currentTarget,data=new FormData(form);setMessage("");let displayName;try{displayName=String(guardFormData(form,["displayName"],authMessage).values.displayName).trim()||"航线同学"}catch(error){setMessage(error.message);return}setBusy(form,true);
       try{const{data:result,error}=await mkjSupabaseClient.auth.signUp({email:String(data.get("email")).trim(),password:String(data.get("password")),options:{data:{display_name:displayName},emailRedirectTo:mkjAuthRedirectUrl}});if(error){setMessage(formatError(error,"注册失败，验证邮件未能发送"));return}if(result.session){mkjCloseModal(authModal);mkjShowToast("账户创建成功")}else{setMessage("注册成功，请查收验证邮件后再登录。","success");startCooldown()}}catch(error){setMessage(formatError(error,"注册失败，验证邮件未能发送"))}finally{setBusy(form,false)}
     });
     resendButton.addEventListener("click",async()=>{if(!requireClient())return;const email=String(mkj$("#mkj-register-form [name='email']").value).trim();if(!email){setMessage("请先填写需要验证的邮箱");return}resendButton.disabled=true;setMessage("");try{const{error}=await mkjSupabaseClient.auth.resend({type:"signup",email,options:{emailRedirectTo:mkjAuthRedirectUrl}});if(error)throw error;setMessage("验证邮件已重新发送，请检查收件箱和垃圾邮件。","success");startCooldown()}catch(error){setMessage(formatError(error,"验证邮件发送失败，请稍后再试"));resendButton.disabled=false}});
     mkj$("#mkj-reset-form").addEventListener("submit",async event=>{event.preventDefault();if(!requireClient())return;const form=event.currentTarget,data=new FormData(form);setMessage("");setBusy(form,true);try{const{error}=await mkjSupabaseClient.auth.resetPasswordForEmail(String(data.get("email")).trim(),{redirectTo:mkjAuthRedirectUrl});if(error){setMessage(formatError(error,"重置邮件发送失败"));return}setMessage("重置邮件已发送，请检查邮箱。","success")}catch(error){setMessage(formatError(error,"重置邮件发送失败"))}finally{setBusy(form,false)}});
     mkj$("#mkj-update-password-form").addEventListener("submit",async event=>{event.preventDefault();if(!requireClient())return;const form=event.currentTarget,data=new FormData(form),password=String(data.get("password"));if(password!==String(data.get("passwordConfirm"))){setMessage("两次输入的密码不一致，请重新确认");return}setMessage("");setBusy(form,true);try{const{error}=await mkjSupabaseClient.auth.updateUser({password});if(error){setMessage(formatError(error,"密码更新失败，请重新打开恢复链接"));return}form.reset();mkjCloseModal(authModal);mkjShowToast("密码已更新，可以使用新密码登录")}catch(error){setMessage(formatError(error,"密码更新失败，请重新打开恢复链接"))}finally{setBusy(form,false)}});
     const mkjRecoveryFlow=window.location.hash.includes("type=recovery")||new URLSearchParams(window.location.search).get("type")==="recovery";
-    if(mkjSupabaseClient){mkjSupabaseClient.auth.onAuthStateChange((event,session)=>window.setTimeout(()=>{updateUI(session?.user||null);if(event==="PASSWORD_RECOVERY"||mkjRecoveryFlow)openAuth("update")},0));mkjSupabaseClient.auth.getSession().then(({data})=>{updateUI(data.session?.user||null);if(mkjRecoveryFlow)openAuth("update")});}
+    const openAccountRoute=()=>{if(window.location.hash === "#account")openAuth("login")};
+    window.addEventListener("hashchange",openAccountRoute);
+    if(mkjSupabaseClient){mkjSupabaseClient.auth.onAuthStateChange((event,session)=>window.setTimeout(()=>{updateUI(session?.user||null);if(event==="PASSWORD_RECOVERY"||mkjRecoveryFlow)openAuth("update");else openAccountRoute()},0));mkjSupabaseClient.auth.getSession().then(({data})=>{updateUI(data.session?.user||null);if(mkjRecoveryFlow)openAuth("update");else openAccountRoute()});}
     else updateUI(null);
   }
   /* 增强模块：让新流程卡片与英雄徽章保持轻量动效，同时不改变既有逻辑。 */

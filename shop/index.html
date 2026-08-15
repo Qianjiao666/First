@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="航线积分商城" />
+    <title>积分商城 - 航线</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/MKJ/styles.css" />
+    <link rel="stylesheet" href="/MKJ/shop/shop.css" />
+    <link rel="stylesheet" href="/MKJ/assets/css/visual-v1.css?v=20260812-v1.0" />
+    <link rel="stylesheet" href="/MKJ/assets/css/visual-v1.1.css?v=20260812-v1.1" />
+    <script type="module" src="/MKJ/assets/js/theme/theme-controller.js?v=20260812-v1.1"></script>
+  </head>
+  <body class="shop-page">
+    <header class="shop-header">
+      <div class="shop-header-inner">
+        <a class="shop-brand" href="/MKJ/" aria-label="返回航线首页"><span class="shop-brand-mark" aria-hidden="true">航</span><span><strong>航线</strong><small>POINTS MARKET</small></span></a>
+        <nav class="shop-nav" aria-label="商城导航">
+          <a aria-current="page" href="/MKJ/shop/">积分商城</a>
+          <a href="/MKJ/tasks/">任务广场</a>
+          <a href="/MKJ/forum/">论坛</a>
+          <a href="/MKJ/#account">登录 / 注册</a>
+        </nav>
+      </div>
+    </header>
+    <main class="shop-shell" data-shop-root>
+      <section class="shop-hero" aria-labelledby="shop-title">
+        <div><p class="shop-kicker">REPUTATION STORE / 01</p><h1 id="shop-title">把积累的声望，换成下一步</h1><p>兑换面试模拟、简历点评和学习资料，把社区里的每一次有效参与带回求职准备。</p></div>
+        <a class="shop-button shop-button-secondary" href="#shop-orders">查看我的订单</a>
+      </section>
+      <div class="shop-status" data-shop-status role="status" hidden></div>
+      <section class="shop-section" aria-labelledby="shop-products-title">
+        <div class="shop-section-heading"><div><p class="shop-kicker">AVAILABLE NOW</p><h2 id="shop-products-title">可兑换商品</h2></div><span class="shop-section-note">库存和积分以提交时为准</span></div>
+        <div class="shop-product-grid" data-shop-products aria-live="polite"><p class="shop-loading">正在读取商品…</p></div>
+      </section>
+      <section class="shop-section shop-orders-section" id="shop-orders" aria-labelledby="shop-orders-title">
+        <div class="shop-section-heading"><div><p class="shop-kicker">YOUR HISTORY</p><h2 id="shop-orders-title">兑换订单</h2></div></div>
+        <ul class="shop-order-list" data-shop-orders aria-live="polite"><li class="shop-orders-empty">正在读取订单…</li></ul>
+      </section>
+    </main>
+    <footer class="shop-footer"><div>© 2026 航线</div></footer>
+    <script src="/MKJ/assets/vendor/supabase-2.111.0.js"></script>
+    <script src="/MKJ/supabase-config.js"></script>
+    <script type="module" src="/MKJ/assets/js/core/runtime.js?v=20260812-v1.1"></script>
+    <script type="module" src="/MKJ/assets/js/core/app-shell.js?v=20260812-v1.1"></script>
+    <script type="module" src="/MKJ/shop/shop.js"></script>
+  </body>
+</html>

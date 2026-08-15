@@ -1,6 +1,14 @@
 .playwright-cli/
+.superpowers/
+.worktrees/
 output/
 deployment/
 deployment/MKJ.zip
 .DS_Store
 Thumbs.db
+supabase/.temp/
+_backup-v2/
+_zip-v05-verify/
+*.tmp.pub
+orca-*.png
+output-*.png

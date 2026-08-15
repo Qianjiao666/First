@@ -1,78 +1,23 @@
-# 航线
+# 航线 MKJ 网站接手入口
 
-面向大学生和准大学生的就业确定性工作台。
+这是 `https://dsxnb.com/MKJ/` 子站源码。当前工作目录是：
 
-当前版本 `v0.3` 新增：多色主题、36 个目标岗位、学历与学校搜索、
-自定义任务、更新日志和账户留言板。学校搜索使用本地离线索引，数据源
-与许可证见 `assets/data/UNIVERSITY_DATA_SOURCE.md`。
+```text
+D:\桌面文件\任务\.worktrees\task-collaboration-v1-2
+```
+
+下次用 Codex 接手时，优先读：
+
+1. `docs/CURRENT_HANDOFF.md`：当前代码结构、业务逻辑、进度、遗留问题。
+2. `CHANGELOG.md`：公开版本从 `v0.1` 到当前 `v1.2` 的连续记录。
+3. `docs/COMMUNITY_RELEASE_RUNBOOK.md`：发布、回滚、Supabase 与腾讯云操作流程。
+
+线上边界：
 
 - 子站：`https://dsxnb.com/MKJ/`
 - 主站：`https://dsxnb.com/`
-- CVM 静态目录：`/var/www/MKJ`
+- 腾讯云 CVM Web 根目录：`/var/www/MKJ`
+- 回滚/备份目录：`/var/www/.mkj-community-releases`
+- Supabase 项目：`hzxvmrbztbyapqnwttjq`
 
-## 网站部署
-
-只需要部署以下浏览器文件与本地依赖目录：
-
-```text
-index.html
-styles.css
-script.js
-supabase-config.js
-assets/
-```
-
-`assets/` 中包含固定版本的 Supabase JS、DM Mono 字体、大学索引及对应开源许可证。网页运行时不依赖 Google Fonts、jsDelivr 或 GitHub，更适合国内网络环境。
-
-不要修改主站 Nginx 的 `location /`，也不要把 `supabase/schema.sql` 复制到网站目录。
-
-## Supabase
-
-1. 在 Supabase SQL Editor 中执行 `supabase/schema.sql`。
-2. 把 Project URL 和 Publishable key 写入 `supabase-config.js`。
-3. 在 Authentication -> URL Configuration 中设置：
-
-```text
-Site URL       https://dsxnb.com/MKJ/
-Redirect URLs  https://dsxnb.com/MKJ/
-```
-
-注册、登录、验证邮件重发、完整密码恢复、会话保持、目标岗位、学历、任务状态和留言板均由 Supabase 提供。验证邮件重发带 60 秒冷却，避免触发邮件频率限制。
-
-`v0.3` 必须重新执行最新版 `supabase/schema.sql`，以创建：
-
-```text
-profiles.education
-feedback_messages
-对应 RLS 策略与索引
-```
-
-留言板仅允许已登录用户读取和发布；用户只能删除自己的留言，不能编辑他人的数据。
-
-## 邮件服务
-
-Supabase 默认 SMTP 只适合项目团队测试，并有很低的发送频率限制。面向 QQ、163 等真实用户时必须启用 Custom SMTP。
-
-当前采用 Gmail SMTP：
-
-```text
-Host       smtp.gmail.com
-Port       587
-Username   完整 Gmail 地址
-Password   Google 应用专用密码
-Sender     与 Username 相同的 Gmail 地址
-```
-
-Gmail 必须开启两步验证。SMTP 密码、邮箱登录密码和授权码只保存在 Supabase 配置中，绝对不要提交到 GitHub。
-
-## 备份
-
-最新完整备份位于：
-
-```text
-backups/MKJ-2026-08-09-v0.3/
-```
-
-备份目录中的 `BACKUP_MANIFEST.md` 记录来源提交和 SHA-256。
-
-只允许在前端公开 Project URL 和 Publishable key。不要提交数据库密码、`service_role` key、SMTP 凭据、腾讯云密码或 SSH 私钥。
+只更新 `/MKJ/` 子站，不覆盖主站根路由，不把 Supabase `service_role`、数据库密码、SSH 私钥、邮件密码或任何 token 写入仓库。

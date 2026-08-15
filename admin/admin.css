@@ -1,0 +1,32 @@
+.admin-grant-fields {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.admin-grant-fields legend {
+  grid-column: 1 / -1;
+  margin-bottom: 4px;
+  font-weight: 700;
+}
+
+.admin-grant-input {
+  min-width: 12rem;
+  max-width: 20rem;
+}
+
+@media (max-width: 720px) {
+  .admin-grant-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .admin-grant-input {
+    min-width: 0;
+    width: 100%;
+  }
+}

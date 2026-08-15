@@ -1,0 +1,158 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-12T00:00:00+08:00",
+  "title": "Design System: 航线 v1.0",
+  "extensions": {
+    "colorMeta": {
+      "calibration-ink": {
+        "role": "neutral",
+        "displayName": "校准墨",
+        "canonical": "#111820",
+        "tonalRamp": ["#111820", "#24313c"]
+      },
+      "route-blue": {
+        "role": "primary",
+        "displayName": "航线蓝",
+        "canonical": "#165dff",
+        "tonalRamp": ["#0f49cc", "#165dff", "#e8efff"]
+      },
+      "signal-green": {
+        "role": "secondary",
+        "displayName": "信号绿",
+        "canonical": "#087f5b",
+        "tonalRamp": ["#087f5b", "#e4f4ed"]
+      },
+      "reward-orange": {
+        "role": "tertiary",
+        "displayName": "奖励橙",
+        "canonical": "#c96318",
+        "tonalRamp": ["#c96318", "#fff0e3"]
+      },
+      "danger-red": {
+        "role": "tertiary",
+        "displayName": "危险红",
+        "canonical": "#b53c43",
+        "tonalRamp": ["#b53c43", "#fff0f1"]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "冷纸面",
+        "canonical": "#f3f6f7",
+        "tonalRamp": ["#eaf0f2", "#f3f6f7", "#f8fafb", "#ffffff"]
+      },
+      "text-muted": {
+        "role": "neutral",
+        "displayName": "冷灰文字",
+        "canonical": "#596875",
+        "tonalRamp": ["#596875", "#788692"]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "边界灰",
+        "canonical": "#d6dfe4",
+        "tonalRamp": ["#b8c5cc", "#d6dfe4"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "品牌展示", "purpose": "首页和社区入口的首要标题。" },
+      "headline": { "displayName": "页面标题", "purpose": "论坛、任务、商城和公告的模块标题。" },
+      "title": { "displayName": "内容标题", "purpose": "帖子、表面、对话框和工具区标题。" },
+      "body": { "displayName": "正文", "purpose": "说明、表单和长文本阅读。" },
+      "data-label": { "displayName": "测量标签", "purpose": "版本、时间、编号、计数、状态和表头。" }
+    },
+    "shadows": [
+      {
+        "name": "ambient-surface",
+        "value": "0 2px 3px rgba(17, 24, 32, .03), 0 12px 30px rgba(30, 48, 62, .06)",
+        "purpose": "任务卡、商品卡、紧凑工具面和轻度悬停。"
+      },
+      {
+        "name": "raised-dialog",
+        "value": "0 4px 7px rgba(17, 24, 32, .05), 0 24px 56px rgba(30, 48, 62, .1)",
+        "purpose": "对话框、通知面板、支持菜单和首页核心校准卡。"
+      }
+    ],
+    "motion": [
+      {
+        "name": "calibration-ease",
+        "value": "cubic-bezier(.16, 1, .3, 1)",
+        "purpose": "状态颜色、边界、阴影与短位移的指数缓出。"
+      },
+      {
+        "name": "state-duration",
+        "value": "200ms",
+        "purpose": "大多数按钮、导航和表面状态转换的实际时长。"
+      }
+    ],
+    "breakpoints": [
+      { "name": "wide-collapse", "value": "1100px" },
+      { "name": "layout-stack", "value": "900px" },
+      { "name": "mobile-navigation", "value": "780px" },
+      { "name": "compact-mobile", "value": "480px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "提交、创建、发布和页面主要命令。",
+      "html": "<button class=\"task-button task-button-primary\" type=\"button\">查看我的任务</button>",
+      "css": ".task-button { min-height: 40px; border-radius: var(--hx-radius-sm); transition: all .2s var(--hx-ease); } .task-button-primary { background: var(--hx-blue); border-color: var(--hx-blue); color: #fff; box-shadow: 0 5px 14px rgba(22,93,255,.18); } .task-button-primary:hover { background: var(--hx-blue-deep); border-color: var(--hx-blue-deep); }"
+    },
+    {
+      "name": "Calibration Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "柔白工作表面上的高对比输入字段。",
+      "html": "<input class=\"task-filter-input\" aria-label=\"搜索任务\" placeholder=\"搜索任务\">",
+      "css": ".task-filter-input { min-height: 42px; padding: 10px 11px; border: 1px solid var(--hx-line-strong); border-radius: var(--hx-radius-sm); background: var(--hx-surface-soft); color: var(--hx-ink); } .task-filter-input:focus-visible { border-color: var(--hx-blue); outline: 3px solid color-mix(in srgb, var(--hx-focus) 36%, transparent); outline-offset: 3px; }"
+    },
+    {
+      "name": "Active Navigation",
+      "kind": "nav",
+      "description": "跨模块一致的当前位置与悬停状态。",
+      "html": "<nav class=\"task-nav\"><a href=\"#\">论坛</a><a aria-current=\"page\" href=\"#\">任务</a><a href=\"#\">商城</a></nav>",
+      "css": ".task-nav { display: flex; gap: 2px; } .task-nav a { padding: 10px 12px; border-radius: var(--hx-radius-sm); color: var(--hx-muted); } .task-nav a:hover, .task-nav a[aria-current=\"page\"] { background: var(--hx-blue-soft); color: var(--hx-blue-deep); }"
+    },
+    {
+      "name": "Signal Status",
+      "kind": "chip",
+      "description": "完成、成功和在线状态的文字化信号。",
+      "html": "<span class=\"task-notice\" role=\"status\">已完成</span>",
+      "css": ".task-notice { padding: 10px 12px; border: 1px solid #b9dfd0; border-radius: var(--hx-radius); background: var(--hx-green-soft); color: var(--hx-green); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "职业校准台",
+    "overview": "航线是一套安静、精密、可信的职业校准工作台。墨黑、纸白和冷灰维持长时间阅读与工作的低噪声背景；航线蓝、信号绿和奖励橙分别承担定位与动作、完成与成功、奖励与商城的明确语义。首页建立品牌张力和明暗节奏，论坛、任务、商城、公告和后台保持紧凑、可扫描和工作导向。",
+    "keyCharacteristics": [
+      "黑白冷灰骨架上使用三种语义信号色。",
+      "首页允许品牌峰值，操作页优先密度与扫描效率。",
+      "中文系统字体负责阅读，DM Mono 只负责数据与状态。",
+      "5px 控件、8px 表面和 12px 对话框构成稳定形态。",
+      "细边界为主、克制阴影为辅，状态变化使用短促指数缓出。"
+    ],
+    "rules": [
+      { "name": "The Semantic Signal Rule", "body": "蓝色表达定位和动作，绿色表达完成与成功，橙色表达奖励与商城。", "section": "colors" },
+      { "name": "The Never-Color-Alone Rule", "body": "关键状态同时保留文字、图标或结构提示。", "section": "colors" },
+      { "name": "The Content Leads Rule", "body": "标题自身承担层级，不添加纯分类式眉标；真实动态分类数据可保留。", "section": "typography" },
+      { "name": "The Mono Measures Rule", "body": "DM Mono 只用于可测量、可比较或可枚举的信息。", "section": "typography" },
+      { "name": "The Flat-by-Default Rule", "body": "信息流和表格静止时优先边界或色面，阴影必须对应真实层级或交互。", "section": "elevation" }
+    ],
+    "dos": [
+      "Do 让首屏直接呈现当前目标、主要动作或真实工作区。",
+      "Do 用航线蓝统一主要动作、当前位置和当前分页。",
+      "Do 用信号绿表达完成、成功、声望和在线，用奖励橙表达积分与奖励。",
+      "Do 在离散响应断点和常见设备宽度验证换行、触控目标和溢出。",
+      "Do 为动画提供 prefers-reduced-motion 降级。"
+    ],
+    "donts": [
+      "Don't 添加纯分类式 kicker、eyebrow 或重复标题的英文眉标。",
+      "Don't 用 Unicode 字符代替功能图标；新增功能控件使用线性 SVG 图标。",
+      "Don't 使用紫色渐变、装饰性光球、玻璃拟态、卡片套卡片或无意义的大胶囊按钮。",
+      "Don't 用奖励橙或信号绿代替主要动作和导航定位的航线蓝。",
+      "Don't 通过连续视口字号缩放、负字距或过度留白制造展示感。"
+    ]
+  }
+}
