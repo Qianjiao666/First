@@ -426,3 +426,39 @@ Supabase service_role key 或数据库密码
 - Live SHA-256 checks matched the r8 manifest for `index.html`, `admin/index.html`, `forum/index.html`, `tasks/index.html`, `shop/index.html`, `announcements/index.html`, and `shared/community-widgets.js`.
 - `https://dsxnb.com/`, `/MKJ/`, `/MKJ/forum/`, `/MKJ/tasks/`, `/MKJ/shop/`, `/MKJ/announcements/`, and the representative shared JavaScript asset all returned HTTP 200 after cutover.
 - The r8 release is the current production baseline. Preserve every `.previous` rollback directory under `/var/www/.mkj-community-releases/` until a later release has been independently verified.
+
+## 12. v1.1 hotfix production deployment completed (2026-08-14)
+
+- Tencent CVM `ins-6xonyz5y` now serves MKJ static release `20260813` / `v1.1` from `/var/www/MKJ`.
+- Release package verified on the server before cutover:
+  - `/root/MKJ-community-forum-tasks-20260813-static-v1.1.zip`
+  - ZIP SHA-256: `3c35dbc3982cdb65deb3863a162773696ae5e1492c818eab59ac4b8fc0b93ae7`
+  - SHA file SHA-256: `18c818b2a8c4996bb86e8de6c69e1685fd9e0bb6f750543bf86082e2140cb089`
+  - Cutover script SHA-256: `3f23bc65ed3c97daf850d14b54224c0d31dc54c77ee8d88cb6d90fbe7877b4a1`
+- Cutover command completed successfully with `MKJ-community-forum-tasks-20260813-static-v1.1.zip: OK` and `MKJ v1.1 installed successfully.`
+- Production manifest at `https://dsxnb.com/MKJ/RELEASE-MANIFEST.txt` reports `Release: 20260813`, `Revision: v1.1`, and `Files: 89`.
+- Raw-byte SHA-256 verification matched the production manifest for `index.html`, `assets/js/security/form-guard.js`, `forum/index.html`, `tasks/index.html`, `shop/index.html`, `announcements/index.html`, and `shared/community-widgets.js`.
+- HTTP status checks returned 200 for `https://dsxnb.com/`, `/MKJ/`, `/MKJ/forum/`, `/MKJ/forum/new/`, `/MKJ/tasks/`, `/MKJ/shop/`, and `/MKJ/announcements/`.
+- Browser smoke opened `https://dsxnb.com/MKJ/forum/new/` successfully with page title `发起讨论｜航线论坛`; unauthenticated posting is gated by the expected login dialog and Playwright console check reported 0 warnings and 0 errors.
+- Rollback directory: `/var/www/.mkj-community-releases/20260814-005530.previous`.
+- Pre-cutover backup archive: `/var/www/.mkj-community-releases/20260814-005530.before-v1.1.tar.gz`.
+- Local targeted verification passed: `node --test tests/browser/form-security.test.mjs tests/schema/capability-lookup-permissions.test.cjs tests/release/v1.1-cutover.test.cjs` (`8/8` tests). A blanket `node --test` reported `170` passing and `3` failures only because CDP smoke entrypoints were invoked without their required CLI arguments; do not treat those as product regressions unless they fail with the correct arguments.
+- The local source changes for this release are not committed or staged. Preserve unrelated dirty worktree artifacts.
+- Supabase remote verification completed after CLI authentication: migration
+  version `20260813112255` appears in the linked project's migration list, and
+  `has_function_privilege('authenticated',
+  'public.canonical_capability(text)', 'EXECUTE')` returned `true`. The
+  capability lookup permission is active; no additional migration push is
+  required.
+
+
+## v1.2 Terra visual refresh handoff (2026-08-15)
+
+- Presentation-only delivery: assets/css/visual-v1.2.css and assets/js/ui/visual-assets.js are loaded after v1.1 styles on production pages.
+- New local assets: assets/images/visual-v1.2/ (19 PNG files, 2.47 MB total) with alt text, lazy loading, fixed aspect constraints, and error fallback.
+- Business logic, Supabase schema/API/RLS, sensitive-word filtering, auth/session coordinator, forum/tasks/shop/announcement/admin entry points remain unchanged.
+- Selected direction: B `Navigation Data Map` structure with C dark signal panels, large Chinese typography, fluorescent energy core, orbital particles, and restrained local blue/orange accents.
+- Final browser evidence is stored under `output/playwright/`, including desktop/mobile homepage, dark theme, forum, and task views. The 390x844 homepage has no horizontal overflow and exposes the next-section transition below the complete signal panel.
+- Validation complete: 37/37 business/session/filter/XSS tests, 19/19 security/redeem/static-audit tests, and 25/25 visual/version/page-shell tests passed.
+- Impeccable detector completed in degraded regex mode because parser modules are unavailable. Its remaining advisory warnings cover the intentionally approved map grid and v1.2 tonal/type ramps documented in `DESIGN.md`; no blocking runtime issue was reported.
+- Preview: `http://127.0.0.1:4174/`, with representative routes at `/forum/` and `/tasks/`.

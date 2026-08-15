@@ -121,14 +121,14 @@ test("avatar preflight accepts JPG PNG WebP up to 2MB and upload exposes busy su
   assert.deepEqual(errors, ["busy", "error"]);
 });
 
-test("all production pages bootstrap themes early and load visual v1.1 last", async () => {
+test("all production pages bootstrap themes early and load visual v1.2 last", async () => {
   for (const relativePath of PRODUCTION_PAGES) {
     const source = await fs.readFile(new URL(`../../${relativePath}`, import.meta.url), "utf8");
     const themeScript = '<script type="module" src="/MKJ/assets/js/theme/theme-controller.js?v=20260812-v1.1"></script>';
-    const visualLink = '<link rel="stylesheet" href="/MKJ/assets/css/visual-v1.1.css?v=20260812-v1.1" />';
+    const visualLink = '<link rel="stylesheet" href="/MKJ/assets/css/visual-v1.2.css?v=20260815-v1.2" />';
     assert.ok(source.indexOf(themeScript) >= 0 && source.indexOf(themeScript) < source.indexOf("</head>"), `${relativePath} theme bootstrap`);
     const styles = source.match(/<link rel="stylesheet"[^>]*\/>/g) ?? [];
-    assert.equal(styles.at(-1), visualLink, `${relativePath} visual v1.1 last`);
+    assert.equal(styles.at(-1), visualLink, `${relativePath} visual v1.2 last`);
   }
 });
 

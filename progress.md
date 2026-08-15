@@ -29,3 +29,19 @@
 - Ran the impeccable detector over the three prototype HTML files. It ran in degraded regex mode because parser modules are unavailable; its findings are advisory token-drift warnings plus one B route-line warning, documented in `docs/visual-directions-v1.2/README.md`. These prototype decisions must be normalized to production tokens after the user chooses a direction.
 - Corrected deterministic v1.2 presentation defects only: homepage changelog visible text/title/aria and newest modal entry now say `v1.2`; `CHANGELOG.md` is newest-to-oldest from `v1.2`; repaired Chinese visual-asset alt strings in `assets/js/ui/visual-assets.js`.
 - Regression evidence: `node --test tests/browser/v1.2-version-alt.test.mjs tests/browser/changelog.test.mjs` passed 7/7. No backend, API, schema, RLS, authentication, or business logic was changed in this checkpoint.
+
+## v1.2 selected production direction (2026-08-15)
+
+- User selected B structure with C dark signal panels and supplied `D:/桌面文件/微信图片_20260815115054_223_7.jpg` as visual reference.
+- Approved interpretation: route/checkpoint information architecture, oversized Chinese typography, fluorescent green energy core, metal/transparent orbit lines, responsive particles, and explicit motion/performance fallback.
+- Production implementation is authorized; tara must load `huashu-design` and `impeccable` before editing and record their verification evidence.
+
+## v1.2 production completion (2026-08-15)
+
+- Applied the selected B route/checkpoint structure with C dark signal panels across all 20 production pages; no business, database, RLS, API, authentication, gift-code, avatar, forum, task, or sensitive-word contract was changed.
+- Rebuilt the decorative particle canvas with capped DPR, coarse-pointer reduction, ResizeObserver sizing, IntersectionObserver pausing, reduced-motion fallback, `aria-hidden`, and non-interactive pointer behavior.
+- Rebalanced the 390x844 homepage Hero so its signal panel is complete, the next-section transition is visible, and `scrollWidth` remains equal to the viewport width.
+- Added the approved v1.2 tokens, map-grid limits, panel rules, and animation performance contract to `DESIGN.md`.
+- Browser artifacts: `output/playwright/v12-home-desktop-v2.png`, `v12-home-mobile-final.png`, `v12-home-dark.png`, `v12-forum-desktop.png`, `v12-forum-mobile.png`, and `v12-tasks-desktop-v2.png`.
+- Verification passed: business/session/sensitive-word/XSS suite 37/37, security/redeem/static audit 19/19, and visual/version/page-shell suite 25/25.
+- Impeccable detector was executed after the final visual pass. It used degraded regex mode because parser dependencies are unavailable; remaining findings are advisory for the approved map grid and explicit v1.2 tonal/type ramps, not blocking runtime defects.

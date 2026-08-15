@@ -3,9 +3,10 @@
 本文件按公开版本号的实际演进顺序记录项目变化。公开版本只使用两段式 `vX.Y`。
 
 ## v1.2
-- Added the Signal Horizon v1.2 presentation overlay with unified light/dark theme tokens, focus states, hover/active feedback, and restrained motion.
-- Added 19 local PNG technology illustrations for home, forum, tasks, profile, and empty states with lazy loading, explicit dimensions, alt text, and error fallback.
-- Preserved all business entry points, sensitive-word filtering, Supabase session behavior, API contracts, and data structures.
+- 采用 B「Navigation Data Map」整体结构并融合 C 深色信号面板，重绘首页、论坛、任务、商城、公告与后台的前端视觉层。
+- 增加荧光能量核心、轨道粒子、路线节点与明暗双主题；粒子具备 DPR 上限、离屏暂停、粗指针减量和减少动态效果降级。
+- 增加首页、论坛、任务、个人中心与空状态的本地科技视觉资产，配置中文 alt、懒加载、稳定尺寸和加载失败降级。
+- 保留全部业务入口、敏感词过滤、Supabase 会话行为、礼包码、头像、论坛/任务接口与数据结构。
 
 ## v1.1
 - 增强跨页面会话、XSS 与敏感词防护、三套主题和移动端组件一致性。

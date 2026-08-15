@@ -22,8 +22,20 @@ test("CHANGELOG is ordered newest to oldest and starts at v1.2", async () => {
 
 test("visual asset alternatives are valid Chinese and never mojibake", async () => {
   const source = await read("assets/js/ui/visual-assets.js");
-  for (const text of ["抽象科技网格背景", "社区交流氛围插图", "任务进度辅助插图", "个人中心背景插图"]) {
+  for (const text of ["社区协作功能插图", "任务系统功能插图", "积分奖励功能插图", "个人中心信号背景"]) {
     assert.match(source, new RegExp(text));
   }
   assert.doesNotMatch(source, /[鎶绉妧缃鏍鑳櫙]/);
+});
+
+test("v1.2 particle field is decorative, bounded, and motion-aware", async () => {
+  const source = await read("assets/js/ui/visual-assets.js");
+  const css = await read("assets/css/visual-v1.2.css");
+  assert.match(source, /className = "hx-particle-field"/);
+  assert.match(source, /setAttribute\("aria-hidden", "true"\)/);
+  assert.match(source, /Math\.min\(devicePixelRatio \|\| 1, 1\.5\)/);
+  assert.match(source, /prefers-reduced-motion: reduce/);
+  assert.match(source, /IntersectionObserver/);
+  assert.match(css, /\.hx-particle-field\s*\{[^}]*pointer-events:\s*none/s);
+  assert.match(css, /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.hx-particle-field\s*\{\s*display:\s*none/s);
 });
