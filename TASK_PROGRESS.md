@@ -7,7 +7,7 @@
 - 已生成本地 v1.3 静态/后端候选包并补齐切换脚本、发布手册、交付报告和首页/`CHANGELOG.md` 更新日志。当前代码在隔离工作树 `codex/collaborative-task-market-v1.3`。
 - 2026-08-16 已在 Supabase `hangxian` 生产分支执行完整迁移，协作 schema/RLS/RPC 已用只读查询验证。
 - 已将管理员审计 RPC 和三个协作触发器函数的直接执行权限收紧为仅服务端可用；ACL 探针显示 `public`、`anon`、`authenticated` 均为 `false`，Security Advisor 已复跑，v1.3 新增函数不再出现在其警告中。
-- `9890dc9` 已推送，`task-admin` 已部署且未认证 POST 验收为 `401`。仍待 Dashboard 部署 `task-complete`、`task-collaboration`，并完成真实角色/RLS、Edge 与生产静态站验收；线上静态版本仍为 v1.2。
+- `9890dc9` 已推送，`task-admin`、`task-complete` 已部署且未认证 POST 验收均为 `401`。仍待 Dashboard 创建 `task-collaboration`，并完成真实角色/RLS、Edge 与生产静态站验收；线上静态版本仍为 v1.2。
 
 ## 2026.08.12 v1.0 全站视觉重构
 

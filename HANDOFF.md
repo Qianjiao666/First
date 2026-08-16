@@ -12,7 +12,7 @@
 - Edge Functions/API/UI、发布手册、v1.3 切换脚本、交付报告和首页/`CHANGELOG.md` 已完成；完整本地回归 `189/189` 通过，候选静态包清单为 `20260816 / v1.3 / 111 files`。
 - 2026-08-16 已在 Supabase `hangxian` 的 `main / PRODUCTION` 执行 v1.3 完整迁移，并以只读查询确认协作表、管理员审计 RPC 和协作 RLS 对象存在。
 - 已收紧 v1.3 的 `get_task_collaboration_admin` 及三个协作触发器函数 ACL：`public`、`anon`、`authenticated` 均无 `EXECUTE` 权限；Security Advisor 复跑后从 24 条警告降至 18 条，余下均为既有函数，未出现 v1.3 新增对象。
-- `9890dc9 fix: restrict collaboration trigger functions` 已推送至 `origin/codex/collaborative-task-market-v1.3`。`task-admin` 已于 2026-08-16 在 Dashboard 更新，未认证 POST 探针返回预期 `401`。仍待部署并验收 `task-complete` 和 `task-collaboration`，之后才可切换静态站；生产静态站仍为 `20260815 / v1.2`。
+- `9890dc9 fix: restrict collaboration trigger functions` 已推送至 `origin/codex/collaborative-task-market-v1.3`。`task-admin` 和 `task-complete` 已于 2026-08-16 在 Dashboard 更新，两个未认证 POST 探针均返回预期 `401`。仍待创建并验收 `task-collaboration`，之后才可切换静态站；生产静态站仍为 `20260815 / v1.2`。
 
 ## 14. v1.0 全站视觉重构状态（2026-08-12）
 
