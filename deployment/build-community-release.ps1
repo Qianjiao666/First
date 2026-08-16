@@ -10,6 +10,7 @@ $ErrorActionPreference = 'Stop'
 if (-not $Root) {
   $Root = Split-Path -Parent $PSScriptRoot
 }
+$Root = [IO.Path]::GetFullPath($Root)
 
 Add-Type -AssemblyName System.IO.Compression
 Add-Type -AssemblyName System.IO.Compression.FileSystem
