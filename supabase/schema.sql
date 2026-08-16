@@ -4757,6 +4757,14 @@ begin
       (select coalesce(jsonb_agg(to_jsonb(a) order by a.created_at), '[]'::jsonb)
         from public.task_member_assignments as a where a.task_id = p_task_id)
       else '[]'::jsonb end,
+    'applications', case when v_can_view_shared then
+      (select coalesce(jsonb_agg(jsonb_build_object(
+        'applicationId', a.id, 'memberId', a.applicant_id, 'status', a.status
+      ) order by a.created_at), '[]'::jsonb)
+        from public.task_applications as a where a.task_id = p_task_id
+          and a.status in ('accepted', 'submitted', 'completed')
+          and a.arbitration_status not in ('force_completed', 'cancelled', 'refunded'))
+      else '[]'::jsonb end,
     'peerReviews', case when v_can_view_shared then
       (select coalesce(jsonb_agg(to_jsonb(r) order by r.created_at), '[]'::jsonb)
         from public.task_peer_reviews as r

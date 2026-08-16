@@ -42,3 +42,11 @@ test("collaboration migration backfills existing application workspaces", () => 
     /insert into public\.task_conversation_members[\s\S]*?select[\s\S]*?from public\.task_conversations[\s\S]*?join public\.task_applications/i,
   );
 });
+
+test("collaboration reads expose accepted-member application identities for peer review", () => {
+  const collaborationFunction = collaborationSql.match(
+    /create or replace function public\.get_task_collaboration[\s\S]*?\$\$;/i,
+  )?.[0] ?? "";
+  assert.match(collaborationFunction, /v_is_admin boolean := false/i);
+  assert.match(collaborationFunction, /'applications', case when v_can_view_shared then[\s\S]*?'applicationId', a\.id[\s\S]*?'memberId', a\.applicant_id/i);
+});

@@ -120,6 +120,10 @@ function renderCollaboration(data) {
   if (!writable) messageForm.remove();
   if (!writable) peerForm.remove();
   if (!writable) return;
+  const reviewee = peerForm.querySelector("[data-task-peer-reviewee]");
+  reviewee.replaceChildren(...asItems(data?.applications).map((application) => new Option(
+    `协作成员 ${String(application.memberId).slice(0, 8)}`, application.applicationId,
+  )));
   messageForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     const content = String(new FormData(messageForm).get("content") ?? "").trim();
@@ -129,6 +133,19 @@ function renderCollaboration(data) {
       messageForm.reset();
       const refreshed = await services.api.getCollaboration(taskId);
       renderCollaboration(refreshed);
+    } catch (error) {
+      showTaskMessage(message, taskErrorMessage(error), "error");
+    }
+  }, { once: true });
+  peerForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const values = new FormData(peerForm);
+    try {
+      await services.api.submitPeerReview(String(values.get("applicationId")), {
+        communication: Number(values.get("communication")), contribution: Number(values.get("contribution")), punctuality: Number(values.get("punctuality")),
+      }, String(values.get("content") ?? "").trim());
+      peerForm.reset();
+      showTaskMessage(message, "成员互评已提交。", "info");
     } catch (error) {
       showTaskMessage(message, taskErrorMessage(error), "error");
     }
