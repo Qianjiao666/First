@@ -1,6 +1,6 @@
 # 航线 MKJ 项目接手文档
 
-更新时间：2026-08-12
+更新时间：2026-08-16
 
 ## 15. v1.3 多人协作任务市场开发状态（2026-08-16）
 
@@ -10,7 +10,9 @@
 - 管理员会话例外读取必须调用带非空理由的 `get_task_collaboration_admin` 并写入审计日志；普通协作读取和发送消息仍限于会话成员。
 - 已修复旧模板写入口绕过版本/模式治理、终态申请继续分工/互评、发布事务不检查资格和账户迁移遗漏协作身份等评审问题。
 - Edge Functions/API/UI、发布手册、v1.3 切换脚本、交付报告和首页/`CHANGELOG.md` 已完成；完整本地回归 `189/189` 通过，候选静态包清单为 `20260816 / v1.3 / 111 files`。
-- 2026-08-16 发布权限探测：`npx supabase@latest` 为 `2.114.0`，但远端项目读取返回 `Unauthorized`；`root@119.45.253.94` 的 SSH 批处理认证被拒绝。未执行真实迁移/RLS E2E、函数部署或静态切换，生产仍为 `20260815 / v1.2`。获得已授权 Supabase 会话和服务器 WebShell/SSH 访问后，必须按 `docs/COMMUNITY_RELEASE_RUNBOOK.md` 先完成后端门禁，禁止提前切静态站。
+- 2026-08-16 已在 Supabase `hangxian` 的 `main / PRODUCTION` 执行 v1.3 完整迁移，并以只读查询确认协作表、管理员审计 RPC 和协作 RLS 对象存在。
+- 已收紧 v1.3 的 `get_task_collaboration_admin` 及三个协作触发器函数 ACL：`public`、`anon`、`authenticated` 均无 `EXECUTE` 权限；Security Advisor 复跑后从 24 条警告降至 18 条，余下均为既有函数，未出现 v1.3 新增对象。
+- `9890dc9 fix: restrict collaboration trigger functions` 已推送至 `origin/codex/collaborative-task-market-v1.3`。下一关是部署并验收 `task-admin`、`task-complete`、`task-collaboration` 三个 Edge Function，之后才可重建候选包并切换静态站；生产静态站仍为 `20260815 / v1.2`。
 
 ## 14. v1.0 全站视觉重构状态（2026-08-12）
 
