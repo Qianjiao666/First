@@ -73,3 +73,8 @@ export function buildTaskArbitrationPayload(taskId, decision, reason = "") {
     reason: String(reason ?? "").trim(),
   };
 }
+
+export function toCollaborativeTaskModel(task = {}) {
+  const isCollaboration = task.task_mode === "collaboration";
+  return { isCollaboration, taskType: isCollaboration ? "collaboration" : "individual" };
+}

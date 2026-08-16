@@ -1,5 +1,11 @@
 # 任务发布系统共享契约
 
+## 协作任务市场扩展
+
+协作任务使用 `task_templates`、`task_publishing_rules`、`task_publishing_overrides`、`task_conversations`、`task_member_assignments` 和 `task_peer_reviews`。发布资格由 `get_task_publishing_eligibility` 返回，模板和治理写入只经 service-only RPC。
+
+浏览器通过 `task-collaboration` 调用 `getCollaboration`、`getConsultation`、`sendMessage`、`assignMember`、`submitPeerReview` 和 `getAuditContext`；模板与资格 API 为 `getTemplates`、`getPublishingEligibility`、`saveTemplate`、`savePublishingRule`、`savePublishingOverride`。不实现支付、钱包、退款或提现流程。
+
 状态：已按第 6.1 版本地共享实现适配。任务模块只消费这里列出的接口；不修改共享实现、规范 schema、论坛或部署文件。
 
 ## 1. 所有权与权限

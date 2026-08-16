@@ -1,5 +1,9 @@
 # 任务运行时与 Edge API
 
+## 协作任务 API
+
+`task-collaboration` 的 action 仅限 `getCollaboration`、`getConsultation`、`sendMessage`、`assignMember`、`submitPeerReview` 和 `getAuditContext`。写入检查禁言并调用 service-only RPC；管理员读取必须提供审计原因。
+
 本文件定义 6.1 核心 shell 注入给任务静态页面的唯一前端接线。它不要求修改共享鉴权、徽章或数据库实现。
 
 ## `MKJ_TASK_INTEGRATION`

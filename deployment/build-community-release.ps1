@@ -1,8 +1,8 @@
 [CmdletBinding()]
 param(
   [string]$Root = '',
-  [string]$ReleaseDate = '20260812',
-  [string]$Revision = 'v1.1'
+  [string]$ReleaseDate = '20260816',
+  [string]$Revision = 'v1.3'
 )
 
 $ErrorActionPreference = 'Stop'
