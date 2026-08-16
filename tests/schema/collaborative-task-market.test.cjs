@@ -62,3 +62,16 @@ test("administrator collaboration reads are service-only", () => {
     /grant execute on function public\.get_task_collaboration_admin\(uuid, uuid, text\) to service_role;/i,
   );
 });
+
+test("collaboration trigger functions are not directly callable by browser roles", () => {
+  for (const routine of [
+    "keep_published_task_template_snapshot()",
+    "sync_task_application_conversations()",
+    "sync_task_listing_conversations()",
+  ]) {
+    assert.match(
+      collaborationSql,
+      new RegExp(`revoke all on function public\\.${routine.replaceAll("(", "\\(").replaceAll(")", "\\)")} from public, anon, authenticated;`, "i"),
+    );
+  }
+});

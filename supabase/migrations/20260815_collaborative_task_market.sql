@@ -923,6 +923,9 @@ revoke all on function public.get_task_publishing_eligibility(uuid) from public,
 revoke all on function public.save_task_template(uuid, uuid, jsonb) from public, anon, authenticated;
 revoke all on function public.save_task_publishing_rule(uuid, uuid, jsonb) from public, anon, authenticated;
 revoke all on function public.save_task_publishing_override(uuid, uuid, uuid, jsonb) from public, anon, authenticated;
+revoke all on function public.keep_published_task_template_snapshot() from public, anon, authenticated;
+revoke all on function public.sync_task_application_conversations() from public, anon, authenticated;
+revoke all on function public.sync_task_listing_conversations() from public, anon, authenticated;
 revoke all on function public.get_task_collaboration(uuid, uuid) from public, anon, authenticated;
 revoke all on function public.get_task_collaboration_admin(uuid, uuid, text) from public, anon, authenticated;
 revoke all on function public.send_task_conversation_message(uuid, uuid, text) from public, anon, authenticated;
