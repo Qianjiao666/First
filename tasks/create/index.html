@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/MKJ/assets/css/visual-v1.css?v=20260812-v1.0" />
     <link rel="stylesheet" href="/MKJ/assets/css/visual-v1.1.css?v=20260812-v1.1" />
     <link rel="stylesheet" href="/MKJ/assets/css/visual-v1.2.css?v=20260815-v1.2" />
+    <link rel="stylesheet" href="/MKJ/assets/css/visual-v1.3.css?v=20260816-v1.3" />
     <script type="module" src="/MKJ/assets/js/theme/theme-controller.js?v=20260812-v1.1"></script>
       <script type="module" src="/MKJ/assets/js/ui/visual-assets.js?v=20260815-v1.2"></script>
   </head>
@@ -28,6 +29,8 @@
 
       <form class="task-create-form" data-task-create-form>
         <div class="task-create-fields">
+          <label><span>任务模板</span><select name="templateId" data-task-template-select><option value="">不使用模板</option></select></label>
+          <label><span>协作方式</span><select name="taskMode"><option value="individual">个人任务</option><option value="collaboration">多人协作</option></select></label>
           <label><span>任务标题</span><input name="title" required maxlength="120" /></label>
           <label><span>任务摘要</span><textarea name="summary" required maxlength="280" rows="3"></textarea></label>
           <label><span>任务内容</span><textarea name="body" required maxlength="8000" rows="12"></textarea></label>
@@ -47,6 +50,7 @@
           <h2>发布前检查</h2>
           <ul><li>标题、摘要和正文完整</li><li>分类与子类匹配</li><li>截止时间晚于当前时间</li><li>发布前会再次过滤敏感内容</li></ul>
           <p class="task-form-message" data-task-form-message role="status"></p>
+          <output data-task-publishing-eligibility aria-live="polite"></output>
           <button class="task-button task-button-secondary task-full-button" type="submit" name="intent" value="draft" data-task-create-draft>保存草稿</button>
           <button class="task-button task-button-primary task-full-button" type="submit" name="intent" value="publish" data-task-create-publish>发布任务</button>
         </aside>

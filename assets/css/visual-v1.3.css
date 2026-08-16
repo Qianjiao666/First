@@ -1,0 +1,2 @@
+[data-task-collaboration-meta], [data-task-publishing-eligibility] { color: var(--visual-text-muted, #5d6470); font-size: 0.875rem; }
+.task-listing [data-task-collaboration-meta] { margin: 0.45rem 0 0; }

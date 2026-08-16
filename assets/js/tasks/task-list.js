@@ -1,6 +1,6 @@
 import { buildTaskDetailUrl, hasTaskCapability } from "./task-domain.js";
 import { asItems, createTag, createTaskServices, mountTaskChrome, showTaskMessage, taskErrorMessage } from "./task-common.js";
-import { formatTaskDeadline, toTaskListingModel } from "./task-view.js";
+import { formatTaskDeadline, toCollaborativeTaskModel } from "./task-view.js";
 
 const services = createTaskServices();
 const list = document.querySelector("[data-task-list]");
@@ -9,13 +9,14 @@ const count = document.querySelector("[data-task-result-count]");
 const queryInput = document.querySelector("[data-task-filter-query]");
 const categorySelect = document.querySelector("[data-task-filter-category]");
 const sortSelect = document.querySelector("[data-task-filter-sort]");
+const modeSelect = document.querySelector("[data-task-filter-mode]");
 const pagination = document.querySelector("[data-task-pagination]");
 let currentPage = 1;
 
 function renderListing(task) {
   const template = document.querySelector("#task-listing-template");
   const fragment = template.content.cloneNode(true);
-  const model = toTaskListingModel(task);
+  const model = toCollaborativeTaskModel(task);
   const title = fragment.querySelector("[data-task-title]");
 
   title.textContent = model.title;
@@ -24,6 +25,7 @@ function renderListing(task) {
   fragment.querySelector("[data-task-category]").textContent = model.categoryName;
   fragment.querySelector("[data-task-deadline]").textContent = formatTaskDeadline(model.deadline);
   fragment.querySelector("[data-task-reward]").textContent = String(model.reward);
+  fragment.querySelector("[data-task-collaboration-meta]").textContent = `${model.taskType} · ${model.capacityLabel} · ${model.reviewLabel}`;
   fragment.querySelector("[data-task-tags]").replaceChildren(...model.tags.map((tag) => createTag(tag)));
   return fragment;
 }
@@ -33,6 +35,7 @@ function currentFilters() {
     query: queryInput.value.trim(),
     category: categorySelect.value,
     sort: sortSelect.value,
+    mode: modeSelect?.value ?? "",
     page: currentPage,
   };
 }
@@ -120,6 +123,7 @@ async function bootstrap() {
   });
   queryInput.addEventListener("search", loadFirstPage);
   categorySelect.addEventListener("change", loadFirstPage);
+  modeSelect?.addEventListener("change", loadFirstPage);
   sortSelect.addEventListener("change", loadFirstPage);
   await loadTasks();
 }

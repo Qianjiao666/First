@@ -50,6 +50,19 @@ export function toTaskListingModel(task = {}) {
   };
 }
 
+export function toCollaborativeTaskModel(task = {}) {
+  const capacity = Math.max(0, Number(task.application_count ?? task.accepted_count ?? 0));
+  const limit = Math.max(1, Number(task.application_limit ?? 1));
+  const isCollaboration = task.task_mode === "collaboration";
+  return {
+    ...toTaskListingModel(task),
+    taskType: isCollaboration ? "多人协作" : "个人任务",
+    isCollaboration,
+    capacityLabel: `${Math.min(capacity, limit)} / ${limit} 人已接取`,
+    reviewLabel: isCollaboration ? "成员互评 + 发布者批改" : "发布者批改",
+  };
+}
+
 export function normalizeTaskTimeline(events) {
   if (!Array.isArray(events)) return [];
   return events

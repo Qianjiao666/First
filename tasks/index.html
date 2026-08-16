@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="/MKJ/assets/css/visual-v1.css?v=20260812-v1.0" />
     <link rel="stylesheet" href="/MKJ/assets/css/visual-v1.1.css?v=20260812-v1.1" />
     <link rel="stylesheet" href="/MKJ/assets/css/visual-v1.2.css?v=20260815-v1.2" />
+    <link rel="stylesheet" href="/MKJ/assets/css/visual-v1.3.css?v=20260816-v1.3" />
     <script type="module" src="/MKJ/assets/js/theme/theme-controller.js?v=20260812-v1.1"></script>
       <script type="module" src="/MKJ/assets/js/ui/visual-assets.js?v=20260815-v1.2"></script>
   </head>
@@ -51,6 +52,10 @@
           <select data-task-filter-category><option value="">全部方向</option></select>
         </label>
         <label>
+          <span>协作方式</span>
+          <select data-task-filter-mode><option value="">全部任务</option><option value="collaboration">多人协作</option><option value="individual">个人任务</option></select>
+        </label>
+        <label>
           <span>排序</span>
           <select data-task-filter-sort>
             <option value="published_at.desc">最新发布</option>
@@ -66,6 +71,7 @@
           <div class="task-section-heading">
             <h2>公开任务</h2>
             <output data-task-result-count>正在读取</output>
+            <output data-task-publishing-eligibility aria-live="polite"></output>
           </div>
           <div class="task-notice" data-task-message role="status" hidden></div>
           <div class="task-list" data-task-list aria-busy="true">
@@ -92,6 +98,7 @@
       <article class="task-listing">
         <div class="task-listing-main">
           <div class="task-listing-meta"><span data-task-category></span><time data-task-deadline></time></div>
+          <p data-task-collaboration-meta></p>
           <h3><a data-task-title></a></h3>
           <p data-task-summary></p>
           <ul class="task-tag-list" data-task-tags aria-label="能力标签"></ul>

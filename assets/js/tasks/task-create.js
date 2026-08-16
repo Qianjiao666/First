@@ -11,6 +11,8 @@ const categorySelect = form?.querySelector("[data-task-category-select]");
 const subcategorySelect = form?.querySelector("[data-task-subcategory-select]");
 const attachmentInput = form?.querySelector("[data-task-attachment-input]");
 const attachmentList = form?.querySelector("[data-task-attachment-list]");
+const templateSelect = form?.querySelector("[data-task-template-select]");
+const eligibility = form?.querySelector("[data-task-publishing-eligibility]");
 let categories = [];
 let currentUser = null;
 
@@ -42,6 +44,16 @@ async function loadCategories() {
   replaceOptions(subcategorySelect, [], "先选择大类");
 }
 
+async function loadTemplatesAndEligibility() {
+  const [templates, publishing] = await Promise.all([services.api.getTemplates(), services.api.getPublishingEligibility()]);
+  replaceOptions(templateSelect, asItems(templates).map((template) => ({ ...template, name: template.title })), "不使用模板");
+  const data = publishing?.data ?? publishing ?? {};
+  if (eligibility) eligibility.textContent = data.eligible === false
+    ? `暂不满足发布条件：需声望 ${data.minimumReputation ?? 0}、完成 ${data.minimumCompletedTasks ?? 0} 项任务。`
+    : "满足当前发布条件。";
+  form.querySelector("[data-task-create-publish]").disabled = data.eligible === false;
+}
+
 function selectedFiles() {
   return [...(attachmentInput?.files ?? [])];
 }
@@ -57,6 +69,8 @@ function payloadFromForm(data) {
     applicationLimit: Number(data.get("applicationLimit")),
     deadlineAt: String(data.get("deadlineAt") ?? ""),
     skillTags: String(data.get("skillTags") ?? "").split(",").map((tag) => tag.trim()).filter(Boolean),
+    templateId: String(data.get("templateId") ?? "") || null,
+    taskMode: String(data.get("taskMode") ?? "individual"),
     attachmentMetadata: selectedFiles().map((file) => ({ name: file.name, mimeType: file.type, size: file.size })),
   };
 }
@@ -130,6 +144,7 @@ async function bootstrap() {
     if (publishButton && !canPublish) publishButton.hidden = true;
     document.body.dataset.taskCapabilityGuard = "allowed";
     await loadCategories();
+    await loadTemplatesAndEligibility();
   } catch (error) {
     blockCreate();
     showTaskMessage(message, taskErrorMessage(error), "error");

@@ -77,6 +77,7 @@ async function queryPublished(client, filters = {}) {
   let query = client.from("task_listings").select("*", { count: "exact" }).eq("status", "published");
 
   if (filters.category) query = query.eq("category_id", String(filters.category));
+  if (filters.mode) query = query.eq("task_mode", String(filters.mode));
   const search = taskSearchFilter(filters.query);
   if (search) query = query.or(search);
 
