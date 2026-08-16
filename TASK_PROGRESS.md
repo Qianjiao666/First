@@ -5,7 +5,7 @@
 - 已完成协作任务 SQL/RLS/RPC、`task-collaboration` Edge Function、任务浏览器 API/市场/发布/详情/我的任务/后台接入，以及模板、发布资格、咨询、分工、三维互评与管理员审计读取。
 - 校园团购只作为多人协作任务；实现和发布门禁均明确排除价格、支付、钱包、退款和结算流程。
 - 已生成本地 v1.3 静态/后端候选包并补齐切换脚本、发布手册、交付报告和首页/`CHANGELOG.md` 更新日志。当前代码在隔离工作树 `codex/collaborative-task-market-v1.3`。
-- 尚未部署到生产：真实 PostgreSQL/Supabase 迁移、函数部署、浏览器角色/RLS 验收和服务器原子切换必须按 `docs/COMMUNITY_RELEASE_RUNBOOK.md` 完成后才能执行。
+- 2026-08-16 发布权限探测：一次性 Supabase CLI `2.114.0` 可运行但项目列表返回 `Unauthorized`；服务器 SSH 批处理认证被拒绝（仅公钥认证）。因此未执行真实 PostgreSQL/Supabase 迁移、函数部署、浏览器角色/RLS 验收或服务器原子切换，线上仍为 v1.2。获得已授权 Supabase 会话和服务器 WebShell/SSH 访问后，必须按 `docs/COMMUNITY_RELEASE_RUNBOOK.md` 从后端门禁开始执行。
 
 ## 2026.08.12 v1.0 全站视觉重构
 
