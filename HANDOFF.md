@@ -2,6 +2,16 @@
 
 更新时间：2026-08-12
 
+## 15. v1.3 多人协作任务市场开发状态（2026-08-16）
+
+- 已完成设计与实施计划：`docs/superpowers/specs/2026-08-15-collaborative-task-market-design.md`、`docs/superpowers/plans/2026-08-15-collaborative-task-market.md`。
+- 当前实现位于工作树 `D:\桌面文件\任务\.worktrees\codex-collaborative-task-market-v1.3`，分支 `codex/collaborative-task-market-v1.3`；尚未部署到生产 `/var/www/MKJ`。
+- 三份 SQL 源已同步：协作任务表、RLS、服务端 RPC、模板版本快照、发布资格规则、咨询/协作会话、成员分工、三维互评、生命周期触发器和账户迁移身份同步。
+- 管理员会话例外读取必须调用带非空理由的 `get_task_collaboration_admin` 并写入审计日志；普通协作读取和发送消息仍限于会话成员。
+- 已修复旧模板写入口绕过版本/模式治理、终态申请继续分工/互评、发布事务不检查资格和账户迁移遗漏协作身份等评审问题。
+- 静态验证：`node --test tests/schema/collaborative-task-market.test.cjs tasks/tests/task-sql.test.mjs` 为 `15/15` 通过；当前环境没有 PostgreSQL、Supabase CLI、Docker 或 Deno，未执行真实迁移/RLS E2E。
+- 下一步应继续完成 Edge Functions/API/UI 接入与集成测试，再按发布手册进行 Supabase 迁移、角色矩阵验收和更新日志页面同步；禁止提前部署。
+
 ## 14. v1.0 全站视觉重构状态（2026-08-12）
 
 - 本次只重构视觉表现，不改变页面路由、DOM 功能契约、表单字段、事件选择器、Supabase 数据流、权限或已有功能。

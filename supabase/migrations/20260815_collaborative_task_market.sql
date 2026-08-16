@@ -126,6 +126,9 @@ create table if not exists public.task_peer_reviews (
   reviewer_id uuid not null references auth.users(id) on delete cascade,
   reviewee_id uuid not null references auth.users(id) on delete cascade,
   rating smallint not null check (rating between 1 and 5),
+  communication smallint not null default 1 check (communication between 1 and 5),
+  contribution smallint not null default 1 check (contribution between 1 and 5),
+  punctuality smallint not null default 1 check (punctuality between 1 and 5),
   content text not null,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
@@ -162,6 +165,9 @@ alter table public.task_conversation_members enable row level security;
 alter table public.task_conversation_messages enable row level security;
 alter table public.task_member_assignments enable row level security;
 alter table public.task_peer_reviews enable row level security;
+alter table public.task_peer_reviews add column if not exists communication smallint not null default 1;
+alter table public.task_peer_reviews add column if not exists contribution smallint not null default 1;
+alter table public.task_peer_reviews add column if not exists punctuality smallint not null default 1;
 
 revoke all on public.task_publishing_rules from anon, authenticated;
 revoke all on public.task_publishing_overrides from anon, authenticated;
@@ -197,8 +203,6 @@ create policy task_conversations_read_participant on public.task_conversations
           ))
         )
     )
-    or exists (select 1 from public.user_public_profiles as p
-      where p.user_id = (select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid) and p.role = 'ADMIN'::public.user_role)
   );
 
 drop policy if exists task_conversation_members_read_participant on public.task_conversation_members;
@@ -222,8 +226,6 @@ create policy task_conversation_members_read_participant on public.task_conversa
           ))
         )
     )
-    or exists (select 1 from public.user_public_profiles as p
-      where p.user_id = (select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid) and p.role = 'ADMIN'::public.user_role)
   );
 
 drop policy if exists task_conversation_messages_read_participant on public.task_conversation_messages;
@@ -234,8 +236,6 @@ create policy task_conversation_messages_read_participant on public.task_convers
       join public.task_conversation_members as m on m.conversation_id = c.id
       where c.id = task_conversation_messages.conversation_id and m.user_id = (select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid)
     )
-    or exists (select 1 from public.user_public_profiles as p
-      where p.user_id = (select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid) and p.role = 'ADMIN'::public.user_role)
   );
 
 drop policy if exists task_member_assignments_read_participant on public.task_member_assignments;
@@ -248,8 +248,6 @@ create policy task_member_assignments_read_participant on public.task_member_ass
       where a.task_id = task_member_assignments.task_id and a.applicant_id = (select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid)
         and a.status in ('accepted', 'submitted', 'completed')
         and a.arbitration_status not in ('force_completed', 'cancelled', 'refunded'))
-    or exists (select 1 from public.user_public_profiles as p
-      where p.user_id = (select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid) and p.role = 'ADMIN'::public.user_role)
   );
 
 drop policy if exists task_peer_reviews_read_participant on public.task_peer_reviews;
@@ -259,8 +257,6 @@ create policy task_peer_reviews_read_participant on public.task_peer_reviews
     or reviewee_id = (select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid)
     or exists (select 1 from public.task_listings as t
       where t.id = task_peer_reviews.task_id and t.creator_id = (select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid))
-    or exists (select 1 from public.user_public_profiles as p
-      where p.user_id = (select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid) and p.role = 'ADMIN'::public.user_role)
   );
 
 create or replace function public.get_task_template_snapshot(p_actor_id uuid, p_template_id uuid)
@@ -720,12 +716,10 @@ set search_path = ''
 as $$
 declare
   v_result jsonb;
-  v_is_admin boolean;
+  v_is_admin boolean := false;
   v_is_creator boolean;
   v_can_view_shared boolean;
 begin
-  select exists (select 1 from public.user_public_profiles as p
-    where p.user_id = p_actor_id and p.role = 'ADMIN'::public.user_role) into v_is_admin;
   select exists (select 1 from public.task_listings as t
     where t.id = p_task_id and t.creator_id = p_actor_id) into v_is_creator;
   select v_is_admin or v_is_creator or exists (
@@ -738,7 +732,7 @@ begin
     select 1 from public.task_conversations as c
     left join public.task_conversation_members as m on m.conversation_id = c.id and m.user_id = p_actor_id
     where c.task_id = p_task_id and (
-      m.user_id is not null or v_is_admin
+      m.user_id is not null
     )
   ) then
     raise exception using errcode = '42501', message = 'Task collaboration is not available to actor.';
@@ -767,14 +761,36 @@ begin
   from public.task_conversations as c
   where c.task_id = p_task_id
     and (c.kind = 'application_consultation' or v_can_view_shared)
-    and (v_is_admin or exists (select 1 from public.task_conversation_members as m
+    and (exists (select 1 from public.task_conversation_members as m
       where m.conversation_id = c.id and m.user_id = p_actor_id));
   return v_result;
 end;
 $$;
 
+create or replace function public.get_task_collaboration_admin(
+  p_actor_id uuid, p_task_id uuid, p_reason text
+)
+returns jsonb language plpgsql stable security definer set search_path = '' as $$
+declare v_result jsonb;
+begin
+  if coalesce(char_length(trim(p_reason)), 0) not between 1 and 800 then
+    raise exception using errcode = '22023', message = 'A non-empty audit reason is required.';
+  end if;
+  perform public.assert_task_admin(p_actor_id);
+  select jsonb_build_object('taskId', p_task_id,
+    'conversations', coalesce(jsonb_agg(jsonb_build_object(
+      'id', c.id, 'kind', c.kind, 'applicationId', c.application_id, 'status', c.status,
+      'members', (select coalesce(jsonb_agg(to_jsonb(m) order by m.joined_at), '[]'::jsonb) from public.task_conversation_members m where m.conversation_id = c.id),
+      'messages', (select coalesce(jsonb_agg(to_jsonb(msg) order by msg.created_at), '[]'::jsonb) from public.task_conversation_messages msg where msg.conversation_id = c.id)
+    ) order by c.created_at), '[]'::jsonb)) into v_result
+  from public.task_conversations c where c.task_id = p_task_id;
+  insert into public.admin_audit_log(actor_id, action, resource_type, resource_id, metadata)
+  values (p_actor_id, 'task.collaboration.admin_read', 'task', p_task_id, jsonb_build_object('reason', trim(p_reason)));
+  return v_result;
+end; $$;
+
 create or replace function public.send_task_conversation_message(
-  p_actor_id uuid, p_conversation_id uuid, p_filtered_content text
+  p_actor_id uuid, p_conversation_id uuid, p_content text
 )
 returns uuid
 language plpgsql
@@ -783,7 +799,7 @@ set search_path = ''
 as $$
 declare v_message_id uuid;
 begin
-  if coalesce(char_length(trim(p_filtered_content)), 0) not between 1 and 4000 then
+  if coalesce(char_length(trim(p_content)), 0) not between 1 and 4000 then
     raise exception using errcode = '22023', message = 'Conversation message is required.';
   end if;
   if not exists (
@@ -791,7 +807,7 @@ begin
     where c.id = p_conversation_id and c.status = 'active' and (
       exists (select 1 from public.user_public_profiles as p
         where p.user_id = p_actor_id and p.role = 'ADMIN'::public.user_role)
-      or (
+      and (
         exists (select 1 from public.task_conversation_members as m
           where m.conversation_id = c.id and m.user_id = p_actor_id)
         and (
@@ -809,7 +825,7 @@ begin
     raise exception using errcode = '42501', message = 'Active task conversation is not available to actor.';
   end if;
   insert into public.task_conversation_messages (conversation_id, sender_id, content)
-  values (p_conversation_id, p_actor_id, trim(p_filtered_content))
+  values (p_conversation_id, p_actor_id, trim(p_content))
   returning id into v_message_id;
   return v_message_id;
 end;
@@ -838,7 +854,8 @@ begin
   end if;
   if not exists (select 1 from public.task_applications
     where task_id = p_task_id and applicant_id = p_member_id
-      and status in ('accepted', 'submitted', 'completed')) then
+      and status in ('accepted', 'submitted', 'completed')
+      and arbitration_status not in ('force_completed', 'cancelled', 'refunded')) then
     raise exception using errcode = '22023', message = 'Accepted task member not found.';
   end if;
   insert into public.task_member_assignments (task_id, member_id, assigned_by_id, responsibility)
@@ -859,7 +876,8 @@ end;
 $$;
 
 create or replace function public.submit_task_peer_review(
-  p_actor_id uuid, p_task_id uuid, p_reviewee_id uuid, p_rating smallint, p_filtered_content text
+  p_actor_id uuid, p_task_id uuid, p_reviewee_id uuid, p_communication smallint,
+  p_contribution smallint, p_punctuality smallint, p_content text
 )
 returns uuid
 language plpgsql
@@ -868,22 +886,25 @@ set search_path = ''
 as $$
 declare v_review_id uuid;
 begin
-  if p_actor_id = p_reviewee_id or p_rating not between 1 and 5
-    or coalesce(char_length(trim(p_filtered_content)), 0) not between 1 and 1200 then
+  if p_actor_id = p_reviewee_id or p_communication not between 1 and 5
+    or p_contribution not between 1 and 5 or p_punctuality not between 1 and 5
+    or coalesce(char_length(trim(p_content)), 0) not between 1 and 1200 then
     raise exception using errcode = '22023', message = 'A valid peer review is required.';
   end if;
   if not exists (select 1 from public.task_applications
       where task_id = p_task_id and applicant_id = p_actor_id
-        and status in ('accepted', 'submitted', 'completed'))
+        and status in ('accepted', 'submitted', 'completed') and arbitration_status not in ('force_completed', 'cancelled', 'refunded'))
     or not exists (select 1 from public.task_applications
       where task_id = p_task_id and applicant_id = p_reviewee_id
-        and status in ('accepted', 'submitted', 'completed')) then
+        and status in ('accepted', 'submitted', 'completed') and arbitration_status not in ('force_completed', 'cancelled', 'refunded')) then
     raise exception using errcode = '42501', message = 'Peer reviews are limited to accepted task members.';
   end if;
-  insert into public.task_peer_reviews (task_id, reviewer_id, reviewee_id, rating, content)
-  values (p_task_id, p_actor_id, p_reviewee_id, p_rating, trim(p_filtered_content))
+  insert into public.task_peer_reviews (task_id, reviewer_id, reviewee_id, rating, communication, contribution, punctuality, content)
+  values (p_task_id, p_actor_id, p_reviewee_id, ((p_communication + p_contribution + p_punctuality + 1) / 3)::smallint,
+    p_communication, p_contribution, p_punctuality, trim(p_content))
   on conflict (task_id, reviewer_id, reviewee_id) do update set
-    rating = excluded.rating, content = excluded.content, updated_at = now()
+    rating = excluded.rating, communication = excluded.communication, contribution = excluded.contribution,
+    punctuality = excluded.punctuality, content = excluded.content, updated_at = now()
   returning id into v_review_id;
   return v_review_id;
 end;
@@ -897,13 +918,14 @@ revoke all on function public.save_task_publishing_override(uuid, uuid, uuid, js
 revoke all on function public.get_task_collaboration(uuid, uuid) from public, anon, authenticated;
 revoke all on function public.send_task_conversation_message(uuid, uuid, text) from public, anon, authenticated;
 revoke all on function public.assign_task_member(uuid, uuid, uuid, text) from public, anon, authenticated;
-revoke all on function public.submit_task_peer_review(uuid, uuid, uuid, smallint, text) from public, anon, authenticated;
+revoke all on function public.submit_task_peer_review(uuid, uuid, uuid, smallint, smallint, smallint, text) from public, anon, authenticated;
 
 grant execute on function public.get_task_publishing_eligibility(uuid) to service_role;
 grant execute on function public.save_task_template(uuid, uuid, jsonb) to service_role;
 grant execute on function public.save_task_publishing_rule(uuid, uuid, jsonb) to service_role;
 grant execute on function public.save_task_publishing_override(uuid, uuid, uuid, jsonb) to service_role;
 grant execute on function public.get_task_collaboration(uuid, uuid) to service_role;
+grant execute on function public.get_task_collaboration_admin(uuid, uuid, text) to service_role;
 grant execute on function public.send_task_conversation_message(uuid, uuid, text) to service_role;
 grant execute on function public.assign_task_member(uuid, uuid, uuid, text) to service_role;
-grant execute on function public.submit_task_peer_review(uuid, uuid, uuid, smallint, text) to service_role;
+grant execute on function public.submit_task_peer_review(uuid, uuid, uuid, smallint, smallint, smallint, text) to service_role;

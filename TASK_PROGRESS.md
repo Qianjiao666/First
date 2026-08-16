@@ -1,5 +1,12 @@
 # 航线 MKJ 任务进度
 
+## 2026.08.16 v1.3 多人协作任务市场
+
+- Task 1 契约测试已完成并通过复核。
+- Task 2 SQL schema 初版及评审修复已完成：管理员会话审计读取、账户迁移协作身份、模板治理、三维互评、终态写保护和发布资格事务检查均已补齐。
+- 当前静态测试 `15/15` 通过；真实 PostgreSQL/Supabase 迁移、Edge Function、浏览器集成和生产部署尚未执行。
+- 代码位于隔离工作树 `codex/collaborative-task-market-v1.3`，待 Task 2 提交后进入 API/Edge/UI 实现。
+
 ## 2026.08.12 v1.0 全站视觉重构
 
 - 在不改变已有功能、路由、表单、Supabase 和权限逻辑的前提下，新增 `assets/css/visual-v1.css` 并接入 20 个生产页面。
