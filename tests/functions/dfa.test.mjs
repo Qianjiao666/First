@@ -19,7 +19,7 @@ const digest = (value) => crypto.createHash("sha256").update(value).digest("hex"
 test("the pinned MIT lexicon snapshot has its documented deterministic hash", async () => {
   const words = await fs.readFile(new URL("../../assets/data/sensitive-lexicon-source/words.txt", import.meta.url));
   const license = await fs.readFile(new URL("../../assets/data/sensitive-lexicon-source/LICENSE", import.meta.url), "utf8");
-  assert.equal(digest(words), "196E6251FBFDB92BEE24BBB3D9E5059D07C29B472FA995C36FAA86AFC9431DC0");
+  assert.equal(digest(words.toString("utf8").replace(/\r\n/g, "\n")), "196E6251FBFDB92BEE24BBB3D9E5059D07C29B472FA995C36FAA86AFC9431DC0");
   assert.match(license, /^MIT License/m);
   assert.equal(OPEN_SOURCE_WARN_WORDS.length, 11788);
   assert.deepEqual(backendLexicon.OPEN_SOURCE_WARN_WORDS, OPEN_SOURCE_WARN_WORDS);
