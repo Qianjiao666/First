@@ -659,7 +659,7 @@ join public.task_listings as t on t.id = a.task_id
 on conflict (task_id, kind, application_id) do nothing;
 
 insert into public.task_conversations (task_id, kind, application_id, status)
-select distinct a.task_id, 'collaboration', null,
+select distinct a.task_id, 'collaboration', null::uuid,
   case
     when t.status in ('closed', 'archived')
       or t.arbitration_status in ('force_completed', 'cancelled', 'refunded')

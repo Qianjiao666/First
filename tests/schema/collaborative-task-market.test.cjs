@@ -41,6 +41,7 @@ test("collaboration migration backfills existing application workspaces", () => 
     collaborationSql,
     /insert into public\.task_conversation_members[\s\S]*?select[\s\S]*?from public\.task_conversations[\s\S]*?join public\.task_applications/i,
   );
+  assert.match(collaborationSql, /select distinct a\.task_id, 'collaboration', null::uuid,/i);
 });
 
 test("collaboration reads expose accepted-member application identities for peer review", () => {
