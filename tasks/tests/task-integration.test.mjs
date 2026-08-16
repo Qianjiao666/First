@@ -196,6 +196,26 @@ test("task function transport allows completion attachments and admin arbitratio
   ]);
 });
 
+test("task function transport allows only declared collaboration actions", async () => {
+  const calls = [];
+  const integration = createTaskIntegration({
+    client: { from: () => createQueryBuilder({ data: [], error: null }).builder },
+    getSession: async () => ({ access_token: "session-token" }),
+    config: { url: "https://example.supabase.co", publishableKey: "publishable" },
+    fetch: async (_url, init) => {
+      calls.push(JSON.parse(init.body));
+      return new Response(JSON.stringify({ data: { ok: true } }), { status: 200 });
+    },
+  });
+
+  await integration.invokeTaskFunction({ functionName: "task-collaboration", action: "sendMessage", body: { conversationId: "c-1", content: "Confirmed" } });
+  await assert.rejects(
+    () => integration.invokeTaskFunction({ functionName: "task-collaboration", action: "deleteConversation", body: {} }),
+    /不支持的任务操作/,
+  );
+  assert.deepEqual(calls, [{ action: "sendMessage", payload: { conversationId: "c-1", content: "Confirmed" } }]);
+});
+
 test("task integration uploads validated attachment bytes through the task storage bucket", async () => {
   const uploads = [];
   const storage = {

@@ -4,6 +4,7 @@ const TASK_FUNCTIONS = Object.freeze({
   "task-admin": new Set(["create", "update", "publish", "close", "archive", "delete", "assign", "reject", "manageCategories", "arbitrate"]),
   "task-complete": new Set(["apply", "submit", "cancel", "complete", "attach"]),
   "task-attachments": new Set(["register", "remove", "delete"]),
+  "task-collaboration": new Set(["getCollaboration", "getConsultation", "sendMessage", "assignMember", "submitPeerReview", "getAuditContext"]),
 });
 
 const SORTS = Object.freeze({
@@ -220,6 +221,14 @@ async function queryCategories(client) {
   };
 }
 
+async function queryTemplates(client) {
+  const { data } = await readQuery(
+    client.from("task_templates").select("*").eq("is_public", true).order("updated_at", { ascending: false }),
+    "任务模板读取失败，请稍后重试。",
+  );
+  return { items: data ?? [] };
+}
+
 export function createTaskIntegration({
   client,
   config = {},
@@ -271,6 +280,7 @@ export function createTaskIntegration({
       case "activity": return queryActivity(activeClient, request.taskId);
       case "attachments": return queryAttachments(activeClient, request.taskId);
       case "categories": return queryCategories(activeClient);
+      case "templates": return queryTemplates(activeClient);
       default: throw new Error("不支持的任务查询范围。");
     }
   }

@@ -45,6 +45,12 @@ export function createTaskApi({ queryTasks, invokeTaskFunction, uploadTaskAttach
     body,
   });
 
+  const invokeCollaboration = (action, body) => unwrap({
+    functionName: "task-collaboration",
+    action,
+    body,
+  });
+
   return Object.freeze({
     listPublished: (filters = {}) => query({ scope: "published", filters }),
     getDetail: (taskId) => query({ scope: "detail", taskId }),
@@ -55,6 +61,7 @@ export function createTaskApi({ queryTasks, invokeTaskFunction, uploadTaskAttach
     getTimeline: (taskId) => query({ scope: "activity", taskId }),
     getActivity: (taskId) => query({ scope: "activity", taskId }),
     getAttachments: (taskId) => query({ scope: "attachments", taskId }),
+    getTemplates: () => query({ scope: "templates" }),
     uploadAttachment: (request) => upload(request),
     apply: (taskId, applicationNote) => invokeCompletion("apply", {
       taskId,
@@ -128,5 +135,15 @@ export function createTaskApi({ queryTasks, invokeTaskFunction, uploadTaskAttach
     cancel: (applicationId) => invokeCompletion("cancel", { applicationId }),
     listCategories: () => query({ scope: "categories" }),
     saveCategory: (payload) => invokeAdmin("manageCategories", payload),
+    getPublishingEligibility: () => invokeAdmin("getPublishingEligibility", {}),
+    saveTemplate: (template) => invokeAdmin("manageTemplates", { templateId: template?.id ?? null, template }),
+    savePublishingRule: (rule) => invokeAdmin("managePublishingRules", { ruleId: rule?.id ?? null, rule }),
+    savePublishingOverride: (userId, override) => invokeAdmin("managePublishingOverrides", { userId, overrideId: override?.id ?? null, override }),
+    getCollaboration: (taskId) => invokeCollaboration("getCollaboration", { taskId }),
+    getConsultation: (taskId) => invokeCollaboration("getConsultation", { taskId }),
+    sendMessage: (conversationId, content) => invokeCollaboration("sendMessage", { conversationId, content }),
+    assignMember: (applicationId, responsibility) => invokeCollaboration("assignMember", { applicationId, responsibility }),
+    submitPeerReview: (applicationId, ratings, content) => invokeCollaboration("submitPeerReview", { applicationId, ratings, content }),
+    getAuditContext: (taskId, reason) => invokeCollaboration("getAuditContext", { taskId, reason }),
   });
 }
