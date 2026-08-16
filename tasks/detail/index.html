@@ -49,6 +49,13 @@
               <h2>相关讨论</h2>
               <div class="task-related-posts" data-task-related-posts><p>暂无关联讨论。</p></div>
             </section>
+            <section data-task-consultation hidden><h2>申请协商</h2><div data-task-consultation-list></div></section>
+            <section data-task-collaboration hidden>
+              <h2>正式协作</h2><ul data-task-member-list></ul><div data-task-collaboration-messages></div>
+              <form data-task-message-form><label><span>消息</span><textarea name="content" required maxlength="2000" rows="3"></textarea></label><button class="task-button task-button-primary" type="submit">发送</button></form>
+              <form data-task-peer-review-form><label><span>沟通</span><input name="communication" type="number" min="1" max="5" required /></label><label><span>贡献</span><input name="contribution" type="number" min="1" max="5" required /></label><label><span>守时</span><input name="punctuality" type="number" min="1" max="5" required /></label><label><span>互评</span><textarea name="content" required maxlength="1200"></textarea></label><button class="task-button task-button-secondary" type="submit">提交互评</button></form>
+              <div data-task-creator-review-checklist hidden></div>
+            </section>
           </div>
           <aside class="task-action-panel">
             <dl>

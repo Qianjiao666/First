@@ -84,6 +84,57 @@ function renderTimeline(events) {
   container.replaceChildren(...rows);
 }
 
+function renderCollaboration(data) {
+  const conversations = asItems(data?.conversations);
+  const consultation = document.querySelector("[data-task-consultation]");
+  const workspace = document.querySelector("[data-task-collaboration]");
+  const consultationRows = conversations.filter((item) => item.kind === "application_consultation");
+  const collaboration = conversations.find((item) => item.kind === "collaboration");
+  if (consultationRows.length && consultation) {
+    consultation.hidden = false;
+    consultation.querySelector("[data-task-consultation-list]").replaceChildren(...consultationRows.map((item) => {
+      const row = document.createElement("p");
+      row.textContent = item.status === "read_only" ? "该申请协商已归档。" : "申请协商已开启。";
+      return row;
+    }));
+  }
+  if (!collaboration || !workspace) return;
+  workspace.hidden = false;
+  const members = asItems(collaboration.members);
+  workspace.querySelector("[data-task-member-list]").replaceChildren(...members.map((member) => {
+    const item = document.createElement("li");
+    item.textContent = member.member_role === "creator" ? "发布者" : "协作成员";
+    return item;
+  }));
+  const messages = asItems(collaboration.messages);
+  workspace.querySelector("[data-task-collaboration-messages]").replaceChildren(...messages.map((entry) => {
+    const row = document.createElement("p");
+    row.textContent = String(entry.content ?? "");
+    return row;
+  }));
+  const writable = collaboration.status === "active";
+  const messageForm = workspace.querySelector("[data-task-message-form]");
+  const peerForm = workspace.querySelector("[data-task-peer-review-form]");
+  messageForm.hidden = !writable;
+  peerForm.hidden = !writable;
+  if (!writable) messageForm.remove();
+  if (!writable) peerForm.remove();
+  if (!writable) return;
+  messageForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const content = String(new FormData(messageForm).get("content") ?? "").trim();
+    if (!content) return;
+    try {
+      await services.api.sendMessage(collaboration.id, content);
+      messageForm.reset();
+      const refreshed = await services.api.getCollaboration(taskId);
+      renderCollaboration(refreshed);
+    } catch (error) {
+      showTaskMessage(message, taskErrorMessage(error), "error");
+    }
+  }, { once: true });
+}
+
 function renderTask(rawTask, relatedPosts) {
   const task = toTaskListingModel(rawTask);
   setText("[data-task-category]", task.categoryName);
@@ -162,12 +213,14 @@ async function bootstrap() {
   try {
     const result = await services.api.getDetail(taskId);
     renderTask(result?.task ?? result, result?.relatedPosts ?? []);
-    const [timelineResult, attachmentResult] = await Promise.allSettled([
+    const [timelineResult, attachmentResult, collaborationResult] = await Promise.allSettled([
       services.api.getTimeline(taskId),
       services.api.getAttachments(taskId),
+      user ? services.api.getCollaboration(taskId) : Promise.resolve(null),
     ]);
     renderTimeline(timelineResult.status === "fulfilled" ? timelineResult.value : []);
     renderAttachments(attachmentResult.status === "fulfilled" ? attachmentResult.value : []);
+    if (collaborationResult.status === "fulfilled") renderCollaboration(collaborationResult.value);
   } catch (error) {
     detail.setAttribute("aria-busy", "false");
     showTaskMessage(message, taskErrorMessage(error), "error");

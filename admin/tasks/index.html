@@ -45,6 +45,12 @@
         <div class="task-section-heading"><h2>申请与核验</h2><button class="task-icon-button" type="button" data-task-applications-close title="关闭" aria-label="关闭申请列表">×</button></div>
         <div data-task-applications-list></div>
       </section>
+      <section class="task-admin-applications" data-task-admin-write>
+        <h2>协作任务治理</h2>
+        <form data-task-template-form><label><span>模板标题</span><input name="title" required maxlength="120" /></label><button class="task-button task-button-secondary" type="submit">保存模板</button></form>
+        <form data-task-publishing-rule-form><label><span>规则标识</span><input name="ruleKey" required maxlength="64" /></label><label><span>最低声望</span><input name="minimumReputation" type="number" min="0" value="0" /></label><button class="task-button task-button-secondary" type="submit">保存规则</button></form>
+        <form data-task-publishing-override-form><label><span>用户 ID</span><input name="userId" required /></label><label><span>原因</span><input name="reason" required maxlength="800" /></label><button class="task-button task-button-secondary" type="submit">保存例外</button></form>
+      </section>
     </main>
 
     <dialog class="task-dialog" id="task-review-dialog" aria-labelledby="task-review-title" data-task-admin-write>
