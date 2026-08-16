@@ -20,6 +20,7 @@ type TaskContentClient = {
 const ADMIN_ACTIONS = new Set([
   "create", "update", "publish", "close", "archive", "delete", "assign", "reject", "manageCategories",
   "arbitrate", "force_complete", "cancel_refund", "edit", "deduct_reputation",
+  "getPublishingEligibility", "manageTemplates", "managePublishingRules", "managePublishingOverrides",
 ]);
 
 const ACTION_PERMISSIONS: Record<string, string> = {
@@ -29,6 +30,10 @@ const ACTION_PERMISSIONS: Record<string, string> = {
   edit: "manage",
   deduct_reputation: "manage",
   arbitrate: "manage",
+  getPublishingEligibility: "create",
+  manageTemplates: "manage",
+  managePublishingRules: "manage",
+  managePublishingOverrides: "manage",
 };
 
 // Arbitration RPCs write task_activity_log audit rows in the same transaction.
@@ -87,6 +92,16 @@ function filterCategoryPayload(payload: Record<string, unknown>) {
   };
 }
 
+function assertNoCommerceFields(value: unknown): void {
+  if (!value || typeof value !== "object") return;
+  for (const [key, child] of Object.entries(value as Record<string, unknown>)) {
+    if (["price", "payment", "wallet", "refund", "payout"].includes(key.toLowerCase())) {
+      throw new ApiError("VALIDATION_ERROR", 400, "协作任务不支持资金或支付字段。");
+    }
+    assertNoCommerceFields(child);
+  }
+}
+
 async function loadTaskForPublish(client: ServiceClient, taskId: string): Promise<Record<string, unknown>> {
   const database = client as unknown as TaskContentClient;
   const { data, error } = await database
@@ -132,6 +147,34 @@ Deno.serve(async (request) => {
     auth.assertNotMuted(context);
     const client = auth.createAdminClient() as unknown as ServiceClient;
     const payload = asRecord(body.payload ?? {}, "payload");
+    assertNoCommerceFields(payload);
+
+    if (action === "getPublishingEligibility") {
+      const eligibility = await callTaskRpc(client, "get_task_publishing_eligibility", { p_actor_id: context.userId });
+      return jsonResponse({ data: eligibility });
+    }
+
+    if (action === "manageTemplates") {
+      const templateId = await callTaskRpc(client, "save_task_template", {
+        p_actor_id: context.userId, p_template_id: payload.templateId ?? null, p_payload: payload.template ?? payload,
+      });
+      return jsonResponse({ data: { templateId } });
+    }
+
+    if (action === "managePublishingRules") {
+      const ruleId = await callTaskRpc(client, "save_task_publishing_rule", {
+        p_actor_id: context.userId, p_rule_id: payload.ruleId ?? null, p_payload: payload.rule ?? payload,
+      });
+      return jsonResponse({ data: { ruleId } });
+    }
+
+    if (action === "managePublishingOverrides") {
+      const overrideId = await callTaskRpc(client, "save_task_publishing_override", {
+        p_actor_id: context.userId, p_override_id: payload.overrideId ?? null,
+        p_user_id: asString(payload.userId, "userId"), p_payload: payload.override ?? payload,
+      });
+      return jsonResponse({ data: { overrideId } });
+    }
 
     if (["create", "update", "publish", "edit"].includes(action)) {
       const existingTaskId = action === "create" ? null : asString(payload.id ?? payload.taskId, "taskId");

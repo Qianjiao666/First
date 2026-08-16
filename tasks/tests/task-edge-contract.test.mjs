@@ -35,6 +35,17 @@ test("task-admin keeps the arbitration validation error as valid source text", a
   assert.doesNotMatch(source, /銆俙/);
 });
 
+test("task-admin governs templates and publishing eligibility through service RPCs", async () => {
+  const source = await read("supabase/functions/task-admin/index.ts");
+
+  assert.match(source, /"getPublishingEligibility", "manageTemplates", "managePublishingRules", "managePublishingOverrides"/);
+  assert.match(source, /"get_task_publishing_eligibility"/);
+  assert.match(source, /"save_task_template"/);
+  assert.match(source, /"save_task_publishing_rule"/);
+  assert.match(source, /"save_task_publishing_override"/);
+  assert.match(source, /\["price", "payment", "wallet", "refund", "payout"\]/);
+});
+
 test("task-complete keeps application and verification writes behind task RPCs", async () => {
   const source = await read("supabase/functions/task-complete/index.ts");
 
