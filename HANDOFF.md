@@ -489,3 +489,12 @@ Supabase service_role key 或数据库密码
 - Rollback directory: `/var/www/.mkj-community-releases/20260815-055547.previous`.
 - Pre-cutover backup archive: `/var/www/.mkj-community-releases/20260815-055547.before-v1.2-route-map.tar.gz`.
 - Production evidence: `output/playwright/production-v1.2-home-desktop-scrolled.png`, `production-v1.2-home-mobile-mid.png`, `production-v1.2-forum-desktop.png`, and `production-v1.2-tasks-desktop.png`.
+
+## 14. v1.3 production deployment completed (2026-08-16)
+
+- Static release `20260816` / `v1.3` was atomically installed on Tencent CVM `ins-6xonyz5y` at 18:18 Asia/Shanghai. The server-side SHA-256 check returned `MKJ-community-forum-tasks-20260816-static-v1.3.zip: OK` before the cutover.
+- Static artifact SHA-256: `CF046D4B5E75B746F98036D78401F41D69AD80F723A97229AD2EA567F360BA38`; backend artifact SHA-256: `BFE4B9D75C8017EB1A5778C022A0F99CFEF00FF80ED3272F734F780D11659B89`.
+- The live manifest at `https://dsxnb.com/MKJ/RELEASE-MANIFEST.txt` reports `Release: 20260816`, `Revision: v1.3`, and `Files: 111`.
+- HTTP 200 was verified for `https://dsxnb.com/`, `/MKJ/`, `/MKJ/tasks/`, `/MKJ/tasks/create/`, `/MKJ/tasks/detail/`, `/MKJ/tasks/my/`, and `/MKJ/admin/tasks/`. The task market also passed a browser smoke at desktop and `390x844` mobile viewports.
+- Rollback directory: `/var/www/.mkj-community-releases/20260816-101857.previous`. Pre-cutover archive: `/var/www/.mkj-community-releases/20260816-101857.before-v1.3.tar.gz`.
+- The deployment only changed `/var/www/MKJ`; do not alter Nginx, the main-site `/` route, or any other web root for subsequent changes.

@@ -7,8 +7,11 @@
 - 已生成本地 v1.3 静态/后端候选包并补齐切换脚本、发布手册、交付报告和首页/`CHANGELOG.md` 更新日志。当前代码在隔离工作树 `codex/collaborative-task-market-v1.3`。
 - 2026-08-16 已在 Supabase `hangxian` 生产分支执行完整迁移，协作 schema/RLS/RPC 已用只读查询验证。
 - 已将管理员审计 RPC 和三个协作触发器函数的直接执行权限收紧为仅服务端可用；ACL 探针显示 `public`、`anon`、`authenticated` 均为 `false`，Security Advisor 已复跑，v1.3 新增函数不再出现在其警告中。
-- `9890dc9` 已推送，三个 Edge Function 均已部署：`task-admin`、`task-complete` 更新成功，`task-collaboration` CLI 部署为 `ACTIVE` v1；三个未认证 POST 探针均为 `401`。仍待真实角色/RLS 验收和生产静态原子切换；线上静态版本仍为 v1.2。
+- `9890dc9` 已推送，三个 Edge Function 均已部署：`task-admin`、`task-complete` 更新成功，`task-collaboration` CLI 部署为 `ACTIVE` v1；三个未认证 POST 探针均为 `401`。
 - 最新候选包 hash：静态 `CF046D4B5E75B746F98036D78401F41D69AD80F723A97229AD2EA567F360BA38`，后端 `BFE4B9D75C8017EB1A5778C022A0F99CFEF00FF80ED3272F734F780D11659B89`。
+- 2026-08-16 18:18（Asia/Shanghai）已在腾讯云 CVM `ins-6xonyz5y` 完成静态原子切换。服务器先对 ZIP 执行 `sha256sum -c` 并返回 `OK`，随后脚本报告 `MKJ 20260816 / v1.3 installed successfully.`；切换范围仅为 `/var/www/MKJ`。
+- 生产 manifest 已核对为 `Release: 20260816`、`Revision: v1.3`、`Files: 111`。`https://dsxnb.com/`、`/MKJ/`、`/MKJ/tasks/`、`/MKJ/tasks/create/`、`/MKJ/tasks/detail/`、`/MKJ/tasks/my/` 与 `/MKJ/admin/tasks/` 均返回 HTTP 200。
+- 浏览器烟测已在任务广场完成：桌面端与 `390x844` 移动端均可渲染任务筛选、公开任务列表及移动导航，未见横向溢出。回滚目录为 `/var/www/.mkj-community-releases/20260816-101857.previous`，切换前归档为 `/var/www/.mkj-community-releases/20260816-101857.before-v1.3.tar.gz`。
 
 ## 2026.08.12 v1.0 全站视觉重构
 
