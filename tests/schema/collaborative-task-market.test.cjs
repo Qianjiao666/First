@@ -51,3 +51,14 @@ test("collaboration reads expose accepted-member application identities for peer
   assert.match(collaborationFunction, /v_is_admin boolean := false/i);
   assert.match(collaborationFunction, /'applications', case when v_can_view_shared then[\s\S]*?'applicationId', a\.id[\s\S]*?'memberId', a\.applicant_id/i);
 });
+
+test("administrator collaboration reads are service-only", () => {
+  assert.match(
+    collaborationSql,
+    /revoke all on function public\.get_task_collaboration_admin\(uuid, uuid, text\) from public, anon, authenticated;/i,
+  );
+  assert.match(
+    collaborationSql,
+    /grant execute on function public\.get_task_collaboration_admin\(uuid, uuid, text\) to service_role;/i,
+  );
+});
