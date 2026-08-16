@@ -2,10 +2,10 @@
 
 ## 2026.08.16 v1.3 多人协作任务市场
 
-- Task 1 契约测试已完成并通过复核。
-- Task 2 SQL schema 初版及评审修复已完成：管理员会话审计读取、账户迁移协作身份、模板治理、三维互评、终态写保护和发布资格事务检查均已补齐。
-- 当前静态测试 `15/15` 通过；真实 PostgreSQL/Supabase 迁移、Edge Function、浏览器集成和生产部署尚未执行。
-- 代码位于隔离工作树 `codex/collaborative-task-market-v1.3`，待 Task 2 提交后进入 API/Edge/UI 实现。
+- 已完成协作任务 SQL/RLS/RPC、`task-collaboration` Edge Function、任务浏览器 API/市场/发布/详情/我的任务/后台接入，以及模板、发布资格、咨询、分工、三维互评与管理员审计读取。
+- 校园团购只作为多人协作任务；实现和发布门禁均明确排除价格、支付、钱包、退款和结算流程。
+- 已生成本地 v1.3 静态/后端候选包并补齐切换脚本、发布手册、交付报告和首页/`CHANGELOG.md` 更新日志。当前代码在隔离工作树 `codex/collaborative-task-market-v1.3`。
+- 尚未部署到生产：真实 PostgreSQL/Supabase 迁移、函数部署、浏览器角色/RLS 验收和服务器原子切换必须按 `docs/COMMUNITY_RELEASE_RUNBOOK.md` 完成后才能执行。
 
 ## 2026.08.12 v1.0 全站视觉重构
 

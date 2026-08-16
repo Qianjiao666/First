@@ -61,6 +61,19 @@ function Remove-GeneratedPath {
   }
 }
 
+function Get-Sha256 {
+  param([string]$Path)
+
+  $sha256 = [Security.Cryptography.SHA256]::Create()
+  $stream = [IO.File]::OpenRead($Path)
+  try {
+    return ([BitConverter]::ToString($sha256.ComputeHash($stream))).Replace('-', '')
+  } finally {
+    $stream.Dispose()
+    $sha256.Dispose()
+  }
+}
+
 function Write-ReleaseManifest {
   param([string]$StageRoot, [string]$ManifestName, [string]$Description)
 
@@ -70,7 +83,7 @@ function Write-ReleaseManifest {
     Sort-Object FullName |
     ForEach-Object {
       $relative = $_.FullName.Substring($StageRoot.Length).TrimStart('\', '/') -replace '\\', '/'
-      $hash = (Get-FileHash -Algorithm SHA256 -LiteralPath $_.FullName).Hash
+      $hash = Get-Sha256 -Path $_.FullName
       "$hash  $relative"
     }
 
@@ -159,8 +172,8 @@ Write-ReleaseManifest -StageRoot $backendStage -ManifestName 'RELEASE-MANIFEST.t
 Write-LinuxZip -StageRoot $staticStage -DestinationZip $staticZip -Timestamp $releaseTimestamp
 Write-LinuxZip -StageRoot $backendStage -DestinationZip $backendZip -Timestamp $releaseTimestamp
 
-$staticHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $staticZip).Hash
-$backendHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $backendZip).Hash
+$staticHash = Get-Sha256 -Path $staticZip
+$backendHash = Get-Sha256 -Path $backendZip
 [IO.File]::WriteAllBytes($staticChecksum, [Text.Encoding]::ASCII.GetBytes("$staticHash  $(Split-Path -Leaf $staticZip)`n"))
 [IO.File]::WriteAllBytes($backendChecksum, [Text.Encoding]::ASCII.GetBytes("$backendHash  $(Split-Path -Leaf $backendZip)`n"))
 
