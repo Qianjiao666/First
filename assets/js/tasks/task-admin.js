@@ -216,6 +216,10 @@ async function setupList() {
   const reviewForm = document.querySelector("[data-task-review-form]");
   const categoryDialog = document.querySelector("#task-category-dialog");
   const categoryForm = document.querySelector("[data-task-category-form]");
+  const templateForm = document.querySelector("[data-task-template-form]");
+  const ruleForm = document.querySelector("[data-task-publishing-rule-form]");
+  const overrideForm = document.querySelector("[data-task-publishing-override-form]");
+  const templateCategory = document.querySelector("[data-task-template-category]");
   let activeApplicationTaskId = null;
 
   const load = async () => {
@@ -329,6 +333,36 @@ async function setupList() {
       formMessage.textContent = taskErrorMessage(error);
     }
   });
+
+  const bindGovernanceForm = (form, save, toPayload) => form?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const formMessage = form.querySelector("[data-task-form-message]");
+    try {
+      await requireAuthenticatedAction(services.runtime, "管理协作任务规则");
+      await save(toPayload(new FormData(form)));
+      form.reset();
+      if (formMessage) formMessage.textContent = "已保存。";
+    } catch (error) {
+      if (formMessage) formMessage.textContent = taskErrorMessage(error);
+    }
+  });
+  bindGovernanceForm(templateForm, (template) => services.api.saveTemplate(template), (data) => ({
+    title: String(data.get("title") ?? "").trim(), summary: String(data.get("summary") ?? "").trim(),
+    body: String(data.get("body") ?? "").trim(), categoryId: String(data.get("categoryId") ?? ""),
+    taskMode: String(data.get("taskMode") ?? "individual"), isPublic: data.get("isPublic") === "on",
+  }));
+  bindGovernanceForm(ruleForm, (rule) => services.api.savePublishingRule(rule), (data) => ({
+    ruleKey: String(data.get("ruleKey") ?? "").trim(), minimumReputation: Number(data.get("minimumReputation") ?? 0), minimumCompletedTasks: Number(data.get("minimumCompletedTasks") ?? 0),
+  }));
+  bindGovernanceForm(overrideForm, (override) => services.api.savePublishingOverride(override.userId, override), (data) => ({
+    userId: String(data.get("userId") ?? "").trim(), reason: String(data.get("reason") ?? "").trim(), isEligible: data.get("isEligible") === "true",
+  }));
+
+  try {
+    replaceOptions(templateCategory, asItems(await services.api.listCategories()), "请选择分类");
+  } catch (error) {
+    showTaskMessage(message, taskErrorMessage(error), "error");
+  }
 
   filter.addEventListener("change", load);
   query.addEventListener("search", load);
