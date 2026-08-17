@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="/MKJ/assets/css/visual-v1.css?v=20260812-v1.0" />
     <link rel="stylesheet" href="/MKJ/assets/css/visual-v1.1.css?v=20260812-v1.1" />
     <link rel="stylesheet" href="/MKJ/assets/css/visual-v1.2.css?v=20260815-v1.2" />
-    <link rel="stylesheet" href="/MKJ/assets/css/task-workspace.css?v=20260817-v1.5" />
+    <link rel="stylesheet" href="/MKJ/assets/css/task-workspace.css?v=20260817-v1.5.1" />
     <script type="module" src="/MKJ/assets/js/theme/theme-controller.js?v=20260812-v1.1"></script>
       <script type="module" src="/MKJ/assets/js/ui/visual-assets.js?v=20260815-v1.2"></script>
   </head>
@@ -31,9 +31,11 @@
         <header class="task-editor-header"><div><p class="task-kicker">TASK EDITOR</p><h1 data-task-editor-title>新建任务</h1></div><span class="task-status" data-task-draft-status>未保存</span></header>
         <div class="task-editor-grid">
           <div class="task-editor-fields">
+            <div class="task-form-section-heading"><h2>基础信息</h2><p>填写任务名称、说明与能力目标。</p></div>
             <label id="task-editor-content"><span>任务标题</span><input name="title" required maxlength="120" /></label>
             <label><span>任务摘要</span><textarea name="summary" required maxlength="280" rows="3"></textarea></label>
             <label><span>任务内容</span><textarea name="body" required maxlength="8000" rows="12"></textarea></label>
+            <div class="task-form-section-heading"><h2>交付设置</h2><p>明确归类、奖励、人数与截止时间。</p></div>
             <div class="task-field-grid" id="task-editor-delivery">
               <label><span>大类</span><select name="categoryId" required data-task-category-select></select></label>
               <label><span>子类</span><select name="subcategoryId" data-task-subcategory-select></select></label>
@@ -59,7 +61,7 @@
     <script type="module" src="/MKJ/assets/js/core/runtime.js?v=20260812-v1.1"></script>
     <script type="module" src="/MKJ/assets/js/core/app-shell.js?v=20260812-v1.1"></script>
     <script type="module" src="/MKJ/assets/js/core/task-integration.js"></script>
-    <script type="module" src="/MKJ/assets/js/tasks/task-workspace.js?v=20260817-v1.5"></script>
+    <script type="module" src="/MKJ/assets/js/tasks/task-workspace.js?v=20260817-v1.5.1"></script>
     <script type="module" src="/MKJ/assets/js/tasks/task-admin.js"></script>
   </body>
 </html>
