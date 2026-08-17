@@ -2,6 +2,14 @@
 
 更新时间：2026-08-17
 
+## 17. v1.6 任务管理 Mock 工作台状态（2026-08-17）
+
+- 新增隔离的 mock 路由：`/MKJ/admin/tasks/mock/`、`/MKJ/admin/tasks/mock/review/`、`/MKJ/tasks/mock/`、`/MKJ/tasks/mock/create/` 与 `/MKJ/tasks/mock/my/`。
+- mock 数据仅使用浏览器 `localStorage`；未改动 `supabase/`、现有任务 API/运行时、论坛、登录、头像上传、主题控制器或数据库表结构。
+- 管理页仅允许真实会话的 `ADMIN` / `MODERATOR` 角色；学生发布/我的任务页拦截管理员，匿名用户不能进入学生写入表单。静态路由上的前端门禁不替代既有服务端权限控制。
+- 功能覆盖：工作台指标与趋势提示、任务组拖拽和 CSV、批改筛选/批量操作、评语模板/声望/确认/日志、发布草稿/预览/敏感词阻断、任务广场筛选收藏及我的任务标签。
+- 完整接口、权限和后续真实接入说明见 `docs/TASK_MANAGEMENT_MOCK_HANDOFF.md`。
+
 ## 16. v1.5 任务运营工作台状态（2026-08-17）
 
 - 工作树：`D:\桌面文件\任务\.worktrees\codex-task-management-workspace-v1.5`，分支 `codex/task-management-workspace-v1.5`。该分支以 v1.3 协作任务功能为基线，并选择性纳入 v1.4 首页图片旅程的静态资源与浏览器契约；主工作区其余未提交文件没有被覆盖或合并。

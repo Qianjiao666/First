@@ -45,3 +45,11 @@
 - Browser artifacts: `output/playwright/v12-home-desktop-v2.png`, `v12-home-mobile-final.png`, `v12-home-dark.png`, `v12-forum-desktop.png`, `v12-forum-mobile.png`, and `v12-tasks-desktop-v2.png`.
 - Verification passed: business/session/sensitive-word/XSS suite 37/37, security/redeem/static audit 19/19, and visual/version/page-shell suite 25/25.
 - Impeccable detector was executed after the final visual pass. It used degraded regex mode because parser dependencies are unavailable; remaining findings are advisory for the approved map grid and explicit v1.2 tonal/type ramps, not blocking runtime defects.
+# 2026-08-17 Task management mock workspace
+
+- 已读取根 HANDOFF、任务 HANDOFF、现有任务页面与敏感词/任务运行时实现。
+- 决定新增隔离 mock 页面与浏览器本地数据仓库，不修改既有数据库、Edge Function 或任务 API。
+- 已新增五个 mock 路由、`task-mock-data.js` 本地数据仓库、`task-mock-ui.js` 角色门禁与交互、`task-mock.css` 明暗主题布局。
+- 浏览器验收发现 mock 页面误继承旧任务工作台的根网格，已通过移除 mock 页面 `data-task-workspace` 属性修复；任务广场筛选与收藏按钮复测通过。
+- 已完成 v1.6 更新日志、mock 交付文档和安全审计。全量 Node 回归为 171/171 通过；审计确认 mock 无网络/数据库写入、无危险 HTML 注入，现有礼包码路径仍具备会话绑定、行锁、幂等使用记录与 service-role RPC ACL。
+- 追加浏览器验收：`/MKJ/tasks/mock/` 在 `390x844` 与 `1440x1000` 下均正常渲染，移动端 `scrollWidth` 为 `390`，没有页面级横向溢出；筛选、收藏与刷新后的本地持久化可用，浏览器控制台为 0 错误、0 警告。截图由 Playwright CLI 记录在 `.playwright-cli/` 会话产物中。
