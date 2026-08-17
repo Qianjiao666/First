@@ -1,0 +1,225 @@
+/* 航线 v1.4 - image journey layer. Motion stays on compositor-friendly properties. */
+.mkj-image-journey {
+  background: #e8f0ee;
+  overflow: hidden;
+}
+
+.mkj-image-journey .mkj-section-intro {
+  max-width: 720px;
+}
+
+.mkj-route-gallery {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  margin-top: 52px;
+}
+
+.mkj-route-card {
+  --journey-lift: 0px;
+  --journey-rotate: 0deg;
+  background: var(--v12-surface);
+  border: 1px solid color-mix(in srgb, var(--v12-line-strong) 72%, transparent);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(12, 45, 46, .06);
+  display: flex;
+  flex-direction: column;
+  grid-column: span 4;
+  min-width: 0;
+  opacity: 1;
+  overflow: hidden;
+  transform: perspective(900px) translate3d(0, var(--journey-lift), 0) rotate(var(--journey-rotate)) rotateX(var(--journey-tilt-y, 0deg)) rotateY(var(--journey-tilt-x, 0deg));
+  transition: transform 520ms cubic-bezier(.2, .8, .2, 1), box-shadow 520ms cubic-bezier(.2, .8, .2, 1), border-color 260ms ease, opacity 620ms ease;
+}
+
+.mkj-route-card.mkj-reveal:not(.mkj-is-visible) {
+  --journey-lift: 24px;
+  opacity: 0;
+}
+
+.mkj-route-card.mkj-reveal.mkj-is-visible {
+  transform: perspective(900px) translate3d(0, 0, 0) rotate(var(--journey-rotate)) rotateX(var(--journey-tilt-y, 0deg)) rotateY(var(--journey-tilt-x, 0deg));
+}
+
+.mkj-route-card--wide,
+.mkj-route-card--cityline { grid-column: span 7; }
+.mkj-route-card--tall,
+.mkj-route-card--city { grid-column: span 5; }
+.mkj-route-card--road,
+.mkj-route-card--fire,
+.mkj-route-card--coast,
+.mkj-route-card--beach { grid-column: span 3; }
+
+.mkj-route-card:nth-child(2) { --journey-rotate: -.7deg; }
+.mkj-route-card:nth-child(3) { --journey-rotate: .55deg; }
+.mkj-route-card:nth-child(5) { --journey-rotate: .7deg; }
+.mkj-route-card:nth-child(7) { --journey-rotate: -.55deg; }
+
+.mkj-route-media {
+  aspect-ratio: 16 / 10;
+  background: var(--v12-surface-soft);
+  isolation: isolate;
+  margin: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.mkj-route-card--tall .mkj-route-media,
+.mkj-route-card--road .mkj-route-media,
+.mkj-route-card--fire .mkj-route-media,
+.mkj-route-card--coast .mkj-route-media,
+.mkj-route-card--beach .mkj-route-media { aspect-ratio: 4 / 5; }
+
+.mkj-route-card--city .mkj-route-media,
+.mkj-route-card--cityline .mkj-route-media { aspect-ratio: 5 / 3; }
+
+.mkj-route-media::after {
+  background: rgba(7, 19, 23, .14);
+  content: "";
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+.mkj-route-media img {
+  height: 108%;
+  inset: -4% 0 0;
+  object-fit: cover;
+  object-position: center;
+  position: absolute;
+  transform: translate3d(0, 0, 0) scale(1.02);
+  transition: transform 900ms cubic-bezier(.2, .8, .2, 1), filter 900ms cubic-bezier(.2, .8, .2, 1);
+  width: 100%;
+}
+
+.mkj-route-card--tall .mkj-route-media img,
+.mkj-route-card--road .mkj-route-media img,
+.mkj-route-card--fire .mkj-route-media img,
+.mkj-route-card--coast .mkj-route-media img,
+.mkj-route-card--beach .mkj-route-media img { object-position: center 38%; }
+
+.mkj-route-card--city .mkj-route-media img { object-position: center 44%; }
+.mkj-route-card--fire .mkj-route-media img { object-position: center 62%; }
+.mkj-route-card--beach .mkj-route-media img { object-position: center 42%; }
+
+.mkj-route-index {
+  align-items: center;
+  background: rgba(7, 19, 23, .72);
+  border: 1px solid rgba(255, 255, 255, .28);
+  border-radius: 999px;
+  color: #fff;
+  display: inline-flex;
+  font: 700 11px/1 "DM Mono", Consolas, monospace;
+  height: 32px;
+  justify-content: center;
+  left: 16px;
+  letter-spacing: .04em;
+  position: absolute;
+  top: 16px;
+  width: 32px;
+  z-index: 1;
+}
+
+.mkj-route-card.is-journey-active .mkj-route-index {
+  animation: journey-index-pulse 720ms cubic-bezier(.2, .8, .2, 1) both;
+}
+
+@keyframes journey-index-pulse {
+  0% { opacity: .55; transform: scale(.78); }
+  70% { opacity: 1; transform: scale(1.08); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.mkj-route-copy {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 20px 22px 24px;
+}
+
+.mkj-route-copy > span {
+  color: var(--v12-teal-deep);
+  font: 700 11px/1.2 "DM Mono", Consolas, monospace;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.mkj-route-copy h3 {
+  color: var(--v12-ink);
+  font-size: clamp(20px, 2vw, 28px);
+  line-height: 1.15;
+  margin: 12px 0 8px;
+}
+
+.mkj-route-copy p {
+  color: var(--v12-muted);
+  font-size: 14px;
+  line-height: 1.7;
+  margin: 0;
+  max-width: 28em;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .mkj-route-card:hover {
+    --journey-lift: -7px;
+    border-color: var(--v12-teal);
+    box-shadow: 0 22px 48px rgba(12, 45, 46, .15);
+  }
+
+  .mkj-route-card:hover .mkj-route-media img {
+    filter: saturate(1.08);
+    transform: translate3d(var(--journey-image-x, 0px), var(--journey-image-y, -1.5%), 0) scale(1.09);
+  }
+}
+
+@media (max-width: 1100px) {
+  .mkj-route-card--wide,
+  .mkj-route-card--cityline { grid-column: span 7; }
+  .mkj-route-card--tall,
+  .mkj-route-card--city { grid-column: span 5; }
+  .mkj-route-card--road,
+  .mkj-route-card--fire,
+  .mkj-route-card--coast,
+  .mkj-route-card--beach { grid-column: span 4; }
+}
+
+@media (max-width: 780px) {
+  .mkj-image-journey { padding-bottom: 76px; padding-top: 76px; }
+  .mkj-route-gallery { gap: 14px; grid-template-columns: 1fr; margin-top: 34px; }
+  .mkj-route-card,
+  .mkj-route-card--wide,
+  .mkj-route-card--tall,
+  .mkj-route-card--city,
+  .mkj-route-card--road,
+  .mkj-route-card--fire,
+  .mkj-route-card--cityline,
+  .mkj-route-card--coast,
+  .mkj-route-card--beach { grid-column: auto; }
+  .mkj-route-card:nth-child(2n) { --journey-rotate: 0deg; }
+  .mkj-route-media,
+  .mkj-route-card--tall .mkj-route-media,
+  .mkj-route-card--road .mkj-route-media,
+  .mkj-route-card--fire .mkj-route-media,
+  .mkj-route-card--coast .mkj-route-media,
+  .mkj-route-card--beach .mkj-route-media { aspect-ratio: 16 / 10; }
+  .mkj-route-card--tall .mkj-route-media img,
+  .mkj-route-card--road .mkj-route-media img,
+  .mkj-route-card--fire .mkj-route-media img,
+  .mkj-route-card--coast .mkj-route-media img,
+  .mkj-route-card--beach .mkj-route-media img { object-position: center 42%; }
+  .mkj-route-copy { padding: 16px 18px 20px; }
+  .mkj-route-copy h3 { font-size: 22px; }
+}
+
+@media (max-width: 420px) {
+  .mkj-route-gallery { margin-top: 28px; }
+  .mkj-route-media { aspect-ratio: 5 / 4; }
+  .mkj-route-copy p { font-size: 13px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mkj-route-card,
+  .mkj-route-card.mkj-reveal:not(.mkj-is-visible) { opacity: 1; transform: none; transition: none; }
+  .mkj-route-media img { filter: none; transform: none; transition: none; }
+  .mkj-route-card.is-journey-active .mkj-route-index { animation: none; }
+}

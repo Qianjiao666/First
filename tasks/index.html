@@ -12,10 +12,11 @@
     <link rel="stylesheet" href="/MKJ/assets/css/visual-v1.css?v=20260812-v1.0" />
     <link rel="stylesheet" href="/MKJ/assets/css/visual-v1.1.css?v=20260812-v1.1" />
     <link rel="stylesheet" href="/MKJ/assets/css/visual-v1.2.css?v=20260815-v1.2" />
+    <link rel="stylesheet" href="/MKJ/assets/css/task-workspace.css?v=20260817-v1.5" />
     <script type="module" src="/MKJ/assets/js/theme/theme-controller.js?v=20260812-v1.1"></script>
       <script type="module" src="/MKJ/assets/js/ui/visual-assets.js?v=20260815-v1.2"></script>
   </head>
-  <body class="task-page">
+  <body class="task-page" data-task-workspace>
     <header class="task-topbar">
       <a class="task-brand" href="/MKJ/" aria-label="返回航线首页"><span>航</span><strong>航线</strong></a>
       <nav class="task-nav" aria-label="任务导航">
@@ -29,19 +30,18 @@
       </div>
     </header>
 
-    <div class="task-announcement-slot" data-task-announcement-slot></div>
-
-    <main class="task-shell">
+    <main class="task-shell" data-task-workspace-main>
+      <div class="task-announcement-slot" data-task-announcement-slot></div>
       <section class="task-heading" aria-labelledby="task-page-title">
         <div>
           <p class="task-kicker">TASK EXCHANGE / 任务协作</p>
           <h1 id="task-page-title">找到一件值得完成的事</h1>
           <p>按方向、难度和截止时间筛选公开任务，申请后在个人任务页跟进进度。</p>
         </div>
-        <div class="task-heading-actions"><a class="task-button task-button-secondary" href="/MKJ/tasks/create/" data-task-create-link hidden>发布任务</a><a class="task-button task-button-primary" href="/MKJ/tasks/my/">查看我的任务</a></div>
+        <div class="task-heading-actions"><button class="task-button task-button-secondary task-workspace-filter-toggle" type="button" data-task-filter-toggle aria-expanded="false">筛选</button><a class="task-button task-button-secondary" href="/MKJ/tasks/create/" data-task-create-link hidden>发布任务</a><a class="task-button task-button-primary" href="/MKJ/tasks/my/">查看我的任务</a></div>
       </section>
 
-      <section class="task-filter-band" aria-label="筛选任务">
+      <section class="task-filter-band" data-task-filter-drawer aria-label="筛选任务">
         <label class="task-search">
           <span>搜索</span>
           <input type="search" placeholder="任务标题或能力标签" data-task-filter-query />
@@ -62,7 +62,7 @@
             <option value="reward_points.desc">奖励较高</option>
           </select>
         </label>
-        <button class="task-icon-button" type="button" data-task-filter-reset title="清除筛选" aria-label="清除筛选">×</button>
+        <button class="task-icon-button" type="button" data-task-filter-reset title="清除筛选" aria-label="清除筛选"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><use href="/MKJ/assets/icons/task-workspace.svg#x"></use></svg></button>
       </section>
 
       <section class="task-content-grid">
@@ -112,6 +112,7 @@
     <script type="module" src="/MKJ/assets/js/core/app-shell.js?v=20260812-v1.1"></script>
     <script type="module" src="/MKJ/shared/community-widgets.js"></script>
     <script type="module" src="/MKJ/assets/js/core/task-integration.js"></script>
+    <script type="module" src="/MKJ/assets/js/tasks/task-workspace.js?v=20260817-v1.5"></script>
     <script type="module" src="/MKJ/assets/js/tasks/task-list.js"></script>
   </body>
 </html>

@@ -84,6 +84,26 @@ function renderAdminRows(tasks) {
   body.replaceChildren(...rows);
 }
 
+function renderAdminMetrics(tasks) {
+  const canCountPendingApplications = tasks.every((task) => Object.hasOwn(task, "pending_application_count"));
+  const values = {
+    total: tasks.length,
+    published: tasks.filter((task) => task.status === "published").length,
+    deadline: tasks.filter((task) => {
+      const deadline = new Date(task.deadline_at);
+      const remaining = deadline.getTime() - Date.now();
+      return Number.isFinite(deadline.getTime()) && remaining >= 0 && remaining <= 7 * 24 * 60 * 60 * 1000;
+    }).length,
+    applications: canCountPendingApplications
+      ? tasks.reduce((count, task) => count + Math.max(0, Number(task.pending_application_count ?? 0)), 0)
+      : "--",
+  };
+  for (const [name, value] of Object.entries(values)) {
+    const output = document.querySelector(`[data-task-admin-metric-${name}]`);
+    if (output) output.textContent = String(value);
+  }
+}
+
 function renderApplications(applications) {
   const container = document.querySelector("[data-task-applications-list]");
   const rows = asItems(applications).map((application) => {
@@ -225,7 +245,9 @@ async function setupList() {
   const load = async () => {
     table.setAttribute("aria-busy", "true");
     try {
-      renderAdminRows(asItems(await services.api.getAdminTasks({ status: filter.value, query: query.value.trim() })));
+      const tasks = asItems(await services.api.getAdminTasks({ status: filter.value, query: query.value.trim() }));
+      renderAdminRows(tasks);
+      renderAdminMetrics(tasks);
       showTaskMessage(message, "");
     } catch (error) {
       showTaskMessage(message, taskErrorMessage(error), "error");

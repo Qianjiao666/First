@@ -121,14 +121,28 @@ test("avatar preflight accepts JPG PNG WebP up to 2MB and upload exposes busy su
   assert.deepEqual(errors, ["busy", "error"]);
 });
 
-test("all production pages bootstrap themes early and load visual v1.2 last", async () => {
+const taskWorkspacePages = new Set([
+  "tasks/index.html",
+  "tasks/create/index.html",
+  "tasks/detail/index.html",
+  "tasks/my/index.html",
+  "admin/tasks/index.html",
+  "admin/tasks/edit/index.html",
+]);
+
+test("all production pages bootstrap themes early and load their final visual layer", async () => {
   for (const relativePath of PRODUCTION_PAGES) {
     const source = await fs.readFile(new URL(`../../${relativePath}`, import.meta.url), "utf8");
     const themeScript = '<script type="module" src="/MKJ/assets/js/theme/theme-controller.js?v=20260812-v1.1"></script>';
     const visualLink = '<link rel="stylesheet" href="/MKJ/assets/css/visual-v1.2.css?v=20260815-v1.2" />';
     assert.ok(source.indexOf(themeScript) >= 0 && source.indexOf(themeScript) < source.indexOf("</head>"), `${relativePath} theme bootstrap`);
     const styles = source.match(/<link rel="stylesheet"[^>]*\/>/g) ?? [];
-    assert.equal(styles.at(-1), visualLink, `${relativePath} visual v1.2 last`);
+    const expectedFinalLayer = taskWorkspacePages.has(relativePath)
+      ? '<link rel="stylesheet" href="/MKJ/assets/css/task-workspace.css?v=20260817-v1.5" />'
+      : relativePath === "index.html"
+      ? '<link rel="stylesheet" href="/MKJ/assets/css/visual-v1.4.css?v=20260816-v1.4" />'
+      : visualLink;
+    assert.equal(styles.at(-1), expectedFinalLayer, `${relativePath} final visual layer`);
   }
 });
 

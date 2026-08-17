@@ -1,6 +1,14 @@
 # 航线 MKJ 项目接手文档
 
-更新时间：2026-08-16
+更新时间：2026-08-17
+
+## 16. v1.5 任务运营工作台状态（2026-08-17）
+
+- 工作树：`D:\桌面文件\任务\.worktrees\codex-task-management-workspace-v1.5`，分支 `codex/task-management-workspace-v1.5`。该分支以 v1.3 协作任务功能为基线，并选择性纳入 v1.4 首页图片旅程的静态资源与浏览器契约；主工作区其余未提交文件没有被覆盖或合并。
+- 任务大厅、我的任务、发布任务、任务详情、任务管理和后台编辑页加载 `assets/css/task-workspace.css` 与 `assets/js/tasks/task-workspace.js`。新增层只控制工作台抽屉、筛选呈现、流程锚点与治理标签，不调用 Supabase、TaskApi 或特权接口。
+- 所有原有 `data-task-*` 选择器、表单 `name`、权限前的 `hidden`/`disabled` 状态、对话框、任务生命周期、敏感词守卫和奖励逻辑均保持原契约。后台指标仅基于当前返回结果派生，无法验证的待处理申请显示 `--`。
+- 本地任务、后台、变更日志、首页图片旅程和视觉系统测试为 `166/166` 通过；工作台脚本语法检查和 `git diff --check` 通过。桌面 1440px 与移动 390px Playwright 检查已执行，移动端无页面级横向溢出。
+- 设计规格：`docs/superpowers/specs/2026-08-17-task-management-workspace-design.md`；v1.4 首页图片旅程通过 `tests/browser/image-journey.test.mjs` 保护。尚未创建静态发布包、推送或部署生产环境。
 
 ## 15. v1.3 多人协作任务市场开发状态（2026-08-16）
 

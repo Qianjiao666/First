@@ -9,19 +9,23 @@
     <link rel="stylesheet" href="/MKJ/assets/css/visual-v1.css?v=20260812-v1.0" />
     <link rel="stylesheet" href="/MKJ/assets/css/visual-v1.1.css?v=20260812-v1.1" />
     <link rel="stylesheet" href="/MKJ/assets/css/visual-v1.2.css?v=20260815-v1.2" />
+    <link rel="stylesheet" href="/MKJ/assets/css/task-workspace.css?v=20260817-v1.5" />
     <script type="module" src="/MKJ/assets/js/theme/theme-controller.js?v=20260812-v1.1"></script>
       <script type="module" src="/MKJ/assets/js/ui/visual-assets.js?v=20260815-v1.2"></script>
   </head>
-  <body class="task-page">
+  <body class="task-page" data-task-workspace>
     <header class="task-topbar">
       <a class="task-brand" href="/MKJ/"><span>航</span><strong>航线</strong></a>
       <nav class="task-nav" aria-label="任务导航"><a href="/MKJ/tasks/">任务广场</a><a href="/MKJ/tasks/my/">我的任务</a></nav>
       <div class="task-user-slot" data-task-reputation-badge aria-live="polite"></div>
     </header>
 
-    <main class="task-shell task-detail-shell">
+    <main class="task-shell task-detail-shell" data-task-workspace-main>
       <a class="task-back-link" href="/MKJ/tasks/">← 返回任务广场</a>
       <div class="task-notice" data-task-message role="status" hidden></div>
+      <nav class="task-workspace-stage-nav" data-task-stage-nav aria-label="任务阶段">
+        <a href="#task-overview">概览</a><a href="#task-consultation-stage">协商</a><a href="#task-collaboration-stage">协作</a><a href="#task-delivery-stage">交付</a><a href="#task-review-stage">批改</a>
+      </nav>
 
       <article class="task-detail" data-task-detail aria-busy="true">
         <header class="task-detail-header">
@@ -35,9 +39,9 @@
 
         <div class="task-detail-grid">
           <div class="task-prose">
-            <section><h2>任务内容</h2><div data-task-body></div></section>
+            <section id="task-overview"><h2>任务内容</h2><div data-task-body></div></section>
             <section><h2>能力要求</h2><ul class="task-tag-list" data-task-tags></ul></section>
-            <section>
+            <section id="task-delivery-stage">
               <h2>任务附件</h2>
               <ul class="task-attachment-list" data-task-attachments aria-live="polite"><li>暂无附件。</li></ul>
             </section>
@@ -49,12 +53,12 @@
               <h2>相关讨论</h2>
               <div class="task-related-posts" data-task-related-posts><p>暂无关联讨论。</p></div>
             </section>
-            <section data-task-consultation hidden><h2>申请协商</h2><div data-task-consultation-list></div></section>
-            <section data-task-collaboration hidden>
+            <section id="task-consultation-stage" data-task-consultation hidden><h2>申请协商</h2><div data-task-consultation-list></div></section>
+            <section id="task-collaboration-stage" data-task-collaboration hidden>
               <h2>正式协作</h2><ul data-task-member-list></ul><div data-task-collaboration-messages></div>
               <form data-task-message-form><label><span>消息</span><textarea name="content" required maxlength="2000" rows="3"></textarea></label><button class="task-button task-button-primary" type="submit">发送</button></form>
               <form data-task-peer-review-form><label><span>协作成员</span><select name="applicationId" required data-task-peer-reviewee></select></label><label><span>沟通</span><input name="communication" type="number" min="1" max="5" required /></label><label><span>贡献</span><input name="contribution" type="number" min="1" max="5" required /></label><label><span>守时</span><input name="punctuality" type="number" min="1" max="5" required /></label><label><span>互评</span><textarea name="content" required maxlength="1200"></textarea></label><button class="task-button task-button-secondary" type="submit">提交互评</button></form>
-              <div data-task-creator-review-checklist hidden></div>
+              <div id="task-review-stage" data-task-creator-review-checklist hidden></div>
             </section>
           </div>
           <aside class="task-action-panel">
@@ -86,6 +90,7 @@
     <script type="module" src="/MKJ/assets/js/core/runtime.js?v=20260812-v1.1"></script>
     <script type="module" src="/MKJ/assets/js/core/app-shell.js?v=20260812-v1.1"></script>
     <script type="module" src="/MKJ/assets/js/core/task-integration.js"></script>
+    <script type="module" src="/MKJ/assets/js/tasks/task-workspace.js?v=20260817-v1.5"></script>
     <script type="module" src="/MKJ/assets/js/tasks/task-detail.js"></script>
   </body>
 </html>

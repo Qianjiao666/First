@@ -27,8 +27,16 @@ const productionPages = [
   "admin/tasks/index.html",
   "admin/tasks/edit/index.html",
 ];
+const taskWorkspacePages = new Set([
+  "tasks/index.html",
+  "tasks/create/index.html",
+  "tasks/detail/index.html",
+  "tasks/my/index.html",
+  "admin/tasks/index.html",
+  "admin/tasks/edit/index.html",
+]);
 
-test("every production page loads the v1 base and current v1.2 visual enhancement last", async () => {
+test("every production page loads the v1 base and its current final visual layer", async () => {
   for (const relativePath of productionPages) {
     const source = await fs.readFile(fileURLToPath(new URL(relativePath, root)), "utf8");
     const releaseVersion = relativePath === "index.html" ? "v1.1" : "v1.0";
@@ -38,7 +46,12 @@ test("every production page loads the v1 base and current v1.2 visual enhancemen
     assert.match(source, /<link rel="icon" href="data:,"\s*\/>/, `${relativePath} must suppress implicit favicon requests`);
     const stylesheetLinks = source.match(/<link rel="stylesheet"[^>]*\/>/g) ?? [];
     assert.ok(stylesheetLinks.includes(visualLink), `${relativePath} must keep the v1 base visual system`);
-    assert.equal(stylesheetLinks.at(-1), enhancementLink, `${relativePath} must load v1.2 enhancement last`);
+    const expectedFinalLayer = taskWorkspacePages.has(relativePath)
+      ? '<link rel="stylesheet" href="/MKJ/assets/css/task-workspace.css?v=20260817-v1.5" />'
+      : relativePath === "index.html"
+        ? '<link rel="stylesheet" href="/MKJ/assets/css/visual-v1.4.css?v=20260816-v1.4" />'
+      : enhancementLink;
+    assert.equal(stylesheetLinks.at(-1), expectedFinalLayer, `${relativePath} must load its final visual layer last`);
   }
 });
 

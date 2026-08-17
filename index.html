@@ -11,8 +11,10 @@
     <link rel="stylesheet" href="/MKJ/assets/css/visual-v1.css?v=20260812-v1.1" />
     <link rel="stylesheet" href="/MKJ/assets/css/visual-v1.1.css?v=20260812-v1.1" />
     <link rel="stylesheet" href="/MKJ/assets/css/visual-v1.2.css?v=20260815-v1.2" />
+    <link rel="stylesheet" href="/MKJ/assets/css/visual-v1.4.css?v=20260816-v1.4" />
     <script type="module" src="/MKJ/assets/js/theme/theme-controller.js?v=20260812-v1.1"></script>
       <script type="module" src="/MKJ/assets/js/ui/visual-assets.js?v=20260815-v1.2"></script>
+      <script type="module" src="/MKJ/assets/js/ui/image-journey.js?v=20260816-v1.4"></script>
   </head>
   <body>
     <!-- THESIS: B 路线结构 + C 深色信号面板。保留按钮拓扑、业务 DOM 与可达性。 -->
@@ -33,7 +35,7 @@
           <a class="mkj-nav-link" href="#faq">FAQ</a>
           <a class="mkj-nav-link" href="#contact">联系</a>
           <a class="mkj-nav-link" href="/MKJ/community/">社区</a>
-          <button class="mkj-log-button" id="mkj-log-button" type="button" title="查看产品更新日志（当前 v1.3）" aria-label="查看产品更新日志（当前 v1.3）"><span aria-hidden="true">↻</span><b>更新日志 · v1.3</b></button>
+          <button class="mkj-log-button" id="mkj-log-button" type="button" title="查看产品更新日志（当前 v1.5）" aria-label="查看产品更新日志（当前 v1.5）"><span aria-hidden="true">↻</span><b>更新日志 · v1.5</b></button>
           <button class="mkj-account-button" id="mkj-account-button" type="button">登录 / 注册</button>
           <a class="mkj-main-site-button" href="/">返回主站 <span aria-hidden="true">↗</span></a>
         </nav>
@@ -72,6 +74,26 @@
           </div>
         </div>
         <div class="mkj-hero-rule" aria-hidden="true"><span></span><small>SCROLL TO CALIBRATE</small><span></span></div>
+      </section>
+
+      <section class="mkj-section mkj-image-journey" id="image-journey" aria-labelledby="image-journey-title">
+        <div class="mkj-container">
+          <div class="mkj-section-intro mkj-reveal">
+            <p class="mkj-kicker">ROUTE NOTES / 视觉路线</p>
+            <h2 id="image-journey-title">先看见方向，<br /><em>再把脚步交给行动。</em></h2>
+            <p>从山湖、道路到城市，每一段风景都提醒我们：确定感不是等来的，是一步步校准出来的。</p>
+          </div>
+          <div class="mkj-route-gallery" data-image-journey>
+            <article class="mkj-route-card mkj-route-card--wide mkj-reveal" data-journey-card><figure class="mkj-route-media"><img src="/MKJ/assets/images/visual-v1.4/route/alpine-lake.jpg" alt="雪山倒映在平静湖面上的开阔风景" loading="lazy" decoding="async" /><span class="mkj-route-index">01</span></figure><div class="mkj-route-copy"><span>看见起点</span><h3>先把视野打开</h3><p>准备不是把自己塞进答案，而是先看清正在面对的路。</p></div></article>
+            <article class="mkj-route-card mkj-route-card--tall mkj-reveal" data-journey-card><figure class="mkj-route-media"><img src="/MKJ/assets/images/visual-v1.4/route/misty-ridges.jpg" alt="云雾穿过层叠山峦的风景" loading="lazy" decoding="async" /><span class="mkj-route-index">02</span></figure><div class="mkj-route-copy"><span>厘清变量</span><h3>把模糊变成层次</h3><p>看见不同可能，才知道下一步该补哪一块。</p></div></article>
+            <article class="mkj-route-card mkj-route-card--city mkj-reveal" data-journey-card><figure class="mkj-route-media"><img src="/MKJ/assets/images/visual-v1.4/route/future-city.jpg" alt="高楼之间延伸的未来城市街道" loading="lazy" decoding="async" /><span class="mkj-route-index">03</span></figure><div class="mkj-route-copy"><span>进入现场</span><h3>让能力靠近真实机会</h3><p>把抽象的自我判断，换成可被验证的信号。</p></div></article>
+            <article class="mkj-route-card mkj-route-card--road mkj-reveal" data-journey-card><figure class="mkj-route-media"><img src="/MKJ/assets/images/visual-v1.4/route/road-arch.jpg" alt="穿过红色岩石拱门的公路" loading="lazy" decoding="async" /><span class="mkj-route-index">04</span></figure><div class="mkj-route-copy"><span>穿过选择</span><h3>做一个可执行的决定</h3><p>不用一次走完，只需要知道下一段往哪里。</p></div></article>
+            <article class="mkj-route-card mkj-route-card--fire mkj-reveal" data-journey-card><figure class="mkj-route-media"><img src="/MKJ/assets/images/visual-v1.4/route/campfire-coast.jpg" alt="海边黄昏燃起的篝火" loading="lazy" decoding="async" /><span class="mkj-route-index">05</span></figure><div class="mkj-route-copy"><span>保留能量</span><h3>给坚持一个回声</h3><p>每一次小行动，都会把你推向更有底气的位置。</p></div></article>
+            <article class="mkj-route-card mkj-route-card--cityline mkj-reveal" data-journey-card><figure class="mkj-route-media"><img src="/MKJ/assets/images/visual-v1.4/route/city-overlook.jpg" alt="绿意环绕的城市全景" loading="lazy" decoding="async" /><span class="mkj-route-index">06</span></figure><div class="mkj-route-copy"><span>扩大坐标</span><h3>找到你的目标半径</h3><p>机会不只有一个方向，适合你的坐标值得被看见。</p></div></article>
+            <article class="mkj-route-card mkj-route-card--coast mkj-reveal" data-journey-card><figure class="mkj-route-media"><img src="/MKJ/assets/images/visual-v1.4/route/pale-coast.jpg" alt="鲜花前景与浅色海岸线" loading="lazy" decoding="async" /><span class="mkj-route-index">07</span></figure><div class="mkj-route-copy"><span>校准节奏</span><h3>让准备留有呼吸</h3><p>稳定的节奏，比短暂的冲刺更接近长期的成长。</p></div></article>
+            <article class="mkj-route-card mkj-route-card--beach mkj-reveal" data-journey-card><figure class="mkj-route-media"><img src="/MKJ/assets/images/visual-v1.4/route/warm-beach.jpg" alt="暖色天空下的海滩和潮线" loading="lazy" decoding="async" /><span class="mkj-route-index">08</span></figure><div class="mkj-route-copy"><span>抵达下一步</span><h3>把方向变成今天</h3><p>现在就开始校准，让未来拥有更具体的形状。</p></div></article>
+          </div>
+        </div>
       </section>
 
       <section class="mkj-section mkj-section-muted" id="features">
@@ -204,8 +226,10 @@
         <span class="mkj-modal-mark">更新日志 / CHANGELOG</span>
         <h2 id="mkj-changelog-title">航线正在持续完善</h2>
         <div class="mkj-changelog-list">
+          <article class="mkj-changelog-entry"><time>2026.08.17 · v1.5</time><strong>任务运营工作台</strong><p>任务大厅、协作详情、发布流程和任务后台现采用统一的工作台布局；保留既有权限、任务生命周期、敏感词过滤和奖励逻辑。</p></article>
+          <article class="mkj-changelog-entry"><time>2026.08.16 · v1.4</time><strong>视觉路线与图片动态增强</strong><p>新增 8 张路线视觉素材、分层滚动揭示、轻量视差与移动端稳定画框；保留既有评估、账户、社区和数据流程。</p></article>
           <article class="mkj-changelog-entry"><time>2026.08.16 · v1.3</time><strong>多人协作任务市场</strong><p>任务模板、声望资格与管理员例外已接入；申请协商、正式协作、成员分工、互评和发布者批改现由参与者权限保护。校园协作仅组织多人任务，不包含支付、钱包或退款流程。</p></article>
-          <article class="mkj-changelog-entry"><time>2026.08.15 · v1.2</time><strong>视觉系统与体验优化（开发中）</strong><p>正在统一全站亮暗主题、视觉资源、组件反馈和移动端阅读体验；不改变既有账户、社区、任务、礼包码与数据流程。</p></article>
+          <article class="mkj-changelog-entry"><time>2026.08.15 · v1.2</time><strong>视觉系统与体验优化</strong><p>统一全站亮暗主题、视觉资源、组件反馈和移动端阅读体验；不改变既有账户、社区、任务、礼包码与数据流程。</p></article>
           <article class="mkj-changelog-entry"><time>2026.08.14 · v1.1</time><strong>安全、身份与主题增强</strong><p>增强跨页面登录状态、双层内容防护、安全头像上传、三套主题和移动端组件一致性。</p></article>
           <article class="mkj-changelog-entry"><time>2026.08.12 · v1.0</time><strong>全站视觉系统升级</strong><p>首页、社区、论坛、任务广场、商城、公告与管理后台统一为更清晰、精密的航线视觉系统；完整保留原有功能与数据流程。</p></article>
           <article class="mkj-changelog-entry"><time>2026.08.11 · v0.8</time><strong>账户状态与版本辨识优化</strong><p>论坛现会同步显示登录昵称与身份；更新日志入口改为明确文字，并为关键资源加入版本标记，避免旧缓存遮住最新界面。</p></article>

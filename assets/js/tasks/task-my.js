@@ -12,6 +12,14 @@ let applications = [];
 let activeGroup = "active";
 let capabilities = [];
 
+function renderPriorityQueue() {
+  const groups = ["active", "submitted", "completed", "closed"];
+  for (const group of groups) {
+    const output = document.querySelector(`[data-task-priority-${group}]`);
+    if (output) output.textContent = String(applications.filter((item) => getApplicationGroup(item.status) === group).length);
+  }
+}
+
 function renderApplications() {
   const template = document.querySelector("#task-my-item-template");
   const filtered = applications.filter((item) => getApplicationGroup(item.status) === activeGroup);
@@ -64,6 +72,7 @@ async function loadApplications() {
   try {
     applications = asItems(await services.api.getMine());
     showTaskMessage(message, "");
+    renderPriorityQueue();
     renderApplications();
   } catch (error) {
     list.replaceChildren();
