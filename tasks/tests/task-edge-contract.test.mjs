@@ -14,6 +14,8 @@ test("task-admin delegates permissions and content filtering to shared services"
   assert.match(source, /\.\.\/_shared\/auth\.ts/);
   assert.match(source, /\.\.\/_shared\/content-guard\.ts/);
   assert.match(source, /checkPermission\(request, "tasks", ACTION_PERMISSIONS\[action\] \?\? action\)/);
+  assert.match(source, /\["create", "publish"\]\.includes\(action\)/);
+  assert.match(source, /auth\.requireContext\(request\)/);
   assert.match(source, /guardPublicText/);
   assert.match(source, /p_actor_id/);
   assert.match(source, /loadTaskForPublish/);
@@ -23,6 +25,14 @@ test("task-admin delegates permissions and content filtering to shared services"
   assert.doesNotMatch(source, /action === "publish" && content\.hasSensitiveContent/);
   assert.match(source, /p_filtered_completion_note:\s*completionNote\.text/);
   assert.doesNotMatch(source, /service_role[^A-Z_]/i);
+});
+
+test("task-admin keeps publishing open to authenticated users while retaining moderation guards", async () => {
+  const source = await read("supabase/functions/task-admin/index.ts");
+
+  assert.match(source, /auth\.assertNotMuted\(context\)/);
+  assert.match(source, /loadTaskForPublish/);
+  assert.match(source, /guardPublicText/);
 });
 
 test("task-admin keeps the arbitration validation error as valid source text", async () => {

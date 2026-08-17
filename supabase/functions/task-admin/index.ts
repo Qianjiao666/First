@@ -143,7 +143,11 @@ Deno.serve(async (request) => {
       serviceRoleKey: requiredEnv("SUPABASE_SERVICE_ROLE_KEY"),
       createClient: createClient as never,
     });
-    const context = await auth.checkPermission(request, "tasks", ACTION_PERMISSIONS[action] ?? action);
+    // Creating and publishing belong to every authenticated, unmuted account.
+    // Management, moderation, assignment, and governance actions retain capability checks.
+    const context = ["create", "publish"].includes(action)
+      ? await auth.requireContext(request)
+      : await auth.checkPermission(request, "tasks", ACTION_PERMISSIONS[action] ?? action);
     auth.assertNotMuted(context);
     const client = auth.createAdminClient() as unknown as ServiceClient;
     const payload = asRecord(body.payload ?? {}, "payload");

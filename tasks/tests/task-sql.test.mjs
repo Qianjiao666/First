@@ -29,6 +29,13 @@ test("task writes use service-only actor RPCs instead of public auth RPCs", asyn
   assert.doesNotMatch(sql, /create or replace function public\.create_task[\s\S]*?auth\.uid\(\)/i);
 });
 
+test("task publishing is not blocked by reputation or completion thresholds", async () => {
+  const sql = await readFile(sqlPath, "utf8");
+  const publish = sql.match(/create or replace function public\.publish_task[\s\S]*?\$\$;/)?.[0] ?? "";
+  assert.match(publish, /Only the task creator may publish this task/);
+  assert.doesNotMatch(publish, /get_task_publishing_eligibility|Actor is not eligible/);
+});
+
 test("task completion passes the locked reward amount to the global reputation event", async () => {
   const sql = await readFile(sqlPath, "utf8");
   assert.match(sql, /reward_points/);

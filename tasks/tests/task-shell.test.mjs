@@ -27,7 +27,7 @@ test("public task routes expose the expected page shells", async () => {
   }
 });
 
-test("task creation route exposes capability-gated taxonomy and attachment controls", async () => {
+test("task creation route exposes open publishing taxonomy and attachment controls", async () => {
   const [html, controller] = await Promise.all([
     read("tasks/create/index.html"),
     read("assets/js/tasks/task-create.js"),
@@ -37,8 +37,9 @@ test("task creation route exposes capability-gated taxonomy and attachment contr
   assert.match(html, /data-task-subcategory-select/);
   assert.match(html, /type="file"[^>]+accept="[^"]*(?:image|video)/);
   assert.match(html, /data-task-attachment-input/);
-  assert.match(controller, /hasTaskCapability/);
-  assert.match(controller, /task:create/);
+  assert.doesNotMatch(controller, /hasTaskCapability/);
+  assert.doesNotMatch(controller, /没有 task:create 权限/);
+  assert.match(controller, /所有登录用户均可发布任务/);
   assert.match(controller, /attachmentMetadata/);
 });
 

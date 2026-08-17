@@ -1,4 +1,3 @@
-import { hasTaskCapability } from "./task-domain.js";
 import { TASK_ATTACHMENT_MAX_BYTES, validateTaskAttachment } from "./task-attachments.js";
 import { asItems, createTaskServices, mountTaskChrome, requireAuthenticatedAction, showTaskMessage, taskErrorMessage } from "./task-common.js";
 import { guardFormData } from "../security/form-guard.js";
@@ -45,13 +44,11 @@ async function loadCategories() {
 }
 
 async function loadTemplatesAndEligibility() {
-  const [templates, publishing] = await Promise.all([services.api.getTemplates(), services.api.getPublishingEligibility()]);
+  const templates = await services.api.getTemplates();
   replaceOptions(templateSelect, asItems(templates).map((template) => ({ ...template, name: template.title })), "不使用模板");
-  const data = publishing?.data ?? publishing ?? {};
-  if (eligibility) eligibility.textContent = data.eligible === false
-    ? `暂不满足发布条件：需声望 ${data.minimumReputation ?? 0}、完成 ${data.minimumCompletedTasks ?? 0} 项任务。`
-    : "满足当前发布条件。";
-  form.querySelector("[data-task-create-publish]").disabled = data.eligible === false;
+  if (eligibility) eligibility.textContent = "所有登录用户均可发布任务。";
+  const publishButton = form?.querySelector("[data-task-create-publish]");
+  if (publishButton) publishButton.disabled = false;
 }
 
 function selectedFiles() {
@@ -75,9 +72,9 @@ function payloadFromForm(data) {
   };
 }
 
-function blockCreate() {
+function blockCreate(messageText = "请先登录后发布任务。") {
   form?.querySelectorAll("input, select, textarea, button").forEach((control) => { control.disabled = true; });
-  showTaskMessage(message, "当前账号没有 task:create 权限。", "error");
+  showTaskMessage(message, messageText, "error");
   document.body.dataset.taskCapabilityGuard = "denied";
 }
 
@@ -129,19 +126,11 @@ async function bootstrap() {
   const user = await mountTaskChrome(services.runtime);
   currentUser = user;
   if (!user) {
-    blockCreate();
+    blockCreate("请先登录后发布任务。");
     void requireAuthenticatedAction(services.runtime, "创建任务").catch(() => {});
     return;
   }
   try {
-    const capabilities = await services.runtime.getCapabilities();
-    if (!hasTaskCapability(capabilities, "create")) {
-      blockCreate();
-      return;
-    }
-    const canPublish = hasTaskCapability(capabilities, "publish");
-    const publishButton = form.querySelector("[data-task-create-publish]");
-    if (publishButton && !canPublish) publishButton.hidden = true;
     document.body.dataset.taskCapabilityGuard = "allowed";
     await loadCategories();
     await loadTemplatesAndEligibility();

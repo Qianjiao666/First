@@ -1775,10 +1775,6 @@ begin
   if v_task.status <> 'draft' then
     raise exception using errcode = 'P0001', message = 'Only draft tasks can be published.';
   end if;
-  if not exists (select 1 from public.user_public_profiles where user_id = p_actor_id and role = 'ADMIN'::public.user_role)
-    and coalesce((public.get_task_publishing_eligibility(p_actor_id) ->> 'eligible')::boolean, false) is not true then
-    raise exception using errcode = '42501', message = 'Actor is not eligible to publish tasks.';
-  end if;
   if (p_filtered_payload ->> 'deadlineAt')::timestamptz <= now() then
     raise exception using errcode = 'P0001', message = 'Task deadline must be in the future.';
   end if;
@@ -4407,10 +4403,6 @@ begin
     (p_filtered_payload ->> 'categoryId')::uuid,
     nullif(p_filtered_payload ->> 'subcategoryId', '')::uuid
   );
-  if not exists (select 1 from public.user_public_profiles where user_id = p_actor_id and role = 'ADMIN'::public.user_role)
-    and coalesce((public.get_task_publishing_eligibility(p_actor_id) ->> 'eligible')::boolean, false) is not true then
-    raise exception using errcode = '42501', message = 'Actor is not eligible to publish tasks.';
-  end if;
   v_template_id := case when p_filtered_payload ? 'templateId'
     then nullif(p_filtered_payload ->> 'templateId', '')::uuid else v_task.template_id end;
   update public.task_listings
