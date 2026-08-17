@@ -10,6 +10,14 @@
 - 功能覆盖：工作台指标与趋势提示、任务组拖拽和 CSV、批改筛选/批量操作、评语模板/声望/确认/日志、发布草稿/预览/敏感词阻断、任务广场筛选收藏及我的任务标签。
 - 完整接口、权限和后续真实接入说明见 `docs/TASK_MANAGEMENT_MOCK_HANDOFF.md`。
 
+## 18. v1.6 生产部署完成（2026-08-17）
+
+- 已在腾讯云 CVM 的 `/var/www/MKJ` 完成静态原子切换；未修改 Nginx、主站根路由、Supabase、数据库、Edge Function、论坛、登录、头像上传或主题控制器。
+- 线上清单确认：`Release: 20260817`、`Revision: v1.6`、`Files: 132`。部署包由已推送提交 `50406a30905af6a68fd00f93db9fd61b58fa43aa` 在服务器端按静态发布白名单生成，并通过 ZIP、清单和 132 项文件哈希校验。
+- 实际部署 ZIP 的 SHA-256：`7f82bd209863db948ac57d453e3442487a57b13844e6cdb0fec8665ee6529097`。本地确定性候选包保留在 `deployment/MKJ-community-forum-tasks-20260817-static-v1.6.zip`，其 SHA-256 为 `E989EDD5D775A749EFFE91A9DE5141580BFC57FA93A38C4E792445323D60D30D`；两者的静态文件清单一致，ZIP 容器字节差异来自服务器端打包时间与压缩实现。
+- 回滚目录：`/var/www/.mkj-community-releases/20260817-081142.previous`。部署前备份：`/var/www/.mkj-community-releases/20260817-081142.before-v1.6.tar.gz`。保留这两个路径，不要删除。
+- 线上验证通过：`https://dsxnb.com/MKJ/tasks/mock/` 可加载任务广场与任务卡；移动视口 `375px` 下页面 `scrollWidth` 等于 `clientWidth`；未登录访问 `/MKJ/tasks/mock/create/` 和 `/MKJ/admin/tasks/mock/` 均按既有鉴权预期回到 `/MKJ/`；主站 `https://dsxnb.com/` 正常返回其原始标题与内容。
+
 ## 16. v1.5 任务运营工作台状态（2026-08-17）
 
 - 工作树：`D:\桌面文件\任务\.worktrees\codex-task-management-workspace-v1.5`，分支 `codex/task-management-workspace-v1.5`。该分支以 v1.3 协作任务功能为基线，并选择性纳入 v1.4 首页图片旅程的静态资源与浏览器契约；主工作区其余未提交文件没有被覆盖或合并。
