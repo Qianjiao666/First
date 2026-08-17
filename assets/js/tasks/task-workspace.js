@@ -5,7 +5,10 @@ function createLink(href, label) {
   link.href = href;
   link.textContent = label;
   link.className = "task-workspace-link";
-  if (new URL(link.href, window.location.origin).pathname === window.location.pathname) {
+  const target = new URL(link.href, window.location.origin);
+  const isCurrentPath = target.pathname === window.location.pathname;
+  const isCurrentHash = target.hash ? target.hash === window.location.hash : !window.location.hash;
+  if (isCurrentPath && isCurrentHash) {
     link.setAttribute("aria-current", "page");
   }
   return link;
@@ -38,7 +41,7 @@ function mountSidebar() {
   const nav = document.createElement("nav");
   nav.className = "task-workspace-nav";
   const links = isAdmin
-    ? [["/MKJ/admin/tasks/", "任务总览"], ["/MKJ/admin/tasks/edit/", "新建任务"], ["/MKJ/admin/", "返回后台"]]
+    ? [["/MKJ/admin/tasks/", "任务工作台"], ["/MKJ/admin/tasks/#task-group-overview-title", "任务组管理"], ["/MKJ/admin/tasks/#task-review-queue", "审核中心"], ["/MKJ/admin/tasks/#task-review-queue", "任务批改"], ["/MKJ/admin/tasks/#task-governance", "协作治理"], ["/MKJ/admin/tasks/edit/", "新建任务"], ["/MKJ/admin/", "返回后台"]]
     : [["/MKJ/tasks/", "任务大厅"], ["/MKJ/tasks/my/", "我的任务"], ["/MKJ/tasks/create/", "发布任务"], ["/MKJ/forum/", "关联讨论"]];
   links.forEach(([href, label]) => nav.append(createLink(href, label)));
 

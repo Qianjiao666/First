@@ -20,40 +20,49 @@
       <div class="task-user-slot" data-task-reputation-badge aria-live="polite"></div>
     </header>
 
-    <main class="task-shell" data-task-workspace-main>
-      <section class="task-heading">
-        <div><p class="task-kicker">ADMIN / TASKS</p><h1>任务管理</h1><p>管理草稿、发布状态、申请分配与完成核验。</p></div>
+    <main class="task-shell task-dashboard-shell" data-task-workspace-main>
+      <nav class="task-breadcrumb" aria-label="面包屑"><a href="/MKJ/admin/">管理后台</a><span aria-hidden="true">/</span><span>任务工作台</span></nav>
+      <section class="task-heading task-dashboard-heading">
+        <div><h1>任务工作台</h1><p data-task-dashboard-context>正在读取任务概览。</p></div>
         <div class="task-heading-actions" data-task-admin-write>
           <button class="task-button task-button-secondary" type="button" data-task-category-open>分类管理</button>
           <a class="task-button task-button-primary" href="/MKJ/admin/tasks/edit/">新建任务</a>
         </div>
       </section>
 
-      <dl class="task-admin-metrics" data-task-admin-metrics aria-label="当前结果指标">
-        <div><dt>当前结果</dt><dd data-task-admin-metric-total>--</dd></div>
-        <div><dt>已发布</dt><dd data-task-admin-metric-published>--</dd></div>
-        <div><dt>临近截止</dt><dd data-task-admin-metric-deadline>--</dd></div>
-        <div><dt>待处理申请</dt><dd data-task-admin-metric-applications>--</dd></div>
-      </dl>
-
-      <section class="task-admin-toolbar">
+      <section class="task-admin-toolbar task-dashboard-filters" aria-label="筛选任务">
         <label><span>状态</span><select data-task-admin-filter><option value="">全部</option><option value="draft">草稿</option><option value="published">已发布</option><option value="closed">已关闭</option><option value="archived">已归档</option></select></label>
         <label class="task-search"><span>搜索</span><input type="search" data-task-admin-query placeholder="标题或能力标签" /></label>
       </section>
 
+      <dl class="task-admin-metrics" data-task-admin-metrics aria-label="当前结果指标">
+        <div><dt>当前任务</dt><dd data-task-admin-metric-total>--</dd><small>当前筛选结果</small></div>
+        <div><dt>已发布</dt><dd data-task-admin-metric-published>--</dd><small>可被用户申请</small></div>
+        <div><dt>临近截止</dt><dd data-task-admin-metric-deadline>--</dd><small>未来 7 天内</small></div>
+        <div><dt>待处理申请</dt><dd data-task-admin-metric-applications>--</dd><small>需要分配或核验</small></div>
+      </dl>
+
+      <section class="task-dashboard-section task-group-overview" aria-labelledby="task-group-overview-title">
+        <div class="task-dashboard-section-heading"><div><h2 id="task-group-overview-title">任务组概览</h2><p>按当前任务分类聚合。</p></div><a href="#task-review-queue">查看待处理</a></div>
+        <div class="task-group-grid" data-task-category-overview aria-live="polite" aria-busy="true"></div>
+      </section>
+
       <div class="task-notice" data-task-message role="status" hidden></div>
-      <section class="task-table-wrap" data-task-admin-list aria-busy="true">
+      <section class="task-dashboard-section task-review-queue" id="task-review-queue" aria-labelledby="task-review-queue-title">
+        <div class="task-dashboard-section-heading"><div><h2 id="task-review-queue-title">待处理队列</h2><p>查看任务状态、申请数量与后续操作。</p></div></div>
+      <div class="task-table-wrap" data-task-admin-list aria-busy="true">
         <table class="task-table">
           <thead><tr><th>任务</th><th>状态</th><th>申请</th><th>奖励</th><th>截止时间</th><th><span class="task-visually-hidden">操作</span></th></tr></thead>
           <tbody data-task-admin-table-body></tbody>
         </table>
+      </div>
       </section>
 
       <section class="task-admin-applications" data-task-admin-applications data-task-admin-write hidden>
         <div class="task-section-heading"><h2>申请与核验</h2><button class="task-icon-button" type="button" data-task-applications-close title="关闭" aria-label="关闭申请列表">×</button></div>
         <div data-task-applications-list></div>
       </section>
-      <section class="task-admin-applications" data-task-admin-write>
+      <section class="task-admin-applications" id="task-governance" data-task-admin-write>
         <h2>协作任务治理</h2>
         <div class="task-governance-tabs" role="tablist" aria-label="任务治理">
           <button class="task-governance-tab" type="button" role="tab" data-task-governance-tab="templates">模板</button>

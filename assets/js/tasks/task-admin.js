@@ -102,6 +102,58 @@ function renderAdminMetrics(tasks) {
     const output = document.querySelector(`[data-task-admin-metric-${name}]`);
     if (output) output.textContent = String(value);
   }
+
+  const context = document.querySelector("[data-task-dashboard-context]");
+  if (context) {
+    const applicationText = values.applications === "--" ? "申请数据正在同步" : `${values.applications} 项申请待处理`;
+    context.textContent = `当前范围内有 ${values.total} 个任务，${applicationText}。`;
+  }
+}
+
+function taskCategoryName(task) {
+  return String(task.category_name ?? task.categoryName ?? task.category?.name ?? "未分类任务");
+}
+
+function renderCategoryOverview(tasks) {
+  const container = document.querySelector("[data-task-category-overview]");
+  if (!container) return;
+
+  const groups = new Map();
+  for (const task of tasks) {
+    const name = taskCategoryName(task);
+    const current = groups.get(name) ?? { tasks: 0, published: 0, applications: 0, hasApplications: true };
+    current.tasks += 1;
+    current.published += task.status === "published" ? 1 : 0;
+    if (Object.hasOwn(task, "application_count")) current.applications += Math.max(0, Number(task.application_count ?? 0));
+    else current.hasApplications = false;
+    groups.set(name, current);
+  }
+
+  const cards = [...groups.entries()].sort(([left], [right]) => left.localeCompare(right, "zh-CN")).map(([name, group]) => {
+    const card = document.createElement("article");
+    card.className = "task-group-card";
+    const header = document.createElement("div");
+    const title = document.createElement("h3");
+    title.textContent = name;
+    const state = document.createElement("span");
+    state.className = "task-group-state";
+    state.textContent = `${group.published} 已发布`;
+    header.append(title, state);
+    const metrics = document.createElement("p");
+    const applicationText = group.hasApplications ? `${group.applications} 项申请` : "申请数据 --";
+    metrics.textContent = `${group.tasks} 个任务 · ${applicationText}`;
+    card.append(header, metrics);
+    return card;
+  });
+
+  if (!cards.length) {
+    const empty = document.createElement("p");
+    empty.className = "task-dashboard-empty";
+    empty.textContent = "当前筛选条件下暂无任务。";
+    cards.push(empty);
+  }
+  container.replaceChildren(...cards);
+  container.setAttribute("aria-busy", "false");
 }
 
 function renderApplications(applications) {
@@ -248,6 +300,7 @@ async function setupList() {
       const tasks = asItems(await services.api.getAdminTasks({ status: filter.value, query: query.value.trim() }));
       renderAdminRows(tasks);
       renderAdminMetrics(tasks);
+      renderCategoryOverview(tasks);
       showTaskMessage(message, "");
     } catch (error) {
       showTaskMessage(message, taskErrorMessage(error), "error");
